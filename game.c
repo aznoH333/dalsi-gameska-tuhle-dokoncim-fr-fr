@@ -22,6 +22,7 @@
 ********************************************************************************************/
 #include "gframework.c"
 #include "raylib.h"
+#include "glog.c"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -29,6 +30,8 @@
 int main(void)
 {
     initFramework();
+    
+
 
     // Main game loop
     while (!WindowShouldClose())
