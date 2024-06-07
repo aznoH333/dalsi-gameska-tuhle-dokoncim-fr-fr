@@ -22,6 +22,7 @@
 ********************************************************************************************/
 #include "gframework.c"
 #include "raylib.h"
+#include "gfiles.c"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -29,6 +30,9 @@
 int main(void)
 {
     initFramework();
+    File f = initFile("benisek.txt");
+
+    printf("%s \n", f.contents);
 
 
     // Main game loop
