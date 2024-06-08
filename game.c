@@ -22,7 +22,7 @@
 ********************************************************************************************/
 #include "gframework.c"
 #include "raylib.h"
-#include "gfiles.c"
+#include "level.c"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -30,14 +30,17 @@
 int main(void)
 {
     initFramework();
-    File f = initFile("benisek.txt");
+    
+    File* f = initFile("./gamedata/1.lvl");
+    char data[] = {0, 2, 0, 2, 1, 0, 0, 2};
+    f->contents = data;
+    f->contentsLength = 8;
+    saveFile(f);
+    printf("file saved\n");
+    
+    Level* l = loadLevel("./gamedata/1.lvl");
+    unloadLevel(l);
 
-    printf("%s \n", f.contents);
-
-    File l = initFile("text.save");
-    l.contents = "lol";
-    l.contentsLength = 3;
-    saveFile(&l);
 
 
     // Main game loop
@@ -46,14 +49,10 @@ int main(void)
         
         fDrawBegin();
 
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
 
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-            draw(0,0,0);
-            draw(1,32,0);
-            draw(2,64,0);
-            draw(3,96,0);
-            draw(4,128,0);
+            
+            
             
 
         fDrawEnd();

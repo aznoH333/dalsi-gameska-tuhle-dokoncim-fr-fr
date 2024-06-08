@@ -16,16 +16,16 @@ struct File{
 
 typedef struct File File;
 
-File initFile(const char* filePath){
-    File out;
+File* initFile(const char* filePath){
+    File* out = malloc(sizeof(File));
 
-    out.filePath = filePath;
+    out->filePath = filePath;
 
     FILE* file = fopen(filePath, "r");
 
     if (file == NULL){
         // create empty file
-        out.contentsLength = 0;
+        out->contentsLength = 0;
         gLog(LOG_WARN, "%s file not found. Creating new empty file", filePath);
 
     }else {
@@ -49,11 +49,11 @@ File initFile(const char* filePath){
         }
 
         // copy file contents
-        out.contents = malloc(index * sizeof(char));
+        out->contents = malloc(index * sizeof(char));
         for (int i = 0; i < index; i++){
-            out.contents[i] = temp[i];
+            out->contents[i] = temp[i];
         }
-        out.contentsLength = index;
+        out->contentsLength = index;
 
         fclose(file);
     }
@@ -66,11 +66,20 @@ File initFile(const char* filePath){
 void saveFile(File* file){
     FILE* f = fopen(file->filePath, "w");
     
+    if (f == NULL){
+        gLog(LOG_ERROR, "File write error %s", file->filePath);
+    }
+
     for (int i = 0; i < file->contentsLength; i++){
         fprintf(f, "%c", file->contents[i]);
     }
 
     fclose(f);
+}
+
+void unloadFile(File* file){
+    free(file->contents);
+    free(file);
 }
 
 #endif

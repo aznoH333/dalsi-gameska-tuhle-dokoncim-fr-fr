@@ -1,8 +1,10 @@
 #ifndef G_UTILS
 #define G_UTILS
 
+#include <limits.h>
 #include <math.h>
 #include <stdlib.h>
+#include "glog.c"
 
 //------------------------------------------------------------------------------------
 // misc
@@ -37,6 +39,13 @@ int min(int a, int b){
     return b;
 }
 
+int max(int a, int b){
+    if (a > b){
+        return a;
+    }
+    return b;
+}
+
 float sign(float input){
 	if (input == 0){
 		return 0;
@@ -44,6 +53,14 @@ float sign(float input){
 		return 1;
 	}
 	return -1;
+}
+
+int parseStrToInt(char* str, int size){
+    int out = 0;
+    for (int i = size - 1; i >= 0; i--){
+        out += str[i] * max(((size - (i + 1)) * (CHAR_MAX + 1)), 1);
+    }
+    return out;
 }
 
 //------------------------------------------------------------------------------------
