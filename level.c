@@ -3,6 +3,7 @@
 
 #include "gfiles.c"
 #include "glog.c"
+#include "gframework.c"
 #include "gutil.c"
 
 
@@ -61,6 +62,56 @@ void unloadLevel(Level* level){
     }
     free(level->tiles);
     free(level);
+}
+
+
+void resizeLevel(Level* level, int newWidth, int newHeight){
+    if(newWidth < 1 || newHeight < 1){
+        return;
+    }
+
+    // init new contents    
+    char** newLevelContent = malloc(sizeof(char*) * newWidth);
+    for (int i = 0; i < newWidth; i++){
+        newLevelContent[i] = malloc(sizeof(char*) * newHeight);
+    }
+    // copy old contents
+    for (int x = 0; x < newWidth; x++){
+        for (int y = 0; y < newHeight; y++){
+            if (x < level->width && y < level->height){
+                newLevelContent[x][y] = level->tiles[x][y];
+            }else {
+                // else fill with air
+                newLevelContent[x][y] = 0;
+            }
+        }
+    }
+
+    // free old contents
+    for (int i = 0; i < level->width;i++){
+        free(level->tiles[i]);
+    }
+    free(level->tiles);
+
+
+    // set new contents
+    level->tiles = newLevelContent;
+    level->width = newWidth;
+    level->height = newHeight;
+}
+
+
+
+#define TILE_SPRITE_START 7
+
+void drawLevel(Level* lvl){
+    for (int x = 0; x < lvl->width; x++){
+        for (int y = 0; y < lvl->height; y++){
+            if (lvl->tiles[x][y] != 0){
+                draw(TILE_SPRITE_START + lvl->tiles[x][y], x * 32, y * 32);
+            }
+        }
+    }
 }
 
 

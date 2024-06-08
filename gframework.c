@@ -49,6 +49,7 @@ void unloadSpriteSheet(FrameworkSpriteSheet spriteSheet){
 //------------------------------------------------------
 FrameworkSpriteSheet loadedSheet;
 RenderTexture2D renderTexture;
+Vector2 actualCameraPos = {0,0};
 Camera2D cam;
 float scalingFactor;
 int renderTextureOffset;
@@ -64,7 +65,7 @@ void screenShake(float ammount){
 
 void updateCamera(){
 	screenShakeAmmount = fmin(screenShakeAmmount, 10);
-	Vector2 vec = {sin(fTimer) * screenShakeAmmount, cos(fTimer) * screenShakeAmmount};
+	Vector2 vec = {actualCameraPos.x + sin(fTimer) * screenShakeAmmount, actualCameraPos.y + cos(fTimer) * screenShakeAmmount};
 	cam.target = vec;
 
 	if (screenShakeAmmount < 0.1f){
@@ -74,6 +75,24 @@ void updateCamera(){
 	}
 
 }
+
+Vector2 getInWorldMousePosition(){
+	Vector2 out = GetMousePosition();
+	
+	out.x /= cam.zoom;
+	out.y /= cam.zoom;
+
+	out.x += cam.target.x;
+	out.y += cam.target.y;
+
+	return out;
+}
+
+void setCameraPos(Vector2 pos){
+	actualCameraPos = pos;
+}
+
+
 
 //------------------------------------------------------
 // drawing
@@ -145,7 +164,7 @@ void initFramework(){
 	loadedSheet = initSpriteSheet();
 	scalingFactor = SCREEN_WIDTH /(float)(GetScreenWidth());
 	renderTextureOffset = ((GetScreenWidth()) / 2) - (SCREEN_WIDTH / 2);
-	ToggleFullscreen();
+	//ToggleFullscreen();
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
 }
 

@@ -22,7 +22,7 @@
 ********************************************************************************************/
 #include "gframework.c"
 #include "raylib.h"
-#include "level.c"
+#include "levelEditor.c"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -31,17 +31,9 @@ int main(void)
 {
     initFramework();
     
-    File* f = initFile("./gamedata/1.lvl");
-    char data[] = {0, 2, 0, 2, 1, 0, 0, 2};
-    f->contents = data;
-    f->contentsLength = 8;
-    saveFile(f);
-    printf("file saved\n");
     
-    Level* l = loadLevel("./gamedata/1.lvl");
-    unloadLevel(l);
 
-
+    LevelEditor* l = initLevelEditor("./gamedata/1.lvl");
 
     // Main game loop
     while (!WindowShouldClose())
@@ -50,14 +42,15 @@ int main(void)
         fDrawBegin();
 
             ClearBackground(BLACK);
-
             
+            updateLevelEditor(l);
             
             
 
         fDrawEnd();
         
     }
+    unloadLevelEditor(l);
 
 	disposeFramework();
     
