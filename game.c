@@ -34,6 +34,11 @@ int main(void)
 
     printf("%s \n", f.contents);
 
+    File l = initFile("text.save");
+    l.contents = "lol";
+    l.contentsLength = 3;
+    saveFile(&l);
+
 
     // Main game loop
     while (!WindowShouldClose())

@@ -35,6 +35,7 @@ File initFile(const char* filePath){
         int index = 0;
         for(;;){
             if (feof(file)){
+                index--; // skip last char if feof
                 break;
             }
             
@@ -58,7 +59,18 @@ File initFile(const char* filePath){
     }
 
     return out;
+}
 
+
+
+void saveFile(File* file){
+    FILE* f = fopen(file->filePath, "w");
+    
+    for (int i = 0; i < file->contentsLength; i++){
+        fprintf(f, "%c", file->contents[i]);
+    }
+
+    fclose(f);
 }
 
 #endif
