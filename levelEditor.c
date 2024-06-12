@@ -4,9 +4,16 @@
 #include "level.c"
 #include "gframework.c"
 
+#define OPERATION_EDIT 0
+#define OPERATION_RESIZE 1
+#define OPERATION_SELECT_TILE 2
+
 struct LevelEditor{
     Level* level;
     
+    // operations
+    int currentOperation;
+
     // cursor
     int cursorX;
     int cursorY;
@@ -15,12 +22,11 @@ struct LevelEditor{
     
     // camera
     Vector2 cameraPos;
+    float cameraZoom;
 
     // resizing
-    bool isResizing;
     int newWidth;
     int newHeight;
-    int resizeCooldown;
 
     // tile selection
     int selectedTile;
@@ -35,11 +41,11 @@ LevelEditor* initLevelEditor(const char* levelPath){
     out->level = loadLevel(levelPath);
 
     out->cameraPos = (Vector2) {0, 0};
+    out->cameraZoom = 1.0f;
 
-    out->isResizing = false;
+    out->currentOperation = OPERATION_EDIT;
     out->newHeight = 0;
     out->newHeight = 0;
-    out->resizeCooldown = 0;
 
     out->selectedTile = 1;
     return out;
@@ -56,7 +62,13 @@ void unloadLevelEditor(LevelEditor* editor){
 #define CURSOR_SPRITE 0
 #define OUT_OF_BOUNDS_SPRITE 1
 #define NEW_BOUNDS_SPRITE 2
-#define DEFAULT_RESIZE_COOLDOWN 15
+
+#define TILE_SPRITE_OFFSET 8
+#define MAX_TILES 2
+#define TILE_PICKER_X 0
+#define TILE_PICKER_Y 0
+#define TILE_PICKER_WIDTH 8
+
 void updateLevelEditor(LevelEditor* editor){
     drawLevel(editor->level);
 
@@ -73,7 +85,7 @@ void updateLevelEditor(LevelEditor* editor){
             draw(OUT_OF_BOUNDS_SPRITE, (editor->level->width) * 32, i * 32);
         }
 
-        if (editor->isResizing){
+        if (editor->currentOperation == OPERATION_RESIZE){
             for (int i = -1; i < editor->newWidth + 1; i++){
                 draw(NEW_BOUNDS_SPRITE, i * 32, -32);
                 draw(NEW_BOUNDS_SPRITE, i * 32, (editor->newHeight) * 32);
@@ -88,45 +100,33 @@ void updateLevelEditor(LevelEditor* editor){
     // level sizing
     {
         // start resizing
-        if (IsKeyPressed(KEY_SPACE) && editor->isResizing == false){
+        if (IsKeyPressed(KEY_SPACE) && editor->currentOperation == OPERATION_EDIT){
             editor->newHeight = editor->level->height;
             editor->newWidth = editor->level->width;
-            editor->isResizing = true;
-        }else if (IsKeyPressed(KEY_SPACE) && editor->isResizing == true){
-            editor->isResizing = false;
+            editor->currentOperation = OPERATION_RESIZE;
+        }else if (IsKeyPressed(KEY_SPACE) && editor->currentOperation == OPERATION_RESIZE){
+            editor->currentOperation = OPERATION_EDIT;
             resizeLevel(editor->level, editor->newWidth, editor->newHeight);
         }
 
-        if (editor->isResizing){
-
-            if (editor->resizeCooldown == 0){
-
-                if (IsKeyDown(KEY_LEFT)){
-                    editor->newWidth -= 1;
-                    editor->resizeCooldown = DEFAULT_RESIZE_COOLDOWN;
-                }else if (IsKeyDown(KEY_RIGHT)){
-                    editor->newWidth += 1;
-                    editor->resizeCooldown = DEFAULT_RESIZE_COOLDOWN;
-                }
-
-                if (IsKeyDown(KEY_UP)){
-                    editor->newHeight -= 1;
-                    editor->resizeCooldown = DEFAULT_RESIZE_COOLDOWN;
-                }else if (IsKeyDown(KEY_DOWN)){
-                    editor->newHeight += 1;
-                    editor->resizeCooldown = DEFAULT_RESIZE_COOLDOWN;
-                }
-
-            }else {
-                editor->resizeCooldown--;
+        if (editor->currentOperation == OPERATION_RESIZE){
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressedRepeat(KEY_LEFT)){
+                editor->newWidth -= 1;
+            }else if (IsKeyPressed(KEY_RIGHT) || IsKeyPressedRepeat(KEY_RIGHT)){
+                editor->newWidth += 1;
             }
 
+            if (IsKeyPressed(KEY_UP) ||IsKeyPressedRepeat(KEY_UP)){
+                editor->newHeight -= 1;
+            }else if (IsKeyPressed(KEY_DOWN) || IsKeyPressedRepeat(KEY_DOWN)){
+                editor->newHeight += 1;
+            }
         }
     }
     
     
     // cusror
-    {
+    if (editor->currentOperation == OPERATION_EDIT){
         Vector2 mousePos = getInWorldMousePosition();
 
         editor->cursorInWorldX = mousePos.x / 32;
@@ -138,16 +138,37 @@ void updateLevelEditor(LevelEditor* editor){
         draw(CURSOR_SPRITE, editor->cursorX, editor->cursorY);
 
         // place tiles
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && 
+        if (
             checkBoxCollisions(editor->cursorInWorldX, editor->cursorInWorldY, 1, 1, 0, 0, editor->level->width, editor->level->height)
         ){
-            editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
+            if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
+                editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
+            }else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)){
+                editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = 0;
+            }
+        }
+    }
+
+
+    // tile selection
+    {
+        if (IsKeyPressed(KEY_E) && editor->currentOperation == OPERATION_EDIT){
+            editor->currentOperation = OPERATION_SELECT_TILE;
+        }else if (IsKeyPressed(KEY_E) && editor->currentOperation == OPERATION_SELECT_TILE){
+            editor->currentOperation = OPERATION_EDIT;
+        }
+
+        for (int tileId = 0; tileId < MAX_TILES; tileId++){
+            int tileX = (tileId % TILE_PICKER_WIDTH) * 32;
+            int tileY = (tileId / TILE_PICKER_WIDTH) * 32;
+
+            draw(TILE_SPRITE_OFFSET + tileId, tileX, tileY);
         }
     }
 
     // camera movement
     {
-        float cameraSpeed = 2;
+        float cameraSpeed = 2 * (editor->cameraZoom);
 
         if (IsKeyDown(KEY_LEFT_SHIFT)){
             cameraSpeed *= 4;
@@ -164,6 +185,14 @@ void updateLevelEditor(LevelEditor* editor){
         }else if (IsKeyDown(KEY_D)){
             editor->cameraPos.x += cameraSpeed;
         }
+
+
+        if (IsKeyDown(KEY_C)){
+            resetCameraZoom();
+        }
+
+        addCameraZoom(GetMouseWheelMove() * 0.25f);
+        editor->cameraZoom -= GetMouseWheelMove() * 0.25f;
 
         setCameraPos(editor->cameraPos);
     }

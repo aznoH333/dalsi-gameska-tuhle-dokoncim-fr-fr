@@ -3,6 +3,9 @@
 
 #include "raylib.h"
 #include <math.h>
+#include <string.h>
+#include "gvector.c"
+
 //------------------------------------------------------
 // Conf
 //------------------------------------------------------
@@ -12,6 +15,17 @@ const char* WINDOW_NAME = "template window";
 const int DEFAULT_SPRITE_SIZE = 32;
 const float DEFAULT_CAMERA_ZOOM = 2.0f;
 const int SPRITE_ORIGIN_OFFSET = DEFAULT_SPRITE_SIZE >> 1;
+
+
+
+
+#define LAYER_BACKGROUND 0
+#define LAYER_WORLD 1
+#define LAYER_OBJECTS 2
+#define LAYER_UI 3
+#define LAYER_STATIC_UI 4
+#define LAYER_COUNT LAYER_STATIC_UI + 1
+
 
 
 
@@ -56,6 +70,71 @@ int renderTextureOffset;
 float screenShakeAmmount = 0.0f;
 int fTimer = 0;
 
+
+//------------------------------------------------------
+// drawing layers and data
+//------------------------------------------------------
+struct DrawingData{
+	int spriteIndex;
+	int x;
+	int y;
+	float rotation;
+	Color c;
+};
+typedef struct DrawingData DrawingData;
+
+
+Vector* drawingLayers[LAYER_STATIC_UI];
+void initDrawingLayers(){
+	for (int i = 0; i < LAYER_COUNT; i++){
+		drawingLayers[i] = malloc(sizeof(Vector));
+		
+		Vector v = initVector();
+
+		memcpy(drawingLayers[i], &v, sizeof(Vector));
+	}
+}
+
+void cleanDrawingLayers(){
+	for (int i = 0; i < LAYER_COUNT; i++){
+		vectorFree(drawingLayers[i]);
+	}
+}
+
+
+void insertDrawRequest(int spriteIndex, int x, int y, float rotation, Color c, int layer){
+	// init data
+	DrawingData* data = malloc(sizeof(DrawingData));
+	data->spriteIndex = spriteIndex;
+	data->x = x;
+	data->y = y;
+	data->rotation = rotation;
+	data->c = c;
+
+
+	// push to vector
+	vectorPush(drawingLayers[layer], data);
+}
+
+void drawSpriteData(DrawingData* data){
+	
+	Rectangle src = {(data->spriteIndex % loadedSheet.width) * DEFAULT_SPRITE_SIZE, floor((float)data->spriteIndex / (float)loadedSheet.width) *
+	DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
+	Rectangle dest = {data->x + SPRITE_ORIGIN_OFFSET, data->y + SPRITE_ORIGIN_OFFSET, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
+	Vector2 origin = {SPRITE_ORIGIN_OFFSET, SPRITE_ORIGIN_OFFSET};
+	DrawTexturePro(loadedSheet.spriteSheetTexture, src, dest, origin, data->rotation, data->c);
+}
+
+void drawLayer(int layer){
+	for (int i = 0; i < drawingLayers[layer]->elementCount;i++){
+		drawSpriteData((DrawingData*)vectorGet(drawingLayers[layer], i));
+	}
+	vectorClear(drawingLayers[layer]);
+}
+
+
+
+
 //------------------------------------------------------
 // camera
 //------------------------------------------------------
@@ -93,22 +172,28 @@ void setCameraPos(Vector2 pos){
 }
 
 
+void addCameraZoom(float zoom){
+	cam.zoom += zoom;
+}
+
+void resetCameraZoom(){
+	cam.zoom = DEFAULT_CAMERA_ZOOM;
+}
+
 
 //------------------------------------------------------
 // drawing
 //------------------------------------------------------
 
 
+void drawRCL(int spriteIndex, int x, int y, float rotation, Color c, int layer){
+	insertDrawRequest(spriteIndex, x, y, rotation, c, layer);
+
+}
+
+
 void drawRC(int spriteIndex, int x, int y, float rotation, Color c){
-	Rectangle src = {(spriteIndex % loadedSheet.width) * DEFAULT_SPRITE_SIZE, floor((float)spriteIndex / (float)loadedSheet.width) *
-	DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
-	Rectangle dest = {x + SPRITE_ORIGIN_OFFSET, y + SPRITE_ORIGIN_OFFSET, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
-	Vector2 origin = {SPRITE_ORIGIN_OFFSET, SPRITE_ORIGIN_OFFSET};
-
-
-
-	DrawTexturePro(loadedSheet.spriteSheetTexture, src, dest, origin, rotation, c);
-
+	insertDrawRequest(spriteIndex, x, y, rotation, c, LAYER_OBJECTS);
 }
 
 void drawR(int spriteIndex, int x, int y, float rotation){
@@ -126,15 +211,35 @@ void draw(int spriteIndex, int x, int y){
 
 
 
-void fDrawBegin(){
+void drawRL(int spriteIndex, int x, int y, float rotation, int layer){
+	drawRCL(spriteIndex, x, y, rotation, WHITE, layer);
+}
+
+void drawCL(int spriteIndex, int x, int y, Color c, int layer){
+	drawRCL(spriteIndex, x, y, 0.0f, c, layer);
+}
+
+void drawL(int spriteIndex, int x, int y, int layer){	
+	drawCL(spriteIndex, x, y, WHITE, layer);
+}
+
+
+void fUpdate(){
 	BeginTextureMode(renderTexture);
     BeginMode2D(cam);
 	updateCamera();
 	fTimer++;
-}
+    ClearBackground(BLACK);
+	
+	for (int i = 0; i < LAYER_STATIC_UI; i++){
+		drawLayer(i);
+	}
 
-void fDrawEnd(){
 	EndMode2D();
+
+
+	drawLayer(LAYER_STATIC_UI);
+
     EndTextureMode();
     
     BeginDrawing();
@@ -166,6 +271,7 @@ void initFramework(){
 	renderTextureOffset = ((GetScreenWidth()) / 2) - (SCREEN_WIDTH / 2);
 	//ToggleFullscreen();
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
+	initDrawingLayers();
 }
 
 //------------------------------------------------------
@@ -174,6 +280,7 @@ void initFramework(){
 void disposeFramework(){
 	unloadSpriteSheet(loadedSheet);
 	UnloadRenderTexture(renderTexture);
+	cleanDrawingLayers();
 	CloseWindow();
 }
 

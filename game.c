@@ -38,17 +38,10 @@ int main(void)
     // Main game loop
     while (!WindowShouldClose())
     {
-        
-        fDrawBegin();
+            
+        updateLevelEditor(l);
 
-            ClearBackground(BLACK);
-            
-            updateLevelEditor(l);
-            
-            
-
-        fDrawEnd();
-        
+        fUpdate();        
     }
     unloadLevelEditor(l);
 

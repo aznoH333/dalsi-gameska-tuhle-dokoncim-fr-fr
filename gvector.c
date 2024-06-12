@@ -24,8 +24,7 @@ Vector initVector(){
 }
 
 void vectorResize(Vector* v){
-    int newSize = v->elementCount * 10;
-    v->elementCount = newSize;
+    int newSize = v->allocatedSize * 10;
     v->elements = realloc(v->elements, newSize * sizeof(void*));
     if (v->elements == NULL){
         gLog(LOG_ERROR, "Vector couldn't realloc");
@@ -35,6 +34,7 @@ void vectorResize(Vector* v){
 }
 
 void vectorPush(Vector* v, void* element){
+    
     if (v->elementCount + 1 > v->allocatedSize){
         vectorResize(v);
     }
@@ -60,6 +60,18 @@ void* vectorGet(Vector* v, int index){
     }
 
     return v->elements[index];
+}
+
+void vectorClear(Vector* v){
+    for (int i = 0; i < v->elementCount; i++){
+        free(v->elements[i]);
+    }
+    v->elementCount = 0;
+}
+
+void vectorFree(Vector* v){
+    vectorClear(v);
+    free(v);
 }
 
 #endif
