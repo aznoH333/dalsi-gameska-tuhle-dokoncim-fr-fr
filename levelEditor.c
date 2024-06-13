@@ -76,24 +76,24 @@ void updateLevelEditor(LevelEditor* editor){
     // draw level bounds
     {
         for (int i = -1; i < editor->level->width + 1; i++){
-            draw(OUT_OF_BOUNDS_SPRITE, i * 32, -32);
-            draw(OUT_OF_BOUNDS_SPRITE, i * 32, (editor->level->height) * 32);
+            draw(OUT_OF_BOUNDS_SPRITE, i * 32, -32, LAYER_UI);
+            draw(OUT_OF_BOUNDS_SPRITE, i * 32, (editor->level->height) * 32, LAYER_UI);
         }
 
         for (int i = 0; i < editor->level->height; i++){
-            draw(OUT_OF_BOUNDS_SPRITE, -32, i * 32);
-            draw(OUT_OF_BOUNDS_SPRITE, (editor->level->width) * 32, i * 32);
+            draw(OUT_OF_BOUNDS_SPRITE, -32, i * 32, LAYER_UI);
+            draw(OUT_OF_BOUNDS_SPRITE, (editor->level->width) * 32, i * 32, LAYER_UI);
         }
 
         if (editor->currentOperation == OPERATION_RESIZE){
             for (int i = -1; i < editor->newWidth + 1; i++){
-                draw(NEW_BOUNDS_SPRITE, i * 32, -32);
-                draw(NEW_BOUNDS_SPRITE, i * 32, (editor->newHeight) * 32);
+                draw(NEW_BOUNDS_SPRITE, i * 32, -32, LAYER_UI);
+                draw(NEW_BOUNDS_SPRITE, i * 32, (editor->newHeight) * 32, LAYER_UI);
             }
 
             for (int i = 0; i < editor->newHeight; i++){
-                draw(NEW_BOUNDS_SPRITE, -32, i * 32);
-                draw(NEW_BOUNDS_SPRITE, (editor->newWidth) * 32, i * 32);
+                draw(NEW_BOUNDS_SPRITE, -32, i * 32, LAYER_UI);
+                draw(NEW_BOUNDS_SPRITE, (editor->newWidth) * 32, i * 32, LAYER_UI);
             }
         }
     }
@@ -135,7 +135,7 @@ void updateLevelEditor(LevelEditor* editor){
         editor->cursorX = editor->cursorInWorldX * 32;
         editor->cursorY = editor->cursorInWorldY * 32;
 
-        draw(CURSOR_SPRITE, editor->cursorX, editor->cursorY);
+        draw(CURSOR_SPRITE, editor->cursorX, editor->cursorY, LAYER_UI);
 
         // place tiles
         if (
@@ -158,12 +158,36 @@ void updateLevelEditor(LevelEditor* editor){
             editor->currentOperation = OPERATION_EDIT;
         }
 
-        for (int tileId = 0; tileId < MAX_TILES; tileId++){
-            int tileX = (tileId % TILE_PICKER_WIDTH) * 32;
-            int tileY = (tileId / TILE_PICKER_WIDTH) * 32;
 
-            draw(TILE_SPRITE_OFFSET + tileId, tileX, tileY);
+        if (editor->currentOperation == OPERATION_SELECT_TILE){
+            // draw tiles
+            for (int tileId = 0; tileId < MAX_TILES; tileId++){
+                int tileX = (tileId % TILE_PICKER_WIDTH) * 64;
+                int tileY = (tileId / TILE_PICKER_WIDTH) * 64;
+
+                drawS(TILE_SPRITE_OFFSET + tileId, tileX, tileY, 2.0f, LAYER_STATIC_UI);
+            }
         }
+
+
+        // cursor
+        Vector2 mousePos = getOnScreenMousePosition();
+
+
+        if (mousePos.x < TILE_PICKER_WIDTH * 64){
+            editor->cursorX = mousePos.x / 64;
+            editor->cursorY = mousePos.y / 64;
+            int newTileId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
+
+            if (newTileId < MAX_TILES){
+                drawS(CURSOR_SPRITE, editor->cursorX * 64, editor->cursorY * 64, 2.0f, LAYER_STATIC_UI);
+
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                    editor->selectedTile = newTileId + 1;
+                }
+            }
+        }
+        
     }
 
     // camera movement

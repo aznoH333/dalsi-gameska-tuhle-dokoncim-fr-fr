@@ -108,7 +108,7 @@ void drawLevel(Level* lvl){
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){
             if (lvl->tiles[x][y] != 0){
-                draw(TILE_SPRITE_START + lvl->tiles[x][y], x * 32, y * 32);
+                draw(TILE_SPRITE_START + lvl->tiles[x][y], x * 32, y * 32, LAYER_WORLD);
             }
         }
     }

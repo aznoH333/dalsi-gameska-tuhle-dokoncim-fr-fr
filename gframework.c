@@ -79,6 +79,7 @@ struct DrawingData{
 	int x;
 	int y;
 	float rotation;
+	float scale;
 	Color c;
 };
 typedef struct DrawingData DrawingData;
@@ -102,12 +103,13 @@ void cleanDrawingLayers(){
 }
 
 
-void insertDrawRequest(int spriteIndex, int x, int y, float rotation, Color c, int layer){
+void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer){
 	// init data
 	DrawingData* data = malloc(sizeof(DrawingData));
 	data->spriteIndex = spriteIndex;
 	data->x = x;
 	data->y = y;
+	data->scale = scale;
 	data->rotation = rotation;
 	data->c = c;
 
@@ -117,10 +119,9 @@ void insertDrawRequest(int spriteIndex, int x, int y, float rotation, Color c, i
 }
 
 void drawSpriteData(DrawingData* data){
-	
 	Rectangle src = {(data->spriteIndex % loadedSheet.width) * DEFAULT_SPRITE_SIZE, floor((float)data->spriteIndex / (float)loadedSheet.width) *
 	DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
-	Rectangle dest = {data->x + SPRITE_ORIGIN_OFFSET, data->y + SPRITE_ORIGIN_OFFSET, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
+	Rectangle dest = {data->x + SPRITE_ORIGIN_OFFSET, data->y + SPRITE_ORIGIN_OFFSET, DEFAULT_SPRITE_SIZE * data->scale, DEFAULT_SPRITE_SIZE * data->scale};
 	Vector2 origin = {SPRITE_ORIGIN_OFFSET, SPRITE_ORIGIN_OFFSET};
 	DrawTexturePro(loadedSheet.spriteSheetTexture, src, dest, origin, data->rotation, data->c);
 }
@@ -167,6 +168,10 @@ Vector2 getInWorldMousePosition(){
 	return out;
 }
 
+Vector2 getOnScreenMousePosition(){
+	return GetMousePosition();
+}
+
 void setCameraPos(Vector2 pos){
 	actualCameraPos = pos;
 }
@@ -186,42 +191,27 @@ void resetCameraZoom(){
 //------------------------------------------------------
 
 
-void drawRCL(int spriteIndex, int x, int y, float rotation, Color c, int layer){
-	insertDrawRequest(spriteIndex, x, y, rotation, c, layer);
+void drawRSC(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer){
+	insertDrawRequest(spriteIndex, x, y, rotation, scale, c, layer);
+}
 
+void drawR(int spriteIndex, int x, int y, float rotation, int layer){
+	drawRSC(spriteIndex, x, y, rotation, 1.0f, WHITE, layer);
+}
+
+void drawC(int spriteIndex, int x, int y, Color c, int layer){
+	drawRSC(spriteIndex, x, y, 0.0f, 1.0f, c, layer);
+}
+
+void drawS(int spriteIndex, int x, int y, float scale, int layer){
+	drawRSC(spriteIndex, x, y, 0.0f, scale, WHITE, layer);
+}
+
+void draw(int spriteIndex, int x, int y, int layer){	
+	drawRSC(spriteIndex, x, y, 0.0f, 1.0f, WHITE, layer);
 }
 
 
-void drawRC(int spriteIndex, int x, int y, float rotation, Color c){
-	insertDrawRequest(spriteIndex, x, y, rotation, c, LAYER_OBJECTS);
-}
-
-void drawR(int spriteIndex, int x, int y, float rotation){
-	drawRC(spriteIndex, x, y, rotation, WHITE);
-}
-
-void drawC(int spriteIndex, int x, int y, Color c){
-	drawRC(spriteIndex, x, y, 0.0f, c);
-}
-
-void draw(int spriteIndex, int x, int y){	
-	drawC(spriteIndex, x, y, WHITE);
-}
-
-
-
-
-void drawRL(int spriteIndex, int x, int y, float rotation, int layer){
-	drawRCL(spriteIndex, x, y, rotation, WHITE, layer);
-}
-
-void drawCL(int spriteIndex, int x, int y, Color c, int layer){
-	drawRCL(spriteIndex, x, y, 0.0f, c, layer);
-}
-
-void drawL(int spriteIndex, int x, int y, int layer){	
-	drawCL(spriteIndex, x, y, WHITE, layer);
-}
 
 
 void fUpdate(){
