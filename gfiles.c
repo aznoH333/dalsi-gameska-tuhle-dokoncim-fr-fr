@@ -61,6 +61,11 @@ File* initFile(const char* filePath){
     return out;
 }
 
+void setFileContents(File* file, char* newContents, int contentSize){
+    free(file->contents);
+    file->contents = newContents;
+    file->contentsLength = contentSize;
+}
 
 
 void saveFile(File* file){

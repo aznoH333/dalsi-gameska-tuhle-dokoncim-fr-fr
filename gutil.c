@@ -63,6 +63,14 @@ int parseStrToInt(char* str, int size){
     return out;
 }
 
+void writeIntAsChar(char* targetStr, int input, int size, int index){
+    int temp = input;
+    for (int i = size - 1; i >= 0; i--){
+        targetStr[i + index] = temp % CHAR_MAX;
+        temp /= CHAR_MAX;
+    }
+}
+
 //------------------------------------------------------------------------------------
 // random
 //------------------------------------------------------------------------------------

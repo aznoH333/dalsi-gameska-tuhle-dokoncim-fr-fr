@@ -47,12 +47,49 @@ Level* loadLevel(const char* levePath){
         for (int x = 0; x < out->width; x++){
             out->tiles[x] = malloc(sizeof(char) * out->height);
             for (int y = 0; y < out->height; y++){
-                out->tiles[x][y] = f->contents[(x * out->width) + y + LEVEL_DATA_START];
+                out->tiles[x][y] = f->contents[(x * out->height) + y + LEVEL_DATA_START];
             }
         }
     }
 
     return out;
+}
+
+void saveLevel(Level* lvl){
+    gLog(LOG_INFO, "Saving level to file %s", lvl->levelFile->filePath);
+
+    // construct file contents
+    char newContents[MAX_FILE_SIZE];
+    int contentsIndex = 0;
+
+    {
+        // write header
+        writeIntAsChar(newContents, lvl->width, 2, 0);
+        writeIntAsChar(newContents, lvl->height, 2, 2);
+        contentsIndex = LEVEL_DATA_START;
+    }
+
+    {
+        // write tiles
+        for (int x = 0; x < lvl->width; x++){
+            for (int y = 0; y < lvl->height; y++){
+                newContents[LEVEL_DATA_START + y + (x * lvl->height)] = lvl->tiles[x][y];
+            }
+        }
+        contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height);
+    }
+
+    {
+        // set file contents
+        char* contetns = malloc(sizeof(char) * contentsIndex);
+        // copy contents
+        for (int i = 0; i < contentsIndex; i++){
+            contetns[i] = newContents[i];
+        }
+        setFileContents(lvl->levelFile, contetns, contentsIndex);
+    }
+
+    saveFile(lvl->levelFile);
 }
 
 void unloadLevel(Level* level){
@@ -103,7 +140,6 @@ void resizeLevel(Level* level, int newWidth, int newHeight){
 
 
 #define TILE_SPRITE_START 7
-
 void drawLevel(Level* lvl){
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){

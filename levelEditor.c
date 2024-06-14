@@ -220,6 +220,13 @@ void updateLevelEditor(LevelEditor* editor){
 
         setCameraPos(editor->cameraPos);
     }
+
+    // file saving
+    {
+        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)){
+            saveLevel(editor->level);
+        }
+    }
 }
 
 
