@@ -71,7 +71,7 @@ void unloadLevelEditor(LevelEditor* editor){
 
 void updateLevelEditor(LevelEditor* editor){
     drawLevel(editor->level);
-
+    drawEntityMarkers(editor->level);
     
     // draw level bounds
     {

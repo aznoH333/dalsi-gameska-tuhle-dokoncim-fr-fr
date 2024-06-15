@@ -5,6 +5,8 @@
 #include "glog.c"
 #include "gframework.c"
 #include "gutil.c"
+#include "gvector.c"
+#include "entities.c"
 
 
 struct Level {
@@ -12,6 +14,8 @@ struct Level {
     int width;
     int height;
     File* levelFile;
+    Vector entityeMarkers;
+
 };
 typedef struct Level Level;
 
@@ -40,6 +44,7 @@ Level* loadLevel(const char* levePath){
         gLog(LOG_ERROR, "Level data corrupted %s", levePath);
     }
     
+    
     // read tile data
     {
         out->tiles = malloc(sizeof(char*) * out->width);
@@ -49,6 +54,16 @@ Level* loadLevel(const char* levePath){
             for (int y = 0; y < out->height; y++){
                 out->tiles[x][y] = f->contents[(x * out->height) + y + LEVEL_DATA_START];
             }
+        }
+    }
+
+    int markersStart = out->width * out->height + LEVEL_DATA_START;
+    {
+        out->entityeMarkers = initVector();
+        
+        // read markers
+        for (int i = markersStart; i < f->contentsLength; i+=6){
+            vectorPush(&out->entityeMarkers, initEntityMarker(f->contents, i));
         }
     }
 
@@ -80,6 +95,14 @@ void saveLevel(Level* lvl){
     }
 
     {
+        // save markers
+        for (int i = 0; i < lvl->entityeMarkers.elementCount; i++){
+            saveEntityMarker(vectorGet(&lvl->entityeMarkers, i), newContents, contentsIndex);
+            contentsIndex += 6;
+        }
+    }
+
+    {
         // set file contents
         char* contetns = malloc(sizeof(char) * contentsIndex);
         // copy contents
@@ -89,6 +112,8 @@ void saveLevel(Level* lvl){
         setFileContents(lvl->levelFile, contetns, contentsIndex);
     }
 
+    
+
     saveFile(lvl->levelFile);
 }
 
@@ -97,6 +122,11 @@ void unloadLevel(Level* level){
     for (int i = 0; i < level->width;i++){
         free(level->tiles[i]);
     }
+
+    for (int i = 0; i < level->entityeMarkers.elementCount; i++){
+        disposeEntityMarker(vectorGet(&level->entityeMarkers, i));
+    }
+
     free(level->tiles);
     free(level);
 }
@@ -147,6 +177,16 @@ void drawLevel(Level* lvl){
                 draw(TILE_SPRITE_START + lvl->tiles[x][y], x * 32, y * 32, LAYER_WORLD);
             }
         }
+    }
+}
+
+
+#define MARKER_SPRITE_START 7
+const Color MARKER_COLOR = {255, 255, 255, 100};
+void drawEntityMarkers(Level* lvl){
+    for (int i = 0; i < lvl->entityeMarkers.elementCount; i++){
+        EntityMarker* marker = vectorGet(&lvl->entityeMarkers, i);
+        drawC(MARKER_SPRITE_START + marker->id, marker->x * 32, marker->y * 32, MARKER_COLOR, LAYER_OBJECTS);
     }
 }
 
