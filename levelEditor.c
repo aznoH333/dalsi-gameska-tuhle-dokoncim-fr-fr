@@ -7,6 +7,7 @@
 #define OPERATION_EDIT 0
 #define OPERATION_RESIZE 1
 #define OPERATION_SELECT_TILE 2
+#define OPERATION_SELECT_ENTITY 3
 
 struct LevelEditor{
     Level* level;
@@ -30,6 +31,7 @@ struct LevelEditor{
 
     // tile selection
     int selectedTile;
+    bool placingEntities;
 };
 typedef struct LevelEditor LevelEditor;
 
@@ -48,6 +50,7 @@ LevelEditor* initLevelEditor(const char* levelPath){
     out->newHeight = 0;
 
     out->selectedTile = 1;
+    out->placingEntities = false;
     return out;
 }
 
@@ -64,7 +67,9 @@ void unloadLevelEditor(LevelEditor* editor){
 #define NEW_BOUNDS_SPRITE 2
 
 #define TILE_SPRITE_OFFSET 8
+#define ENTITY_SPRITE_OFFSET 8
 #define MAX_TILES 2
+#define MAX_ENTITIES 1
 #define TILE_PICKER_X 0
 #define TILE_PICKER_Y 0
 #define TILE_PICKER_WIDTH 8
@@ -141,10 +146,26 @@ void updateLevelEditor(LevelEditor* editor){
         if (
             checkBoxCollisions(editor->cursorInWorldX, editor->cursorInWorldY, 1, 1, 0, 0, editor->level->width, editor->level->height)
         ){
-            if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
-                editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
-            }else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)){
-                editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = 0;
+            if (editor->placingEntities){ // entity markers
+                if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+                    vectorPush(&editor->level->entityeMarkers, initEntityMarkerBasic(editor->selectedTile, editor->cursorInWorldX, editor->cursorInWorldY));
+                }else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)){
+                    // find and remove tile
+                    for (int i = 0; i < editor->level->entityeMarkers.elementCount; i++){
+                        EntityMarker* m = vectorGet(&editor->level->entityeMarkers, i);
+
+                        if (m->x == editor->cursorInWorldX && m->y == editor->cursorInWorldY){
+                            vectorRemove(&editor->level->entityeMarkers, i);
+                            break;
+                        }
+                    }
+                }
+            }else { // tiles
+                if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
+                    editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
+                }else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)){
+                    editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = 0;
+                }
             }
         }
     }
@@ -167,27 +188,67 @@ void updateLevelEditor(LevelEditor* editor){
 
                 drawS(TILE_SPRITE_OFFSET + tileId, tileX, tileY, 2.0f, LAYER_STATIC_UI);
             }
-        }
 
 
-        // cursor
-        Vector2 mousePos = getOnScreenMousePosition();
+            // cursor
+            Vector2 mousePos = getOnScreenMousePosition();
 
 
-        if (mousePos.x < TILE_PICKER_WIDTH * 64){
-            editor->cursorX = mousePos.x / 64;
-            editor->cursorY = mousePos.y / 64;
-            int newTileId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
+            if (mousePos.x < TILE_PICKER_WIDTH * 64){
+                editor->cursorX = mousePos.x / 64;
+                editor->cursorY = mousePos.y / 64;
+                int newTileId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
 
-            if (newTileId < MAX_TILES){
-                drawS(CURSOR_SPRITE, editor->cursorX * 64, editor->cursorY * 64, 2.0f, LAYER_STATIC_UI);
+                if (newTileId < MAX_TILES){
+                    drawS(CURSOR_SPRITE, editor->cursorX * 64, editor->cursorY * 64, 2.0f, LAYER_STATIC_UI);
 
-                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-                    editor->selectedTile = newTileId + 1;
+                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                        editor->selectedTile = newTileId + 1;
+                        editor->placingEntities = false;
+                    }
                 }
             }
         }
-        
+    }
+
+    {
+        // entity selection
+        if (IsKeyPressed(KEY_Q) && editor->currentOperation == OPERATION_EDIT){
+            editor->currentOperation = OPERATION_SELECT_ENTITY;
+        }else if (IsKeyPressed(KEY_Q) && editor->currentOperation == OPERATION_SELECT_ENTITY){
+            editor->currentOperation = OPERATION_EDIT;
+        }
+
+        if (editor->currentOperation == OPERATION_SELECT_ENTITY){
+            // draw tiles
+            for (int entityId = 0; entityId < MAX_ENTITIES; entityId++){
+                int entityX = (entityId % TILE_PICKER_WIDTH) * 64;
+                int entityY = (entityId / TILE_PICKER_WIDTH) * 64;
+
+                drawS(TILE_SPRITE_OFFSET + entityId, entityX, entityY, 2.0f, LAYER_STATIC_UI);
+            }
+
+
+            // cursor
+            Vector2 mousePos = getOnScreenMousePosition();
+
+
+            if (mousePos.x < TILE_PICKER_WIDTH * 64){
+                editor->cursorX = mousePos.x / 64;
+                editor->cursorY = mousePos.y / 64;
+                int newEntityId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
+
+                if (newEntityId < MAX_ENTITIES){
+                    drawS(CURSOR_SPRITE, editor->cursorX * 64, editor->cursorY * 64, 2.0f, LAYER_STATIC_UI);
+
+                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                        editor->selectedTile = newEntityId + 1;
+                        editor->placingEntities = true;
+                    }
+                }
+            }
+        }
+
     }
 
     // camera movement

@@ -26,6 +26,15 @@ EntityMarker* initEntityMarker(char* levelData, int markerIndex){
     return out;
 }
 
+EntityMarker* initEntityMarkerBasic(int id, int x, int y){
+    EntityMarker* out = malloc(sizeof(EntityMarker));
+    out->id = id;
+    out->x = x;
+    out->y = y;
+    return out;
+}
+
+
 void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex){
     writeIntAsChar(fileData, marker->x, 2, markerIndex);
     writeIntAsChar(fileData, marker->y, 2, markerIndex + 2);
