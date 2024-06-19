@@ -12,9 +12,11 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const char* WINDOW_NAME = "template window";
-const int DEFAULT_SPRITE_SIZE = 32;
-const float DEFAULT_CAMERA_ZOOM = 2.0f;
+const int DEFAULT_SPRITE_SIZE = 16;
+const float DEFAULT_CAMERA_ZOOM = 2.8f;
 const int SPRITE_ORIGIN_OFFSET = DEFAULT_SPRITE_SIZE >> 1;
+const Color BACKGROUND_COLOR = {22, 7, 18, 255};
+
 
 
 
@@ -181,6 +183,10 @@ void addCameraZoom(float zoom){
 	cam.zoom += zoom;
 }
 
+void setCameraZoom(float zoom){
+	cam.zoom = zoom;
+}
+
 void resetCameraZoom(){
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
 }
@@ -213,13 +219,12 @@ void draw(int spriteIndex, int x, int y, int layer){
 
 
 
-
 void fUpdate(){
 	BeginTextureMode(renderTexture);
     BeginMode2D(cam);
 	updateCamera();
 	fTimer++;
-    ClearBackground(BLACK);
+    ClearBackground(BACKGROUND_COLOR);
 	
 	for (int i = 0; i < LAYER_STATIC_UI; i++){
 		drawLayer(i);

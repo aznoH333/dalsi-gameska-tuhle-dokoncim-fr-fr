@@ -3,6 +3,7 @@
 
 #include "level.c"
 #include "gframework.c"
+#include "spritedata.c"
 
 #define OPERATION_EDIT 0
 #define OPERATION_RESIZE 1
@@ -62,14 +63,9 @@ void unloadLevelEditor(LevelEditor* editor){
 }
 
 
-#define CURSOR_SPRITE 0
-#define OUT_OF_BOUNDS_SPRITE 1
-#define NEW_BOUNDS_SPRITE 2
 
-#define TILE_SPRITE_OFFSET 8
-#define ENTITY_SPRITE_OFFSET 8
-#define MAX_TILES 2
-#define MAX_ENTITIES 1
+
+
 #define TILE_PICKER_X 0
 #define TILE_PICKER_Y 0
 #define TILE_PICKER_WIDTH 8
@@ -81,24 +77,24 @@ void updateLevelEditor(LevelEditor* editor){
     // draw level bounds
     {
         for (int i = -1; i < editor->level->width + 1; i++){
-            draw(OUT_OF_BOUNDS_SPRITE, i * 32, -32, LAYER_UI);
-            draw(OUT_OF_BOUNDS_SPRITE, i * 32, (editor->level->height) * 32, LAYER_UI);
+            draw(OUT_OF_BOUNDS_SPRITE, i * 16, -16, LAYER_UI);
+            draw(OUT_OF_BOUNDS_SPRITE, i * 16, (editor->level->height) * 16, LAYER_UI);
         }
 
         for (int i = 0; i < editor->level->height; i++){
-            draw(OUT_OF_BOUNDS_SPRITE, -32, i * 32, LAYER_UI);
-            draw(OUT_OF_BOUNDS_SPRITE, (editor->level->width) * 32, i * 32, LAYER_UI);
+            draw(OUT_OF_BOUNDS_SPRITE, -16, i * 16, LAYER_UI);
+            draw(OUT_OF_BOUNDS_SPRITE, (editor->level->width) * 16, i * 16, LAYER_UI);
         }
 
         if (editor->currentOperation == OPERATION_RESIZE){
             for (int i = -1; i < editor->newWidth + 1; i++){
-                draw(NEW_BOUNDS_SPRITE, i * 32, -32, LAYER_UI);
-                draw(NEW_BOUNDS_SPRITE, i * 32, (editor->newHeight) * 32, LAYER_UI);
+                draw(NEW_BOUNDS_SPRITE, i * 16, -16, LAYER_UI);
+                draw(NEW_BOUNDS_SPRITE, i * 16, (editor->newHeight) * 16, LAYER_UI);
             }
 
             for (int i = 0; i < editor->newHeight; i++){
-                draw(NEW_BOUNDS_SPRITE, -32, i * 32, LAYER_UI);
-                draw(NEW_BOUNDS_SPRITE, (editor->newWidth) * 32, i * 32, LAYER_UI);
+                draw(NEW_BOUNDS_SPRITE, -16, i * 16, LAYER_UI);
+                draw(NEW_BOUNDS_SPRITE, (editor->newWidth) * 16, i * 16, LAYER_UI);
             }
         }
     }
@@ -134,13 +130,13 @@ void updateLevelEditor(LevelEditor* editor){
     if (editor->currentOperation == OPERATION_EDIT){
         Vector2 mousePos = getInWorldMousePosition();
 
-        editor->cursorInWorldX = mousePos.x / 32;
-        editor->cursorInWorldY = mousePos.y / 32;
+        editor->cursorInWorldX = mousePos.x / 16;
+        editor->cursorInWorldY = mousePos.y / 16;
 
-        editor->cursorX = editor->cursorInWorldX * 32;
-        editor->cursorY = editor->cursorInWorldY * 32;
+        editor->cursorX = editor->cursorInWorldX * 16;
+        editor->cursorY = editor->cursorInWorldY * 16;
 
-        draw(CURSOR_SPRITE, editor->cursorX, editor->cursorY, LAYER_UI);
+        draw(TILE_CURSOR, editor->cursorX, editor->cursorY, LAYER_UI);
 
         // place tiles
         if (
@@ -182,11 +178,11 @@ void updateLevelEditor(LevelEditor* editor){
 
         if (editor->currentOperation == OPERATION_SELECT_TILE){
             // draw tiles
-            for (int tileId = 0; tileId < MAX_TILES; tileId++){
-                int tileX = (tileId % TILE_PICKER_WIDTH) * 64;
-                int tileY = (tileId / TILE_PICKER_WIDTH) * 64;
+            for (int tileId = 0; tileId <= SPRITE_COUNT_TILES; tileId++){
+                int tileX = (tileId % TILE_PICKER_WIDTH) * 32;
+                int tileY = (tileId / TILE_PICKER_WIDTH) * 32;
 
-                drawS(TILE_SPRITE_OFFSET + tileId, tileX, tileY, 2.0f, LAYER_STATIC_UI);
+                drawS(SPRITE_START_TILES + tileId, tileX, tileY, 2.0f, LAYER_STATIC_UI);
             }
 
 
@@ -194,13 +190,13 @@ void updateLevelEditor(LevelEditor* editor){
             Vector2 mousePos = getOnScreenMousePosition();
 
 
-            if (mousePos.x < TILE_PICKER_WIDTH * 64){
-                editor->cursorX = mousePos.x / 64;
-                editor->cursorY = mousePos.y / 64;
+            if (mousePos.x < TILE_PICKER_WIDTH * 32){
+                editor->cursorX = mousePos.x / 32;
+                editor->cursorY = mousePos.y / 32;
                 int newTileId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
 
-                if (newTileId < MAX_TILES){
-                    drawS(CURSOR_SPRITE, editor->cursorX * 64, editor->cursorY * 64, 2.0f, LAYER_STATIC_UI);
+                if (newTileId <= SPRITE_COUNT_TILES){
+                    drawS(TILE_CURSOR, editor->cursorX * 32, editor->cursorY * 32, 2.0f, LAYER_STATIC_UI);
 
                     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                         editor->selectedTile = newTileId + 1;
@@ -220,12 +216,12 @@ void updateLevelEditor(LevelEditor* editor){
         }
 
         if (editor->currentOperation == OPERATION_SELECT_ENTITY){
-            // draw tiles
-            for (int entityId = 0; entityId < MAX_ENTITIES; entityId++){
-                int entityX = (entityId % TILE_PICKER_WIDTH) * 64;
-                int entityY = (entityId / TILE_PICKER_WIDTH) * 64;
+            // draw entities
+            for (int entityId = 0; entityId <= SPRITE_COUNT_MARKERS; entityId++){
+                int entityX = (entityId % TILE_PICKER_WIDTH) * 32;
+                int entityY = (entityId / TILE_PICKER_WIDTH) * 32;
 
-                drawS(TILE_SPRITE_OFFSET + entityId, entityX, entityY, 2.0f, LAYER_STATIC_UI);
+                drawS(SPRITE_START_MARKERS + entityId, entityX, entityY, 2.0f, LAYER_STATIC_UI);
             }
 
 
@@ -233,16 +229,16 @@ void updateLevelEditor(LevelEditor* editor){
             Vector2 mousePos = getOnScreenMousePosition();
 
 
-            if (mousePos.x < TILE_PICKER_WIDTH * 64){
-                editor->cursorX = mousePos.x / 64;
-                editor->cursorY = mousePos.y / 64;
+            if (mousePos.x < TILE_PICKER_WIDTH * 32){
+                editor->cursorX = mousePos.x / 32;
+                editor->cursorY = mousePos.y / 32;
                 int newEntityId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
 
-                if (newEntityId < MAX_ENTITIES){
-                    drawS(CURSOR_SPRITE, editor->cursorX * 64, editor->cursorY * 64, 2.0f, LAYER_STATIC_UI);
+                if (newEntityId <= SPRITE_COUNT_MARKERS){
+                    drawS(TILE_CURSOR, editor->cursorX * 32, editor->cursorY * 32, 2.0f, LAYER_STATIC_UI);
 
                     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-                        editor->selectedTile = newEntityId + 1;
+                        editor->selectedTile = newEntityId;
                         editor->placingEntities = true;
                     }
                 }
@@ -253,7 +249,7 @@ void updateLevelEditor(LevelEditor* editor){
 
     // camera movement
     {
-        float cameraSpeed = 2 * (editor->cameraZoom);
+        float cameraSpeed = max(2 * (editor->cameraZoom), 1);
 
         if (IsKeyDown(KEY_LEFT_SHIFT)){
             cameraSpeed *= 4;

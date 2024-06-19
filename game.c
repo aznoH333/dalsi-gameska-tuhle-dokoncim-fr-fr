@@ -23,6 +23,7 @@
 #include "gframework.c"
 #include "raylib.h"
 #include "levelEditor.c"
+#include "gameplay.c"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -31,19 +32,23 @@ int main(void)
 {
     initFramework();
     
-    
+    // TODO main menu of some kind
 
     LevelEditor* l = initLevelEditor("./gamedata/1.lvl");
+    //Gameplay* g = startGameplay("./gamedata/1.lvl");
+
 
     // Main game loop
     while (!WindowShouldClose())
     {
             
         updateLevelEditor(l);
+        //updateGameplay(g);
 
-        fUpdate();        
+        fUpdate();
     }
     unloadLevelEditor(l);
+    //stopGameplay(g);
 
 	disposeFramework();
     

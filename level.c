@@ -7,6 +7,7 @@
 #include "gutil.c"
 #include "gvector.c"
 #include "entities.c"
+#include "spritedata.c"
 
 
 struct Level {
@@ -169,24 +170,24 @@ void resizeLevel(Level* level, int newWidth, int newHeight){
 
 
 
-#define TILE_SPRITE_START 7
+
 void drawLevel(Level* lvl){
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){
             if (lvl->tiles[x][y] != 0){
-                draw(TILE_SPRITE_START + lvl->tiles[x][y], x * 32, y * 32, LAYER_WORLD);
+                draw(SPRITE_START_TILES - 1 + lvl->tiles[x][y], x * 16, y * 16, LAYER_WORLD);
             }
         }
     }
 }
 
 
-#define MARKER_SPRITE_START 7
-const Color MARKER_COLOR = {255, 255, 255, 100};
+
+const Color MARKER_COLOR = {255, 255, 255, 200};
 void drawEntityMarkers(Level* lvl){
     for (int i = 0; i < lvl->entityeMarkers.elementCount; i++){
         EntityMarker* marker = vectorGet(&lvl->entityeMarkers, i);
-        drawC(MARKER_SPRITE_START + marker->id, marker->x * 32, marker->y * 32, MARKER_COLOR, LAYER_OBJECTS);
+        drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
     }
 }
 
