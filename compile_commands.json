@@ -1,0 +1,11 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "game.c"
+    ],
+    "directory": "/mnt/disk1/Dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/mnt/disk1/Dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/game.c"
+  }
+]

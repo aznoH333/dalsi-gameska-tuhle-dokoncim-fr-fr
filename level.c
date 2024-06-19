@@ -12,6 +12,7 @@
 
 struct Level {
     char** tiles;
+    char** background;
     int width;
     int height;
     File* levelFile;
@@ -22,6 +23,9 @@ typedef struct Level Level;
 
 #define MIN_LEVEL_FILE_SIZE 4
 #define LEVEL_DATA_START 4
+
+char** readTileData(Level* lvl, char* fileData, int index);
+void writeTileData(Level* lvl, char* fileData, int index, char** tileData);
 
 Level* loadLevel(const char* levePath){
     File* f = initFile(levePath);
@@ -48,6 +52,7 @@ Level* loadLevel(const char* levePath){
     
     // read tile data
     {
+        /*
         out->tiles = malloc(sizeof(char*) * out->width);
 
         for (int x = 0; x < out->width; x++){
@@ -55,10 +60,15 @@ Level* loadLevel(const char* levePath){
             for (int y = 0; y < out->height; y++){
                 out->tiles[x][y] = f->contents[(x * out->height) + y + LEVEL_DATA_START];
             }
-        }
+        }*/
+
+        out->tiles = readTileData(out, out->levelFile->contents, LEVEL_DATA_START);
+        out->background = readTileData(out, out->levelFile->contents, LEVEL_DATA_START + (out->width * out->height));
     }
 
-    int markersStart = out->width * out->height + LEVEL_DATA_START;
+
+
+    int markersStart = (out->width * out->height * 2) + LEVEL_DATA_START;
     {
         out->entityeMarkers = initVector();
         
@@ -86,13 +96,19 @@ void saveLevel(Level* lvl){
     }
 
     {
+        /*
         // write tiles
         for (int x = 0; x < lvl->width; x++){
             for (int y = 0; y < lvl->height; y++){
                 newContents[LEVEL_DATA_START + y + (x * lvl->height)] = lvl->tiles[x][y];
             }
         }
-        contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height);
+        contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height);*/
+
+        writeTileData(lvl, newContents, LEVEL_DATA_START, lvl->tiles);
+        writeTileData(lvl, newContents, LEVEL_DATA_START + (lvl->width * lvl->height), lvl->tiles);
+        contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height * 2);
+
     }
 
     {
@@ -166,6 +182,28 @@ void resizeLevel(Level* level, int newWidth, int newHeight){
     level->tiles = newLevelContent;
     level->width = newWidth;
     level->height = newHeight;
+}
+
+char** readTileData(Level* lvl ,char* fileData, int index){
+    char** tiles;
+    tiles = malloc(sizeof(char*) * lvl->width);
+
+    for (int x = 0; x < lvl->width; x++){
+        tiles[x] = malloc(sizeof(char) * lvl->height);
+        for (int y = 0; y < lvl->height; y++){
+            tiles[x][y] = fileData[(x * lvl->height) + y + index];
+        }
+    }
+
+    return tiles;
+}
+
+void writeTileData(Level* lvl, char* fileData, int index, char** tileData){
+    for (int x = 0; x < lvl->width; x++){
+        for (int y = 0; y < lvl->height; y++){
+            fileData[index + y + (x * lvl->height)] = tileData[x][y];
+        }
+    }
 }
 
 

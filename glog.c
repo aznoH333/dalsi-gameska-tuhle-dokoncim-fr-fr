@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "raylib.h"
 
-#define LOG_INFO 0
+//#define LOG_INFO 0
 #define LOG_ERROR 1
 #define LOG_WARN 2
 

@@ -3,11 +3,13 @@
 
 #include <stdlib.h>
 #include "gutil.c"
+#include <stdbool.h> 
 
 struct EntityMarker{
     int x;
     int y;
     int id;
+    bool hasBeenActivated;
 };
 
 typedef struct EntityMarker EntityMarker;
@@ -22,6 +24,7 @@ EntityMarker* initEntityMarker(char* levelData, int markerIndex){
     out->y = parseStrToInt(y, 2);
     char id[2] = {levelData[markerIndex + 4], levelData[markerIndex + 5]};
     out->id = parseStrToInt(id, 2);
+    out->hasBeenActivated = false;
 
     return out;
 }

@@ -258,6 +258,7 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color){
 // init
 //------------------------------------------------------
 void initFramework(){
+	SetTraceLogLevel(LOG_WARNING);
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_NAME);
 	SetTargetFPS(60);
 	renderTexture = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);

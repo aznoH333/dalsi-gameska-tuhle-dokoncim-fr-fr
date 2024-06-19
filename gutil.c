@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
-#include "glog.c"
+#include <stdbool.h> 
 
 //------------------------------------------------------------------------------------
 // misc
