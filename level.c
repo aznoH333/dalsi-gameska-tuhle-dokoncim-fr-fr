@@ -149,11 +149,7 @@ void unloadLevel(Level* level){
 }
 
 
-void resizeLevel(Level* level, int newWidth, int newHeight){
-    if(newWidth < 1 || newHeight < 1){
-        return;
-    }
-
+void resizeLevelTileData(Level* level, int newWidth, int newHeight, char*** tileData){
     // init new contents    
     char** newLevelContent = malloc(sizeof(char*) * newWidth);
     for (int i = 0; i < newWidth; i++){
@@ -163,7 +159,7 @@ void resizeLevel(Level* level, int newWidth, int newHeight){
     for (int x = 0; x < newWidth; x++){
         for (int y = 0; y < newHeight; y++){
             if (x < level->width && y < level->height){
-                newLevelContent[x][y] = level->tiles[x][y];
+                newLevelContent[x][y] = (*tileData)[x][y];
             }else {
                 // else fill with air
                 newLevelContent[x][y] = 0;
@@ -173,13 +169,22 @@ void resizeLevel(Level* level, int newWidth, int newHeight){
 
     // free old contents
     for (int i = 0; i < level->width;i++){
-        free(level->tiles[i]);
+        free((*tileData)[i]);
     }
-    free(level->tiles);
+    free(*tileData);
+
+    *tileData = newLevelContent;
+}
 
 
-    // set new contents
-    level->tiles = newLevelContent;
+void resizeLevel(Level* level, int newWidth, int newHeight){
+    if(newWidth < 1 || newHeight < 1){
+        return;
+    }
+    
+    resizeLevelTileData(level, newWidth, newHeight, &level->tiles);
+    resizeLevelTileData(level, newWidth, newHeight, &level->background);
+
     level->width = newWidth;
     level->height = newHeight;
 }
@@ -209,14 +214,21 @@ void writeTileData(Level* lvl, char* fileData, int index, char** tileData){
 
 
 
-void drawLevel(Level* lvl){
+
+
+void drawLevelTiles(Level* lvl, char** tiles, int layer){
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){
-            if (lvl->tiles[x][y] != 0){
-                draw(SPRITE_START_TILES - 1 + lvl->tiles[x][y], x * 16, y * 16, LAYER_WORLD);
+            if (tiles[x][y] != 0){
+                draw(SPRITE_START_TILES - 1 + tiles[x][y], x * 16, y * 16, layer);
             }
         }
     }
+}
+
+void drawLevel(Level* lvl){
+    drawLevelTiles(lvl, lvl->background, LAYER_BACKGROUND);
+    drawLevelTiles(lvl, lvl->tiles, LAYER_WORLD);
 }
 
 

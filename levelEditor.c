@@ -10,6 +10,11 @@
 #define OPERATION_SELECT_TILE 2
 #define OPERATION_SELECT_ENTITY 3
 
+
+#define PLACE_MODE_TILES 0
+#define PLACE_MODE_ENTITES 1
+#define PLACE_MODE_BACKGROUND 2
+
 struct LevelEditor{
     Level* level;
     
@@ -32,7 +37,8 @@ struct LevelEditor{
 
     // tile selection
     int selectedTile;
-    bool placingEntities;
+    int placeMode;
+    
 };
 typedef struct LevelEditor LevelEditor;
 
@@ -51,7 +57,7 @@ LevelEditor* initLevelEditor(const char* levelPath){
     out->newHeight = 0;
 
     out->selectedTile = 1;
-    out->placingEntities = false;
+    out->placeMode = PLACE_MODE_TILES;
     return out;
 }
 
@@ -142,25 +148,27 @@ void updateLevelEditor(LevelEditor* editor){
         if (
             checkBoxCollisions(editor->cursorInWorldX, editor->cursorInWorldY, 1, 1, 0, 0, editor->level->width, editor->level->height)
         ){
-            if (editor->placingEntities){ // entity markers
+            if (editor->placeMode == PLACE_MODE_ENTITES){ // entity markers
                 if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
                     vectorPush(&editor->level->entityeMarkers, initEntityMarkerBasic(editor->selectedTile, editor->cursorInWorldX, editor->cursorInWorldY));
                 }else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)){
-                    // find and remove tile
+                    // find and remove entities
                     for (int i = 0; i < editor->level->entityeMarkers.elementCount; i++){
                         EntityMarker* m = vectorGet(&editor->level->entityeMarkers, i);
 
                         if (m->x == editor->cursorInWorldX && m->y == editor->cursorInWorldY){
                             vectorRemove(&editor->level->entityeMarkers, i);
-                            break;
+                            i--;
                         }
                     }
                 }
             }else { // tiles
+                char** targetArray = (editor->placeMode == PLACE_MODE_TILES ? editor->level->tiles : editor->level->background);
+                
                 if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
-                    editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
+                    targetArray[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
                 }else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)){
-                    editor->level->tiles[editor->cursorInWorldX][editor->cursorInWorldY] = 0;
+                    targetArray[editor->cursorInWorldX][editor->cursorInWorldY] = 0;
                 }
             }
         }
@@ -200,7 +208,7 @@ void updateLevelEditor(LevelEditor* editor){
 
                     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                         editor->selectedTile = newTileId + 1;
-                        editor->placingEntities = false;
+                        editor->placeMode = PLACE_MODE_TILES;
                     }
                 }
             }
@@ -239,12 +247,20 @@ void updateLevelEditor(LevelEditor* editor){
 
                     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                         editor->selectedTile = newEntityId;
-                        editor->placingEntities = true;
+                        editor->placeMode = PLACE_MODE_ENTITES;
                     }
                 }
             }
         }
 
+    }
+    {
+        // background controls
+        if(IsKeyPressed(KEY_B) && editor->placeMode == PLACE_MODE_TILES){
+            editor->placeMode = PLACE_MODE_BACKGROUND;
+        }else if (IsKeyPressed(KEY_B) && editor->placeMode == PLACE_MODE_BACKGROUND){
+            editor->placeMode = PLACE_MODE_TILES;
+        }
     }
 
     // camera movement
