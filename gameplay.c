@@ -1,14 +1,6 @@
-#ifndef GAMEPLAY
-#define GAMEPLAY
+#include "gameplay.h"
 
-#include "level.c"
-#include "entities.c"
-#include "gframework.c"
 
-struct Gameplay{
-    Level* level;
-};
-typedef struct Gameplay Gameplay;
 
 Gameplay* startGameplay(const char* levelPath){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -29,5 +21,3 @@ void stopGameplay(Gameplay* g){
 void updateGameplay(Gameplay* g){
     drawLevel(g->level);
 }
-
-#endif

@@ -1,9 +1,6 @@
-#ifndef LEVEL_EDITOR
-#define LEVEL_EDITOR
+#include "levelEditor.h"
 
-#include "level.c"
-#include "gframework.c"
-#include "spritedata.c"
+
 
 #define OPERATION_EDIT 0
 #define OPERATION_RESIZE 1
@@ -15,32 +12,7 @@
 #define PLACE_MODE_ENTITES 1
 #define PLACE_MODE_BACKGROUND 2
 
-struct LevelEditor{
-    Level* level;
-    
-    // operations
-    int currentOperation;
 
-    // cursor
-    int cursorX;
-    int cursorY;
-    int cursorInWorldX;
-    int cursorInWorldY;
-    
-    // camera
-    Vector2 cameraPos;
-    float cameraZoom;
-
-    // resizing
-    int newWidth;
-    int newHeight;
-
-    // tile selection
-    int selectedTile;
-    int placeMode;
-    
-};
-typedef struct LevelEditor LevelEditor;
 
 
 
@@ -67,10 +39,6 @@ void unloadLevelEditor(LevelEditor* editor){
     unloadLevel(editor->level);
     free(editor);
 }
-
-
-
-
 
 #define TILE_PICKER_X 0
 #define TILE_PICKER_Y 0
@@ -254,6 +222,7 @@ void updateLevelEditor(LevelEditor* editor){
         }
 
     }
+    
     {
         // background controls
         if(IsKeyPressed(KEY_B) && editor->placeMode == PLACE_MODE_TILES){
@@ -302,5 +271,3 @@ void updateLevelEditor(LevelEditor* editor){
     }
 }
 
-
-#endif

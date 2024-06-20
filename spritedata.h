@@ -1,14 +1,6 @@
 #ifndef SPRITE_DATA
 #define SPRITE_DATA
 
-
-
-
-
-
-
-
-
 // player
 #define SPRITE_START_PLAYER 0
 #define SPRITE_END_PLAYER 6

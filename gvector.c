@@ -1,19 +1,12 @@
-#ifndef G_VECTOR
-#define G_VECTOR
-
+#include "gvector.h"
 #include <stdlib.h>
-#include "glog.c"
+#include "gutil.h"
 
 #define START_ELEMENT_COUNT 10
 
 // tohle je chyba, ktere budu pozdeji litovat
 // anyway...
-struct Vector{
-    void** elements; 
-    int elementCount;
-    int allocatedSize;
-};
-typedef struct Vector Vector;
+
 
 Vector initVector(){
     Vector out;
@@ -27,7 +20,7 @@ void vectorResize(Vector* v){
     int newSize = v->allocatedSize * 10;
     v->elements = realloc(v->elements, newSize * sizeof(void*));
     if (v->elements == NULL){
-        gLog(LOG_ERROR, "Vector couldn't realloc");
+        gLog(LOG_ERR, "Vector couldn't realloc");
     }
     
     v->allocatedSize = newSize;
@@ -43,7 +36,7 @@ void vectorPush(Vector* v, void* element){
 
 void vectorRemove(Vector* v, int index){
     if (index < 0 || index > v->elementCount){
-        gLog(LOG_ERROR, "Vector out of bounds access {%d}", index);
+        gLog(LOG_ERR, "Vector out of bounds access {%d}", index);
     }
 
     free(v->elements[index]);
@@ -56,7 +49,7 @@ void vectorRemove(Vector* v, int index){
 
 void* vectorGet(Vector* v, int index){
     if (index < 0 || index > v->elementCount){
-        gLog(LOG_ERROR, "Vector out of bounds access {%d}", index);
+        gLog(LOG_ERR, "Vector out of bounds access {%d}", index);
     }
 
     return v->elements[index];
@@ -73,5 +66,3 @@ void vectorFree(Vector* v){
     vectorClear(v);
     free(v);
 }
-
-#endif

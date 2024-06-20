@@ -20,10 +20,10 @@
 *   Copyright (c) 2013-2024 Ramon Santamaria (@raysan5)
 *
 ********************************************************************************************/
-#include "gframework.c"
+#include "gframework.h"
 #include "raylib.h"
-#include "levelEditor.c"
-#include "gameplay.c"
+#include "levelEditor.h"
+#include "gameplay.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point

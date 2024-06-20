@@ -1,10 +1,39 @@
-#ifndef G_UTILS
-#define G_UTILS
+#include "gutil.h"
 
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
-#include <stdbool.h> 
+#include <stdio.h>
+#include <stdarg.h>
+#include "raylib.h"
+
+//------------------------------------------------------------------------------------
+// logging
+//------------------------------------------------------------------------------------
+
+
+void gLog(int level, const char* str, ...){
+    const char* header;
+
+    va_list args;
+    va_start(args, str);
+
+    switch (level) {
+        case LOG_INF: header = "[INFO]"; break;
+        case LOG_ERR: header = "[ERROR]"; break;
+        case LOG_WAR: header = "[WARNING]"; break;
+    }
+    
+    
+    printf("%s ", header);
+    vprintf(str, args);
+    printf("\n");
+    va_end(args);
+
+    if (level == LOG_ERROR){
+        exit(-1);
+    }
+}
 
 //------------------------------------------------------------------------------------
 // misc
@@ -95,5 +124,3 @@ float getRandomFloatRange(float min, float max){
 bool randomChance(float chance){
     return getRandomFloat() < chance;
 }
-
-#endif

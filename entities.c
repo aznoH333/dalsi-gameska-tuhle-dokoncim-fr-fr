@@ -1,18 +1,7 @@
-#ifndef ENTITIES
-#define ENTITIES 
 
-#include <stdlib.h>
-#include "gutil.c"
-#include <stdbool.h> 
+#include "entities.h"
 
-struct EntityMarker{
-    int x;
-    int y;
-    int id;
-    bool hasBeenActivated;
-};
 
-typedef struct EntityMarker EntityMarker;
 
 EntityMarker* initEntityMarker(char* levelData, int markerIndex){
     EntityMarker* out = malloc(sizeof(EntityMarker));
@@ -47,8 +36,3 @@ void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex){
 void disposeEntityMarker(EntityMarker* marker){
     free(marker);
 }
-
-
-
-
-#endif

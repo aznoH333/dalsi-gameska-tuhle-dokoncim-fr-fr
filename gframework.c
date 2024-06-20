@@ -1,10 +1,4 @@
-#ifndef G_FRAMEWORK
-#define G_FRAMEWORK
-
-#include "raylib.h"
-#include <math.h>
-#include <string.h>
-#include "gvector.c"
+#include "gframework.h"
 
 //------------------------------------------------------
 // Conf
@@ -18,20 +12,6 @@ const int SPRITE_ORIGIN_OFFSET = DEFAULT_SPRITE_SIZE >> 1;
 const Color BACKGROUND_COLOR = {22, 7, 18, 255};
 
 
-
-
-
-#define LAYER_BACKGROUND 0
-#define LAYER_WORLD 1
-#define LAYER_OBJECTS 2
-#define LAYER_UI 3
-#define LAYER_STATIC_UI 4
-#define LAYER_COUNT LAYER_STATIC_UI + 1
-
-
-
-
-
 //------------------------------------------------------
 // sprites
 //------------------------------------------------------
@@ -42,6 +22,7 @@ struct FrameworkSpriteSheet{
 
 };
 typedef struct FrameworkSpriteSheet FrameworkSpriteSheet;
+
 
 FrameworkSpriteSheet mainSpriteSheet;
 FrameworkSpriteSheet initSpriteSheet(){
@@ -280,5 +261,3 @@ void disposeFramework(){
 	CloseWindow();
 }
 
-
-#endif

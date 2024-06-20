@@ -1,20 +1,4 @@
-#ifndef G_FILES
-#define G_FILES 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include "glog.c"
-
-#define MAX_FILE_SIZE 10000
-
-struct File{
-    char* contents;
-    int contentsLength;
-    const char* filePath;
-};
-
-
-typedef struct File File;
+#include "gfiles.h"
 
 File* initFile(const char* filePath){
     File* out = malloc(sizeof(File));
@@ -26,7 +10,7 @@ File* initFile(const char* filePath){
     if (file == NULL){
         // create empty file
         out->contentsLength = 0;
-        gLog(LOG_WARN, "%s file not found. Creating new empty file", filePath);
+        gLog(LOG_WAR, "%s file not found. Creating new empty file", filePath);
 
     }else {
         // read file contents
@@ -44,7 +28,7 @@ File* initFile(const char* filePath){
             
             
             if (index >= MAX_FILE_SIZE){
-                gLog(LOG_ERROR, "File read error. Max size exceeded %d", MAX_FILE_SIZE);
+                gLog(LOG_ERR, "File read error. Max size exceeded %d", MAX_FILE_SIZE);
             }
         }
 
@@ -72,7 +56,7 @@ void saveFile(File* file){
     FILE* f = fopen(file->filePath, "w");
     
     if (f == NULL){
-        gLog(LOG_ERROR, "File write error %s", file->filePath);
+        gLog(LOG_ERR, "File write error %s", file->filePath);
     }
 
     for (int i = 0; i < file->contentsLength; i++){
@@ -86,5 +70,3 @@ void unloadFile(File* file){
     free(file->contents);
     free(file);
 }
-
-#endif

@@ -1,25 +1,8 @@
-#ifndef LEVEL 
-#define LEVEL 
-
-#include "gfiles.c"
-#include "glog.c"
-#include "gframework.c"
-#include "gutil.c"
-#include "gvector.c"
-#include "entities.c"
-#include "spritedata.c"
-
-
-struct Level {
-    char** tiles;
-    char** background;
-    int width;
-    int height;
-    File* levelFile;
-    Vector entityeMarkers;
-
-};
-typedef struct Level Level;
+#include "level.h"
+#include "gframework.h"
+#include "gutil.h"
+#include "entities.h"
+#include "spritedata.h"
 
 #define MIN_LEVEL_FILE_SIZE 4
 #define LEVEL_DATA_START 4
@@ -243,4 +226,3 @@ void drawEntityMarkers(Level* lvl){
 
 
 
-#endif
