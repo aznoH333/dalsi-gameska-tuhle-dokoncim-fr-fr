@@ -89,7 +89,7 @@ void saveLevel(Level* lvl){
         contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height);*/
 
         writeTileData(lvl, newContents, LEVEL_DATA_START, lvl->tiles);
-        writeTileData(lvl, newContents, LEVEL_DATA_START + (lvl->width * lvl->height), lvl->tiles);
+        writeTileData(lvl, newContents, LEVEL_DATA_START + (lvl->width * lvl->height), lvl->background);
         contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height * 2);
 
     }

@@ -201,7 +201,6 @@ void updateLevelEditor(LevelEditor* editor){
 }
 
 void tileSelector(LevelEditor* editor, int operationType){
-    
     int key;
     int itemCount;
     int itemStart;

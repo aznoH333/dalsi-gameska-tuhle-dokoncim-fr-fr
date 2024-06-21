@@ -24,6 +24,7 @@
 #include "raylib.h"
 #include "levelEditor.h"
 #include "gameplay.h"
+#include "gfont.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -31,6 +32,7 @@
 int main(void)
 {
     initFramework();
+    initFont();
     
     // TODO main menu of some kind
 
@@ -44,12 +46,12 @@ int main(void)
             
         updateLevelEditor(l);
         //updateGameplay(g);
-
+        drawText("beans", 100, 100, 1.0, WHITE, LAYER_STATIC_UI);
         fUpdate();
     }
     unloadLevelEditor(l);
     //stopGameplay(g);
-
+    disposeFont();
 	disposeFramework();
     
 
