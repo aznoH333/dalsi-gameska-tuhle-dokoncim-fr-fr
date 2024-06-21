@@ -44,6 +44,8 @@ void unloadLevelEditor(LevelEditor* editor){
 #define TILE_PICKER_Y 0
 #define TILE_PICKER_WIDTH 8
 
+
+void tileSelector(LevelEditor* editor, int operationType);
 void updateLevelEditor(LevelEditor* editor){
     drawLevel(editor->level);
     drawEntityMarkers(editor->level);
@@ -144,84 +146,11 @@ void updateLevelEditor(LevelEditor* editor){
 
 
     // tile selection
-    {
-        if (IsKeyPressed(KEY_E) && editor->currentOperation == OPERATION_EDIT){
-            editor->currentOperation = OPERATION_SELECT_TILE;
-        }else if (IsKeyPressed(KEY_E) && editor->currentOperation == OPERATION_SELECT_TILE){
-            editor->currentOperation = OPERATION_EDIT;
-        }
+    tileSelector(editor, OPERATION_SELECT_TILE);
 
+    // entity selection
+    tileSelector(editor, OPERATION_SELECT_ENTITY);
 
-        if (editor->currentOperation == OPERATION_SELECT_TILE){
-            // draw tiles
-            for (int tileId = 0; tileId <= SPRITE_COUNT_TILES; tileId++){
-                int tileX = (tileId % TILE_PICKER_WIDTH) * 32;
-                int tileY = (tileId / TILE_PICKER_WIDTH) * 32;
-
-                drawS(SPRITE_START_TILES + tileId, tileX, tileY, 2.0f, LAYER_STATIC_UI);
-            }
-
-
-            // cursor
-            Vector2 mousePos = getOnScreenMousePosition();
-
-
-            if (mousePos.x < TILE_PICKER_WIDTH * 32){
-                editor->cursorX = mousePos.x / 32;
-                editor->cursorY = mousePos.y / 32;
-                int newTileId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
-
-                if (newTileId <= SPRITE_COUNT_TILES){
-                    drawS(TILE_CURSOR, editor->cursorX * 32, editor->cursorY * 32, 2.0f, LAYER_STATIC_UI);
-
-                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-                        editor->selectedTile = newTileId + 1;
-                        editor->placeMode = PLACE_MODE_TILES;
-                    }
-                }
-            }
-        }
-    }
-
-    {
-        // entity selection
-        if (IsKeyPressed(KEY_Q) && editor->currentOperation == OPERATION_EDIT){
-            editor->currentOperation = OPERATION_SELECT_ENTITY;
-        }else if (IsKeyPressed(KEY_Q) && editor->currentOperation == OPERATION_SELECT_ENTITY){
-            editor->currentOperation = OPERATION_EDIT;
-        }
-
-        if (editor->currentOperation == OPERATION_SELECT_ENTITY){
-            // draw entities
-            for (int entityId = 0; entityId <= SPRITE_COUNT_MARKERS; entityId++){
-                int entityX = (entityId % TILE_PICKER_WIDTH) * 32;
-                int entityY = (entityId / TILE_PICKER_WIDTH) * 32;
-
-                drawS(SPRITE_START_MARKERS + entityId, entityX, entityY, 2.0f, LAYER_STATIC_UI);
-            }
-
-
-            // cursor
-            Vector2 mousePos = getOnScreenMousePosition();
-
-
-            if (mousePos.x < TILE_PICKER_WIDTH * 32){
-                editor->cursorX = mousePos.x / 32;
-                editor->cursorY = mousePos.y / 32;
-                int newEntityId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
-
-                if (newEntityId <= SPRITE_COUNT_MARKERS){
-                    drawS(TILE_CURSOR, editor->cursorX * 32, editor->cursorY * 32, 2.0f, LAYER_STATIC_UI);
-
-                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-                        editor->selectedTile = newEntityId;
-                        editor->placeMode = PLACE_MODE_ENTITES;
-                    }
-                }
-            }
-        }
-
-    }
     
     {
         // background controls
@@ -271,3 +200,53 @@ void updateLevelEditor(LevelEditor* editor){
     }
 }
 
+void tileSelector(LevelEditor* editor, int operationType){
+    
+    int key;
+    int itemCount;
+    int itemStart;
+    int placeMode;
+    switch (operationType) {
+        case OPERATION_SELECT_ENTITY:   key = KEY_Q; itemCount = SPRITE_COUNT_MARKERS;  itemStart = SPRITE_START_MARKERS;   placeMode = PLACE_MODE_ENTITES; break;
+        case OPERATION_SELECT_TILE:     key = KEY_E; itemCount = SPRITE_COUNT_TILES;    itemStart = SPRITE_START_TILES;     placeMode = PLACE_MODE_TILES; break;
+    }
+
+    
+    
+    // key operations
+    if (IsKeyPressed(key) && editor->currentOperation == OPERATION_EDIT){
+        editor->currentOperation = operationType;
+    }else if (IsKeyPressed(key) && editor->currentOperation == operationType){
+        editor->currentOperation = OPERATION_EDIT;
+    }
+
+    if (editor->currentOperation == operationType){
+        // draw items
+        for (int entityId = 0; entityId <= itemCount; entityId++){
+            int entityX = (entityId % TILE_PICKER_WIDTH) * 32;
+            int entityY = (entityId / TILE_PICKER_WIDTH) * 32;
+
+            drawS(itemStart + entityId, entityX, entityY, 2.0f, LAYER_STATIC_UI);
+        }
+
+
+        // cursor
+        Vector2 mousePos = getOnScreenMousePosition();
+
+
+        if (mousePos.x < TILE_PICKER_WIDTH * 32){
+            editor->cursorX = mousePos.x / 32;
+            editor->cursorY = mousePos.y / 32;
+            int newEntityId = editor->cursorX + (editor->cursorY * TILE_PICKER_WIDTH);
+
+            if (newEntityId <= itemCount){
+                drawS(TILE_CURSOR, editor->cursorX * 32, editor->cursorY * 32, 2.0f, LAYER_STATIC_UI);
+
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                    editor->selectedTile = newEntityId + (operationType == OPERATION_SELECT_TILE); // hacky workaround
+                    editor->placeMode = placeMode;
+                }
+            }
+        }
+    }
+}
