@@ -253,6 +253,12 @@ void updateLevelEditor(LevelEditor* editor){
             
         }
 
+        // resize display
+        if (editor->currentOperation == OPERATION_RESIZE){
+            textF("current w %d h %d", 1000, 8, editor->level->width, editor->level->height);
+            textF("new w %d h %d", 1000, 32, editor->newWidth, editor->newHeight);
+        }
+
         
     }
 }
