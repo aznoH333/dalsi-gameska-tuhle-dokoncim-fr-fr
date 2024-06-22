@@ -51,6 +51,7 @@ void disposeFramework();
 // fonts
 void drawText(const char* text, int x, int y, float scale, Color color, int layer);
 void drawTextF(const char* text, int x, int y, float scale, Color color, int layer, ...);
+void textF(const char* text, int x, int y, ...);
 
 
 

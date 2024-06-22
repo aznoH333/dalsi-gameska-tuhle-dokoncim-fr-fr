@@ -44,11 +44,7 @@ int main(void)
             
         updateLevelEditor(l);
         //updateGameplay(g);
-        drawText("beans", 100, 100, 1.0, WHITE, LAYER_STATIC_UI);
-        drawText("heinz 264", 200, 200, 1.0, WHITE, LAYER_STATIC_UI);
-
-
-        drawTextF("%s", 200, 250, 1.0, WHITE, LAYER_STATIC_UI, "hello world");
+        
         fUpdate();
     }
     unloadLevelEditor(l);

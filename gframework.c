@@ -202,14 +202,14 @@ char translateCharToSpriteSheetId(char in){
 }
 
 void drawText(const char* text, int x, int y, float scale, Color color, int layer){
-    int iterator = 0;
+	int iterator = 0;
     while (text[iterator] != 0) {
         
 		// skip drawing spaces
 		if (text[iterator] != ' '){
 			char character = translateCharToSpriteSheetId(text[iterator]);
         
-        	insertDrawRequest(character, x + (iterator * CHARACTER_SIZE), y, 0.0f, scale, color, layer, &fontSheet);
+        	insertDrawRequest(character, x + (iterator * CHARACTER_SIZE * scale), y, 0.0f, scale, color, layer, &fontSheet);
         }
         iterator++;
     }
@@ -222,10 +222,25 @@ void drawTextF(const char* text, int x, int y, float scale, Color color, int lay
     
     vsprintf(formatedText, text, args);
 
-
 	va_end(args);
     drawText(formatedText, x, y, scale, color, layer);
 
+}
+
+void drawTextVF(const char* text, int x, int y, float scale, Color color, int layer, va_list* args){
+	
+	char formatedText[500];
+	vsprintf(formatedText, text, *args);
+	drawText(formatedText, x, y, scale, color, layer);
+}
+
+void textF(const char* text, int x, int y, ...){
+	va_list args;
+	va_start(args, y);
+
+	drawTextVF(text, x, y, 2.0, WHITE, LAYER_STATIC_UI, &args);
+
+	va_end(args);
 }
 
 

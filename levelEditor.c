@@ -198,6 +198,63 @@ void updateLevelEditor(LevelEditor* editor){
             saveLevel(editor->level);
         }
     }
+
+    // displaying state
+    {
+        // mode display
+        {
+            const char* currentMode;
+
+            switch (editor->currentOperation) {
+                case OPERATION_EDIT: currentMode = "edit mode"; break;
+                case OPERATION_RESIZE: currentMode = "resize level"; break;
+                case OPERATION_SELECT_TILE: currentMode = "select tile"; break;
+                case OPERATION_SELECT_ENTITY: currentMode = "select entity"; break;
+            }
+            
+            textF(currentMode, 540, 8);
+        }
+
+        // place mode display
+        if (editor->currentOperation == OPERATION_EDIT)
+        {
+            {   // display type
+                const char* currentMode;
+
+                switch (editor->placeMode) {
+                    case PLACE_MODE_ENTITES: currentMode = "ent"; break;
+                    case PLACE_MODE_TILES: currentMode = "tile"; break;
+                    case PLACE_MODE_BACKGROUND: currentMode = "back"; break;
+                }
+                
+                textF("placing %s", 1050, 8, currentMode);
+            }
+
+            // show tile preview
+            {   
+                int spriteIndex = editor->selectedTile;
+                switch (editor->placeMode) {
+                    case PLACE_MODE_TILES:
+                    case PLACE_MODE_BACKGROUND:
+                        spriteIndex += SPRITE_START_TILES - 1;
+                        break;
+                    case PLACE_MODE_ENTITES:
+                        spriteIndex += SPRITE_START_MARKERS;
+                        break;
+                }
+                
+                drawS(spriteIndex, 1140, 32, 6.0, LAYER_STATIC_UI);
+            }
+
+            // show coordinates
+            if (checkBoxCollisions(0, 0, editor->level->width, editor->level->height, editor->cursorInWorldX, editor->cursorInWorldY, 1, 1)){
+                textF("x %d y %d", 1110, 136, editor->cursorInWorldX, editor->cursorInWorldY);
+            }
+            
+        }
+
+        
+    }
 }
 
 void tileSelector(LevelEditor* editor, int operationType){
@@ -207,7 +264,7 @@ void tileSelector(LevelEditor* editor, int operationType){
     int placeMode;
     switch (operationType) {
         case OPERATION_SELECT_ENTITY:   key = KEY_Q; itemCount = SPRITE_COUNT_MARKERS;  itemStart = SPRITE_START_MARKERS;   placeMode = PLACE_MODE_ENTITES; break;
-        case OPERATION_SELECT_TILE:     key = KEY_E; itemCount = SPRITE_COUNT_TILES;    itemStart = SPRITE_START_TILES;     placeMode = PLACE_MODE_TILES; break;
+        case OPERATION_SELECT_TILE:     key = KEY_E; itemCount = SPRITE_COUNT_TILES;    itemStart = SPRITE_START_TILES;     placeMode = (editor->placeMode == PLACE_MODE_BACKGROUND ? PLACE_MODE_BACKGROUND : PLACE_MODE_TILES); break;
     }
 
     
