@@ -30,7 +30,7 @@ void gLog(int level, const char* str, ...){
     printf("\n");
     va_end(args);
 
-    if (level == LOG_ERROR){
+    if (level == LOG_ERR){
         exit(-1);
     }
 }

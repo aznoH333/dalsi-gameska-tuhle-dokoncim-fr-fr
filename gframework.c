@@ -19,18 +19,20 @@ struct FrameworkSpriteSheet{
 	Texture2D spriteSheetTexture;
 	int width;
 	int height;
-
+	int defaultSpriteSize;
+	int originOffset;
 };
 typedef struct FrameworkSpriteSheet FrameworkSpriteSheet;
 
 
 FrameworkSpriteSheet mainSpriteSheet;
-FrameworkSpriteSheet initSpriteSheet(){
+FrameworkSpriteSheet initSpriteSheet(const char* spriteSheetPath, int defaultSpriteSize){
 	FrameworkSpriteSheet out;
-	out.spriteSheetTexture = LoadTexture("resources/spritesheet.png");
-	out.width = out.spriteSheetTexture.width / DEFAULT_SPRITE_SIZE;
-	out.height = out.spriteSheetTexture.height / DEFAULT_SPRITE_SIZE;
-	
+	out.spriteSheetTexture = LoadTexture(spriteSheetPath);
+	out.width = out.spriteSheetTexture.width / defaultSpriteSize;
+	out.height = out.spriteSheetTexture.height / defaultSpriteSize;
+	out.defaultSpriteSize = defaultSpriteSize;
+	out.originOffset = defaultSpriteSize >> 1;
 	return out;
 }
 
@@ -45,6 +47,7 @@ void unloadSpriteSheet(FrameworkSpriteSheet spriteSheet){
 // Variables
 //------------------------------------------------------
 FrameworkSpriteSheet loadedSheet;
+FrameworkSpriteSheet fontSheet;
 RenderTexture2D renderTexture;
 Vector2 actualCameraPos = {0,0};
 Camera2D cam;
@@ -64,6 +67,7 @@ struct DrawingData{
 	float rotation;
 	float scale;
 	Color c;
+	FrameworkSpriteSheet* targetSheet;
 };
 typedef struct DrawingData DrawingData;
 
@@ -86,7 +90,7 @@ void cleanDrawingLayers(){
 }
 
 
-void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer){
+void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer, FrameworkSpriteSheet* targetSheet){
 	// init data
 	DrawingData* data = malloc(sizeof(DrawingData));
 	data->spriteIndex = spriteIndex;
@@ -95,6 +99,7 @@ void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scal
 	data->scale = scale;
 	data->rotation = rotation;
 	data->c = c;
+	data->targetSheet = targetSheet;
 
 
 	// push to vector
@@ -102,11 +107,10 @@ void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scal
 }
 
 void drawSpriteData(DrawingData* data){
-	Rectangle src = {(data->spriteIndex % loadedSheet.width) * DEFAULT_SPRITE_SIZE, floor((float)data->spriteIndex / (float)loadedSheet.width) *
-	DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE, DEFAULT_SPRITE_SIZE};
-	Rectangle dest = {data->x + SPRITE_ORIGIN_OFFSET, data->y + SPRITE_ORIGIN_OFFSET, DEFAULT_SPRITE_SIZE * data->scale, DEFAULT_SPRITE_SIZE * data->scale};
-	Vector2 origin = {SPRITE_ORIGIN_OFFSET, SPRITE_ORIGIN_OFFSET};
-	DrawTexturePro(loadedSheet.spriteSheetTexture, src, dest, origin, data->rotation, data->c);
+	Rectangle src = {(data->spriteIndex % data->targetSheet->width) * data->targetSheet->defaultSpriteSize, floor((float)data->spriteIndex / data->targetSheet->width) * data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize};
+	Rectangle dest = {data->x + data->targetSheet->originOffset, data->y + data->targetSheet->originOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
+	Vector2 origin = {data->targetSheet->originOffset, data->targetSheet->originOffset};
+	DrawTexturePro(data->targetSheet->spriteSheetTexture, src, dest, origin, data->rotation, data->c);
 }
 
 void drawLayer(int layer){
@@ -174,12 +178,60 @@ void resetCameraZoom(){
 
 
 //------------------------------------------------------
+// font
+//------------------------------------------------------
+#define CHARACTER_SIZE 8
+void initFont(){
+    fontSheet = initSpriteSheet("resources/font.png", CHARACTER_SIZE);
+}
+
+void disposeFont(){
+    unloadSpriteSheet(fontSheet);
+}
+
+
+
+char translateCharToSpriteSheetId(char in){
+    if (in >= 'a' && in <= 'z'){
+        return in - 'a';
+    }else if (in >= '0' && in <= '9'){
+        return in - '0' + 26;
+    }
+    gLog(LOG_ERR, "Font error, character %d not defined", in);
+    return 0;
+}
+
+void drawText(const char* text, int x, int y, float scale, Color color, int layer){
+    int iterator = 0;
+    while (text[iterator] != 0) {
+        
+		// skip drawing spaces
+		if (text[iterator] != ' '){
+			char character = translateCharToSpriteSheetId(text[iterator]);
+        
+        	insertDrawRequest(character, x + (iterator * CHARACTER_SIZE), y, 0.0f, scale, color, layer, &fontSheet);
+        }
+        iterator++;
+    }
+}
+
+void drawTextF(const char* text, int x, int y, float scale, Color color, int layer, ...){
+    va_list args;
+    char formatedText[500];
+    
+    sprintf(formatedText, text, args);
+
+    drawText(formatedText, x, y, scale, color, layer);
+}
+
+
+//------------------------------------------------------
 // drawing
 //------------------------------------------------------
 
 
 void drawRSC(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer){
-	insertDrawRequest(spriteIndex, x, y, rotation, scale, c, layer);
+	insertDrawRequest(spriteIndex, x, y, rotation, scale, c, layer, &loadedSheet);
 }
 
 void drawR(int spriteIndex, int x, int y, float rotation, int layer){
@@ -243,12 +295,13 @@ void initFramework(){
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_NAME);
 	SetTargetFPS(60);
 	renderTexture = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
-	loadedSheet = initSpriteSheet();
+	loadedSheet = initSpriteSheet("resources/spritesheet.png", DEFAULT_SPRITE_SIZE);
 	scalingFactor = SCREEN_WIDTH /(float)(GetScreenWidth());
 	renderTextureOffset = ((GetScreenWidth()) / 2) - (SCREEN_WIDTH / 2);
 	//ToggleFullscreen();
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
 	initDrawingLayers();
+	initFont();
 }
 
 //------------------------------------------------------
@@ -256,6 +309,7 @@ void initFramework(){
 //------------------------------------------------------
 void disposeFramework(){
 	unloadSpriteSheet(loadedSheet);
+	disposeFont();
 	UnloadRenderTexture(renderTexture);
 	cleanDrawingLayers();
 	CloseWindow();

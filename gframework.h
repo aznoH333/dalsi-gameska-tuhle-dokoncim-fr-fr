@@ -3,10 +3,12 @@
 
 
 #include "raylib.h"
+#include "gutil.h"
 #include <math.h>
 #include <string.h>
 #include "gvector.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 
 
@@ -45,6 +47,10 @@ void fUpdate();
 void initFramework();
 void disposeFramework();
 
+
+// fonts
+void drawText(const char* text, int x, int y, float scale, Color color, int layer);
+void drawTextF(const char* text, int x, int y, float scale, Color color, int layer, ...);
 
 
 
