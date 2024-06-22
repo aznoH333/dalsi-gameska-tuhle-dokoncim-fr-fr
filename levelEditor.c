@@ -98,6 +98,13 @@ void updateLevelEditor(LevelEditor* editor){
             }else if (IsKeyPressed(KEY_DOWN) || IsKeyPressedRepeat(KEY_DOWN)){
                 editor->newHeight += 1;
             }
+
+            // mouse resize
+            if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
+                Vector2 mousePos = getInWorldMousePosition();
+                editor->newWidth = mousePos.x / 16;
+                editor->newHeight = mousePos.y / 16;
+            }
         }
     }
     
