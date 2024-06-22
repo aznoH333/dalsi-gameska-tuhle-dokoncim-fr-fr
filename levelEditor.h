@@ -30,6 +30,8 @@ struct LevelEditor{
     // tile selection
     int selectedTile;
     int placeMode;
+
+    int viewMode;
     
 };
 typedef struct LevelEditor LevelEditor;

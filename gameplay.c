@@ -19,5 +19,5 @@ void stopGameplay(Gameplay* g){
 
 
 void updateGameplay(Gameplay* g){
-    drawLevel(g->level);
+    drawLevel(g->level, LEVEL_DRAW_GAME);
 }

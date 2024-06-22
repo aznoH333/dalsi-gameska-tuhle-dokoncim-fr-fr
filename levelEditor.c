@@ -30,6 +30,8 @@ LevelEditor* initLevelEditor(const char* levelPath){
 
     out->selectedTile = 1;
     out->placeMode = PLACE_MODE_TILES;
+
+    out->viewMode = LEVEL_DRAW_EDITOR;
     return out;
 }
 
@@ -47,8 +49,8 @@ void unloadLevelEditor(LevelEditor* editor){
 
 void tileSelector(LevelEditor* editor, int operationType);
 void updateLevelEditor(LevelEditor* editor){
-    drawLevel(editor->level);
-    drawEntityMarkers(editor->level);
+    drawLevel(editor->level, editor->viewMode);
+    
     
     // draw level bounds
     {
@@ -206,6 +208,14 @@ void updateLevelEditor(LevelEditor* editor){
         }
     }
 
+    // toggle view mode
+    {
+        if (IsKeyPressed(KEY_V)){
+            editor->viewMode++;
+            editor->viewMode %= LEVEL_DRAW_COUNT;
+        }
+    }
+
     // displaying state
     {
         // mode display
@@ -266,6 +276,20 @@ void updateLevelEditor(LevelEditor* editor){
             textF("new w %d h %d", 1000, 32, editor->newWidth, editor->newHeight);
         }
 
+
+        // view mode
+        {
+            const char* viewMode;
+
+            switch (editor->viewMode) {
+                case LEVEL_DRAW_EDITOR: viewMode = "editor"; break;
+                case LEVEL_DRAW_EDITOR_BACKGROUND: viewMode = "background"; break;
+                case LEVEL_DRAW_EDITOR_TILES: viewMode = "tiles"; break;
+                case LEVEL_DRAW_GAME: viewMode = "preview"; break;
+            }
+
+            textF("viewmode %s", 8, 690, viewMode);
+        }
         
     }
 }

@@ -7,7 +7,11 @@
 
 
 
-
+#define LEVEL_DRAW_GAME 0
+#define LEVEL_DRAW_EDITOR 1
+#define LEVEL_DRAW_EDITOR_TILES 2
+#define LEVEL_DRAW_EDITOR_BACKGROUND 3
+#define LEVEL_DRAW_COUNT 4
 
 struct Level {
     char** tiles;
@@ -25,8 +29,8 @@ Level* loadLevel(const char* levePath);                         // loads level i
 void saveLevel(Level* lvl);                                     // saves level to file specified when loading level
 void unloadLevel(Level* level);                                 // unloads level and frees asociated pointers
 void resizeLevel(Level* level, int newWidth, int newHeight);    // resizes level
-void drawLevel(Level* lvl);                                     // draws level and background
-void drawEntityMarkers(Level* lvl);                             // draws entity markers (should only by used by level editor)
+void drawLevel(Level* lvl, int drawLevel);                      // draws level and background
+
 
 
 #endif

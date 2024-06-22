@@ -195,34 +195,64 @@ void writeTileData(Level* lvl, char* fileData, int index, char** tileData){
 }
 
 
-
-
-
-
-void drawLevelTiles(Level* lvl, char** tiles, int layer){
+// this sucks
+// try to make this simpler
+const Color MARKER_COLOR = {255, 255, 255, 200};
+void drawLevel(Level* lvl, int drawType){
+    
+    bool drawForeGround = drawType != LEVEL_DRAW_EDITOR_BACKGROUND;
+    bool highlightBlacks = drawType != LEVEL_DRAW_GAME;
+    bool drawBackGround = drawType != LEVEL_DRAW_EDITOR_TILES;
+    
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){
-            if (tiles[x][y] != 0){
-                draw(SPRITE_START_TILES - 1 + tiles[x][y], x * 16, y * 16, layer);
+            
+            
+            // fore ground
+            {
+                char tile = lvl->tiles[x][y];
+                
+                if (tile != 0){
+                    if (drawForeGround){
+                        if (tile != 1 || !highlightBlacks){
+                            draw(SPRITE_START_TILES - 1 + tile, x * 16, y * 16, LAYER_WORLD);
+                        }else {
+                            draw(SPRITE_VIS_TOGGLE, x * 16, y * 16, LAYER_WORLD);
+                        }
+                    }else {
+                        draw(SPRITE_VIS_TOGGLE + 1, x * 16, y * 16, LAYER_WORLD);
+                    }
+                }
             }
+            
+            // background
+            {
+                char tile = lvl->background[x][y];
+                if (tile != 0){
+                    if (drawBackGround){
+                        if (tile != 1 || !highlightBlacks){
+                            draw(SPRITE_START_TILES - 1 + tile, x * 16, y * 16, LAYER_BACKGROUND);
+                        }else {
+                            draw(SPRITE_VIS_TOGGLE, x * 16, y * 16, LAYER_BACKGROUND);
+                        }
+                    }else {
+                        draw(SPRITE_VIS_TOGGLE + 1, x * 16, y * 16, LAYER_BACKGROUND);
+                    }
+                }
+            }
+
+
+
         }
     }
-}
-
-void drawLevel(Level* lvl){
-    drawLevelTiles(lvl, lvl->background, LAYER_BACKGROUND);
-    drawLevelTiles(lvl, lvl->tiles, LAYER_WORLD);
-}
 
 
-
-const Color MARKER_COLOR = {255, 255, 255, 200};
-void drawEntityMarkers(Level* lvl){
+    if (!highlightBlacks){
+        return;
+    }
+    // draw markers
     for (int i = 0; i < lvl->entityeMarkers.elementCount; i++){
         EntityMarker* marker = vectorGet(&lvl->entityeMarkers, i);
         drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
     }
 }
-
-
-
