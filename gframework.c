@@ -217,11 +217,15 @@ void drawText(const char* text, int x, int y, float scale, Color color, int laye
 
 void drawTextF(const char* text, int x, int y, float scale, Color color, int layer, ...){
     va_list args;
+	va_start(args, layer);
     char formatedText[500];
     
-    sprintf(formatedText, text, args);
+    vsprintf(formatedText, text, args);
 
+
+	va_end(args);
     drawText(formatedText, x, y, scale, color, layer);
+
 }
 
 
