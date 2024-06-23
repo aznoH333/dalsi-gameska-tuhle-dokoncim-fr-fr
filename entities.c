@@ -105,6 +105,7 @@ void updateEntityManager(EntityManager* manager){
 
         // destroy
         if (ent->shouldDestroy){
+            ent->clean(ent);
             ent->onDestroy(ent);
             free(ent->data);
             free(ent);
