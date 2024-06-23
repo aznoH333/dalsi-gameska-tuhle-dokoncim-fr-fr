@@ -8,6 +8,7 @@
 struct Gameplay{
     Level* level;
 };
+
 typedef struct Gameplay Gameplay;
 
 Gameplay* startGameplay(const char* levelPath);

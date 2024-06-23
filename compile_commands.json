@@ -1,11 +1,83 @@
 [
   {
     "arguments": [
-      "/usr/bin/cc",
+      "/usr/bin/gcc",
+      "-c",
+      "entities.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/entities.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
       "-c",
       "game.c"
     ],
-    "directory": "/mnt/disk1/Dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
-    "file": "/mnt/disk1/Dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/game.c"
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/game.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "gameplay.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/gameplay.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "gfiles.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/gfiles.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "gframework.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/gframework.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "gutil.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/gutil.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "gvector.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/gvector.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "level.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/level.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "levelEditor.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/levelEditor.c"
   }
 ]

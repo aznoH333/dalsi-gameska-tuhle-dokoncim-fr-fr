@@ -1,7 +1,5 @@
 #include "gameplay.h"
 
-
-
 Gameplay* startGameplay(const char* levelPath){
     Gameplay* output = malloc(sizeof(Gameplay));
     output->level = loadLevel(levelPath);
