@@ -1,6 +1,8 @@
 #include "player.h"
 #include "entities.h"
+#include "gameplay.h"
 #include "gframework.h"
+#include "level.h"
 #include <stdlib.h>
 
 Entity* initPlayer(int x, int y){
@@ -20,6 +22,11 @@ void playerUpdate(Entity* this){
 
     if (IsKeyDown(KEY_D)){
         this->x += 1;
+    }
+
+    if (IsKeyDown(KEY_S) && !collidesWithLevel(getGameplay()->level, this->x, this->y + 1, this->w, this->h)){
+        this->y += 1;
+
     }
     
 

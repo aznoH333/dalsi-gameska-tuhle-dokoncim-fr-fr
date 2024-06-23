@@ -11,8 +11,10 @@ struct Gameplay{
 
 typedef struct Gameplay Gameplay;
 
-Gameplay* startGameplay(const char* levelPath);
-void stopGameplay(Gameplay* g);
+
+Gameplay* getGameplay();
+void unloadGameplay(Gameplay* g);
+void startLevel(Gameplay* g, const char* levelPath);
 void updateGameplay(Gameplay* g);
 
 #endif

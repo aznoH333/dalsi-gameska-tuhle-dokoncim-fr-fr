@@ -30,6 +30,7 @@ void saveLevel(Level* lvl);                                     // saves level t
 void unloadLevel(Level* level);                                 // unloads level and frees asociated pointers
 void resizeLevel(Level* level, int newWidth, int newHeight);    // resizes level
 void drawLevel(Level* lvl, int drawLevel);                      // draws level and background
+bool collidesWithLevel(Level* lvl, int x, int y, int w, int h);
 
 
 

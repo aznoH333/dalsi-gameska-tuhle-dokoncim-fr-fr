@@ -1,27 +1,51 @@
 #include "gameplay.h"
 #include "entities.h"
+#include "level.h"
 #include "player.h"
 
-Gameplay* startGameplay(const char* levelPath){
-    Gameplay* output = malloc(sizeof(Gameplay));
-    output->level = loadLevel(levelPath);
 
-    // find player
-    EntityMarker* playerMarker;
-    for (int i = 0; i < output->level->entityeMarkers.elementCount; i++){
-        playerMarker = vectorGet(&output->level->entityeMarkers, i);
-        
-        if (playerMarker->id == 0){
-            break;
-        }
-    }
-    addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
-    
-    return output;
+
+Gameplay* initGameplay(){
+    Gameplay* output = malloc(sizeof(Gameplay));
+    output->level = 0;
+    return output;    
 }
 
 
-void stopGameplay(Gameplay* g){
+Gameplay* gameplayInstance;
+Gameplay* getGameplay(){
+    if (gameplayInstance == 0) {
+        gameplayInstance = initGameplay();
+    }
+    return gameplayInstance;
+}
+
+void startLevel(Gameplay* g, const char* levelPath){
+    // level load
+    {
+        if (g->level != 0){
+            unloadLevel(g->level);
+        }
+            
+        
+        g->level = loadLevel(levelPath);
+    }
+    // find player
+    {
+        EntityMarker* playerMarker;
+        for (int i = 0; i < g->level->entityeMarkers.elementCount; i++){
+            playerMarker = vectorGet(&g->level->entityeMarkers, i);
+            
+            if (playerMarker->id == 0){
+                break;
+            }
+        }
+        addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
+    }
+}
+
+
+void unloadGameplay(Gameplay* g){
     unloadLevel(g->level);
     free(g);
 }

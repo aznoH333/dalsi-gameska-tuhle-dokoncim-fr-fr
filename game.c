@@ -36,7 +36,8 @@ int main(void)
     // TODO main menu of some kind
 
     //LevelEditor* l = initLevelEditor("./gamedata/1.lvl");
-    Gameplay* g = startGameplay("./gamedata/1.lvl");
+    Gameplay* g = getGameplay();
+    startLevel(g, "./gamedata/1.lvl");
 
 
     // Main game loop
@@ -49,9 +50,9 @@ int main(void)
         fUpdate();
     }
     //unloadLevelEditor(l);
-    stopGameplay(g);
+    unloadGameplay(g);
 	disposeFramework();
-    //unloadEntityManager(getEntityManager());
+    unloadEntityManager(getEntityManager());
 
     return 0;
 }

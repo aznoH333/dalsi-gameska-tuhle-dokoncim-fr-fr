@@ -63,7 +63,7 @@ Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void 
 
 
 // Entity manager
-EntityManager* instance = 0;
+EntityManager* entityManagerInstance = 0;
 EntityManager* initEntityManager(){
     EntityManager* out = malloc(sizeof(EntityManager));
 
@@ -74,10 +74,10 @@ EntityManager* initEntityManager(){
 
 
 EntityManager* getEntityManager(){
-    if (instance == 0){
-        instance = initEntityManager();
+    if (entityManagerInstance == 0){
+        entityManagerInstance = initEntityManager();
     }
-    return instance;
+    return entityManagerInstance;
 }
 
 void unloadEntityManager(EntityManager* manager){

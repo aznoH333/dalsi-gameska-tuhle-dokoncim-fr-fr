@@ -264,3 +264,23 @@ void drawLevel(Level* lvl, int drawType){
         drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
     }
 }
+
+char getTileAt(Level* lvl, int x, int y){
+    if (x < 0 || y < 0 || x > lvl->width || y > lvl->height){
+        return 0;
+    }
+    return lvl->tiles[x][y];
+}
+
+
+
+bool collidesWithLevel(Level* lvl, int x, int y, int w, int h){
+    for (float xf = floor(x / 16.0f); xf < ceil((x + w) / 16.0f); xf += 0.25f){
+        for (float yf = floor(y / 16.0f); yf < ceil((x + w) / 16.0f); yf += 0.25f){
+            if (getTileAt(lvl, (int) xf, (int) yf) != 0){
+                return true;
+            }
+        }
+    }
+    return false;
+}
