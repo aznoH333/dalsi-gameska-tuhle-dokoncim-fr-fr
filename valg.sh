@@ -9,5 +9,5 @@ done
 
 gcc $target_files -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 rm *.o
-./a.out
+valgrind --leak-check=full --show-leak-kinds=definite,possible --track-origins=yes ./a.out 
 rm *.out

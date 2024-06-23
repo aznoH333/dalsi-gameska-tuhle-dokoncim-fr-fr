@@ -37,11 +37,11 @@ void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex){
 }
 
 void disposeEntityMarker(EntityMarker* marker){
-    free(marker);
+    //free(marker);
 }
 
 // Entity
-Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*)){
+Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*), void (*clean)(Entity*)){
     Entity* out = malloc(sizeof(Entity));
     
     out->x = x;
@@ -54,6 +54,7 @@ Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void 
     out->updateFunction = updateFunction;
     out->onCollide = onCollide;
     out->onDestroy = onDestroy;
+    out->clean = clean;
 
     return out;
 }

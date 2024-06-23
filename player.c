@@ -9,7 +9,7 @@ Entity* initPlayer(int x, int y){
     
     
     
-    Entity* out = initEntity(x, y, 16, 20, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy);
+    Entity* out = initEntity(x, y, 16, 20, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 }
 
 
@@ -24,5 +24,9 @@ void playerOnCollide(Entity* this, Entity* other){
 }
 
 void playerOnDestroy(Entity* this){
+
+}
+
+void playerClean(Entity* this){
 
 }

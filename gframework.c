@@ -86,6 +86,7 @@ void initDrawingLayers(){
 void cleanDrawingLayers(){
 	for (int i = 0; i < LAYER_COUNT; i++){
 		vectorFree(drawingLayers[i]);
+		free(drawingLayers[i]);
 	}
 }
 

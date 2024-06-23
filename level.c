@@ -2,6 +2,7 @@
 #include "gframework.h"
 #include "gutil.h"
 #include "entities.h"
+#include "gvector.h"
 #include "spritedata.h"
 
 #define MIN_LEVEL_FILE_SIZE 4
@@ -123,11 +124,18 @@ void unloadLevel(Level* level){
         free(level->tiles[i]);
     }
 
+    for (int i = 0; i < level->width;i++){
+        free(level->background[i]);
+    }
+
     for (int i = 0; i < level->entityeMarkers.elementCount; i++){
         disposeEntityMarker(vectorGet(&level->entityeMarkers, i));
     }
 
+    vectorFree(&level->entityeMarkers);
+
     free(level->tiles);
+    free(level->background);
     free(level);
 }
 

@@ -64,5 +64,5 @@ void vectorClear(Vector* v){
 
 void vectorFree(Vector* v){
     vectorClear(v);
-    free(v);
+    free(v->elements);
 }

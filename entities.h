@@ -28,6 +28,7 @@ struct Entity{
     void (*updateFunction)(struct Entity*);
     void (*onCollide)(struct Entity*, struct Entity*);
     void (*onDestroy)(struct Entity*);
+    void (*clean)(struct Entity*);
 };
 typedef struct Entity Entity;
 
@@ -44,7 +45,7 @@ void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex);
 void disposeEntityMarker(EntityMarker* marker);
 
 // entities
-Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*));
+Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*), void (*clean)(struct Entity*));
 
 
 // entity manager
