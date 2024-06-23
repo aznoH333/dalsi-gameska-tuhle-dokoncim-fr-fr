@@ -25,11 +25,15 @@ struct Entity{
     int identifier;
     bool shouldDestroy;
     void* data;
-    void (*updateFunction)(struct Entity*, void*);
-    void (*onCollide)(struct Entity*, void*, struct Entity*);
-    void (*onDestroy)(struct Entity*, void*);
+    void (*updateFunction)(struct Entity*);
+    void (*onCollide)(struct Entity*, struct Entity*);
+    void (*onDestroy)(struct Entity*);
 };
 typedef struct Entity Entity;
+
+#define ENTITY_PLAYER 0
+#define ENTITY_ENEMY 1
+#define ENTITY_OTHER 2
 
 
 
@@ -40,18 +44,19 @@ void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex);
 void disposeEntityMarker(EntityMarker* marker);
 
 // entities
-Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*, void*), void (*onCollide)(struct Entity*, void*, struct Entity*), void (*onDestroy)(struct Entity*, void*));
+Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*));
 
 
 // entity manager
 struct EntityManager{
-    Vector* entities;
+    Vector entities;
 };
 typedef struct EntityManager EntityManager;
 
 EntityManager* getEntityManager();
 void unloadEntityManager(EntityManager* manager);
 void updateEntityManager(EntityManager* manager);
+void addEntity(EntityManager* manager, Entity* entity);
 
 
 

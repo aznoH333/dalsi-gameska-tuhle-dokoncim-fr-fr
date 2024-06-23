@@ -41,7 +41,7 @@ void disposeEntityMarker(EntityMarker* marker){
 }
 
 // Entity
-Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*, void*), void (*onCollide)(struct Entity*, void*, struct Entity*), void (*onDestroy)(struct Entity*, void*)){
+Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*)){
     Entity* out = malloc(sizeof(Entity));
     
     out->x = x;
@@ -66,7 +66,7 @@ EntityManager* instance = 0;
 EntityManager* initEntityManager(){
     EntityManager* out = malloc(sizeof(EntityManager));
 
-    *out->entities = initVector();
+    out->entities = initVector();
 
     return out;
 }
@@ -80,35 +80,39 @@ EntityManager* getEntityManager(){
 }
 
 void unloadEntityManager(EntityManager* manager){
-    vectorClear(manager->entities);
+    vectorClear(&manager->entities);
     
     free(manager);
 }
 
 void updateEntityManager(EntityManager* manager){
-    for (int i = 0; i < manager->entities->elementCount; i++){
-        Entity* ent = vectorGet(manager->entities, i);
+    for (int i = 0; i < manager->entities.elementCount; i++){
+        Entity* ent = vectorGet(&manager->entities, i);
         // call update
-        ent->updateFunction(ent, ent->data);
+        ent->updateFunction(ent);
 
         // collision check
-        for (int j = 0; j < manager->entities->elementCount; j++){
+        for (int j = 0; j < manager->entities.elementCount; j++){
             if (i != j){
-                Entity* other = vectorGet(manager->entities, j);
+                Entity* other = vectorGet(&manager->entities, j);
 
                 if (checkBoxCollisions(ent->x, ent->y, ent->w, ent->h, other->x, other->y, other->w, other->h)){
-                    ent->onCollide(ent, ent->data, other);
+                    ent->onCollide(ent, other);
                 }
             }
         }
 
         // destroy
         if (ent->shouldDestroy){
-            ent->onDestroy(ent, ent->data);
+            ent->onDestroy(ent);
             free(ent->data);
             free(ent);
-            vectorRemove(manager->entities, i);
+            vectorRemove(&manager->entities, i);
             i--;
         }
     }
+}
+
+void addEntity(EntityManager* manager, Entity* entity){
+    vectorPush(&manager->entities, entity);
 }

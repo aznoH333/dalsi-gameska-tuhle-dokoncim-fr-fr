@@ -1,4 +1,6 @@
 #include "gameplay.h"
+#include "entities.h"
+#include "player.h"
 
 Gameplay* startGameplay(const char* levelPath){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -13,6 +15,7 @@ Gameplay* startGameplay(const char* levelPath){
             break;
         }
     }
+    addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
     
     return output;
 }
@@ -27,4 +30,5 @@ void stopGameplay(Gameplay* g){
 
 void updateGameplay(Gameplay* g){
     drawLevel(g->level, LEVEL_DRAW_GAME);
+    updateEntityManager(getEntityManager());
 }

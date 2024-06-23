@@ -79,5 +79,14 @@
     ],
     "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
     "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/levelEditor.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "player.c"
+    ],
+    "directory": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr",
+    "file": "/home/aznoh/Documents/dev/c/dalsi-gameska-tuhle-dokoncim-fr-fr/player.c"
   }
 ]

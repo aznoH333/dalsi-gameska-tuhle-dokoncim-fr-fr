@@ -24,6 +24,7 @@
 #include "raylib.h"
 #include "levelEditor.h"
 #include "gameplay.h"
+#include "entities.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -50,7 +51,7 @@ int main(void)
     //unloadLevelEditor(l);
     stopGameplay(g);
 	disposeFramework();
-    
+    unloadEntityManager(getEntityManager());
 
     return 0;
 }
