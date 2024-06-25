@@ -26,4 +26,7 @@ float getRandomFloat();
 float getRandomFloatRange(float min, float max);
 bool randomChance(float chance);
 
+// animations
+int getAnimationSprite(int startFrame, int endFrame, int frameDuration, int timer);
+
 #endif

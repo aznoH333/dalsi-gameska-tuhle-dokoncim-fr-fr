@@ -89,14 +89,35 @@ void playerUpdate(Entity* this){
     {
         this->x += data->xVelocity;
         this->y += data->yVelocity;
+        setCameraPos((Vector2){this->x - 250, this->y - 150}); // temp camera movement
+
     }
 
 
     // draw
     {
-        draw(0, this->x, this->y, LAYER_OBJECTS);
-        draw(5, this->x, this->y + UPPER_BODY_OFFSET, LAYER_OBJECTS);
-        setCameraPos((Vector2){this->x - 250, this->y - 150}); // temp camera movement
+        // choose animation sprites
+        int upperSprite = 5;
+        int lowerSprite = 0;
+
+        // lower animations
+        {
+            // jumping
+            if (!isTouchingGround){
+                lowerSprite = 4;
+            }
+            
+            // walking animation
+            else if (fabs(data->xVelocity) > 0.5){
+                lowerSprite = getAnimationSprite(1, 3, 6, getGlobalTimer());
+            }
+        }
+        
+
+
+        // draw sprites
+        draw(lowerSprite, this->x, this->y, LAYER_OBJECTS);
+        draw(upperSprite, this->x, this->y + UPPER_BODY_OFFSET, LAYER_OBJECTS);
     }
 }
 

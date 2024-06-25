@@ -20,7 +20,8 @@
 #define LAYER_STATIC_UI 4
 #define LAYER_COUNT LAYER_STATIC_UI + 1
 
-
+// misc
+int getGlobalTimer();
 
 // camera
 void screenShake(float ammount);

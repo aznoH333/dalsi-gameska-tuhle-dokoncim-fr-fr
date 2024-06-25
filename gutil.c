@@ -124,3 +124,10 @@ float getRandomFloatRange(float min, float max){
 bool randomChance(float chance){
     return getRandomFloat() < chance;
 }
+
+//------------------------------------------------------------------------------------
+// animations
+//------------------------------------------------------------------------------------
+int getAnimationSprite(int startFrame, int endFrame, int frameDuration, int timer){
+    return  (timer / frameDuration) % (endFrame - startFrame + 1) + startFrame;
+}
