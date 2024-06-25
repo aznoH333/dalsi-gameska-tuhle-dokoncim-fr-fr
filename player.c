@@ -10,6 +10,7 @@ Entity* initPlayer(int x, int y){
 
     p->xVelocity = 0;
     p->yVelocity = 0;
+    p->flip = 0;
 
     Entity* out = initEntity(x, y, 16, 20, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 
@@ -43,9 +44,12 @@ void playerUpdate(Entity* this){
         }
         else if (IsKeyDown(KEY_D) && data->xVelocity < MAX_WALK_SPEED){
             data->xVelocity += WALK_ACCELERATION;
+
+            data->flip = 0;
         }
         else if (IsKeyDown(KEY_A) && data->xVelocity > -MAX_WALK_SPEED){
             data->xVelocity -= WALK_ACCELERATION;
+            data->flip = 1;
         }
         // wall collisions
         if (collidesWithLevel(gameplay->level, this->x + data->xVelocity, this->y, this->w, this->h - 4)){
@@ -116,8 +120,8 @@ void playerUpdate(Entity* this){
 
 
         // draw sprites
-        draw(lowerSprite, this->x, this->y, LAYER_OBJECTS);
-        draw(upperSprite, this->x, this->y + UPPER_BODY_OFFSET, LAYER_OBJECTS);
+        drawF(lowerSprite, this->x, this->y, data->flip, LAYER_OBJECTS);
+        drawF(upperSprite, this->x, this->y + UPPER_BODY_OFFSET, data->flip, LAYER_OBJECTS);
     }
 }
 

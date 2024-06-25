@@ -20,6 +20,11 @@
 #define LAYER_STATIC_UI 4
 #define LAYER_COUNT LAYER_STATIC_UI + 1
 
+#define FLIP_NONE 0
+#define FLIP_HORIZONTAL 1
+#define FLIP_VERTICAL 2
+#define FLIP_BOTH 4
+
 // misc
 int getGlobalTimer();
 
@@ -35,10 +40,12 @@ void resetCameraZoom();
 
 
 // drawing
+void drawRFSC(int spriteIndex, int x, int y, float rotation, int flip, float scale, Color c, int layer);
 void drawRSC(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer);
 void drawR(int spriteIndex, int x, int y, float rotation, int layer);
 void drawC(int spriteIndex, int x, int y, Color c, int layer);
 void drawS(int spriteIndex, int x, int y, float scale, int layer);
+void drawF(int spriteIndex, int x, int y, int flip, int layer);
 void draw(int spriteIndex, int x, int y, int layer);
 
 void drawFancyText(const char* text, int x, int y, int scale, Color color);

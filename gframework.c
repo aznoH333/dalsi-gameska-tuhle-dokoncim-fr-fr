@@ -68,6 +68,7 @@ struct DrawingData{
 	float scale;
 	Color c;
 	FrameworkSpriteSheet* targetSheet;
+	int flip;
 };
 typedef struct DrawingData DrawingData;
 
@@ -91,7 +92,7 @@ void cleanDrawingLayers(){
 }
 
 
-void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer, FrameworkSpriteSheet* targetSheet){
+void insertDrawRequest(int spriteIndex, int x, int y, float rotation, int flip, float scale, Color c, int layer, FrameworkSpriteSheet* targetSheet){
 	// init data
 	DrawingData* data = malloc(sizeof(DrawingData));
 	data->spriteIndex = spriteIndex;
@@ -100,6 +101,7 @@ void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scal
 	data->scale = scale;
 	data->rotation = rotation;
 	data->c = c;
+	data->flip = flip;
 	data->targetSheet = targetSheet;
 
 
@@ -108,7 +110,26 @@ void insertDrawRequest(int spriteIndex, int x, int y, float rotation, float scal
 }
 
 void drawSpriteData(DrawingData* data){
-	Rectangle src = {(data->spriteIndex % data->targetSheet->width) * data->targetSheet->defaultSpriteSize, floor((float)data->spriteIndex / data->targetSheet->width) * data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize};
+	int flip = data->flip % 4;
+	bool flipHorizontaly = flip == FLIP_HORIZONTAL || flip == FLIP_BOTH;
+	bool flipVerticaly = flip == FLIP_VERTICAL || flip == FLIP_BOTH;
+	
+	Rectangle src = {
+		(data->spriteIndex % data->targetSheet->width) * data->targetSheet->defaultSpriteSize, 
+		floor((float)data->spriteIndex / data->targetSheet->width) * data->targetSheet->defaultSpriteSize, 
+		data->targetSheet->defaultSpriteSize, 
+		data->targetSheet->defaultSpriteSize};
+
+	if (flipHorizontaly){
+		src.width *= -1;
+	}
+
+	if (flipVerticaly){
+		src.height *= -1;
+	}
+	
+	//Rectangle src = {(data->spriteIndex % data->targetSheet->width) * data->targetSheet->defaultSpriteSize, floor((float)data->spriteIndex / data->targetSheet->width) * data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize};
+	
 	Rectangle dest = {data->x + data->targetSheet->originOffset, data->y + data->targetSheet->originOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
 	Vector2 origin = {data->targetSheet->originOffset, data->targetSheet->originOffset};
 	DrawTexturePro(data->targetSheet->spriteSheetTexture, src, dest, origin, data->rotation, data->c);
@@ -214,7 +235,7 @@ void drawText(const char* text, int x, int y, float scale, Color color, int laye
 		if (text[iterator] != ' '){
 			char character = translateCharToSpriteSheetId(text[iterator]);
         
-        	insertDrawRequest(character, x + (iterator * CHARACTER_SIZE * scale), y, 0.0f, scale, color, layer, &fontSheet);
+        	insertDrawRequest(character, x + (iterator * CHARACTER_SIZE * scale), y, 0.0f, FLIP_NONE, scale, color, layer, &fontSheet);
         }
         iterator++;
     }
@@ -254,8 +275,12 @@ void textF(const char* text, int x, int y, ...){
 //------------------------------------------------------
 
 
+void drawRFSC(int spriteIndex, int x, int y, float rotation, int flip, float scale, Color c, int layer){
+	insertDrawRequest(spriteIndex, x, y, rotation, flip, scale, c, layer, &loadedSheet);
+}
+
 void drawRSC(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer){
-	insertDrawRequest(spriteIndex, x, y, rotation, scale, c, layer, &loadedSheet);
+	insertDrawRequest(spriteIndex, x, y, rotation, FLIP_NONE, scale, c, layer, &loadedSheet);
 }
 
 void drawR(int spriteIndex, int x, int y, float rotation, int layer){
@@ -268,6 +293,10 @@ void drawC(int spriteIndex, int x, int y, Color c, int layer){
 
 void drawS(int spriteIndex, int x, int y, float scale, int layer){
 	drawRSC(spriteIndex, x, y, 0.0f, scale, WHITE, layer);
+}
+
+void drawF(int spriteIndex, int x, int y, int flip, int layer){
+	drawRFSC(spriteIndex, x, y, 0.0f, flip, 1.0f, WHITE, layer);
 }
 
 void draw(int spriteIndex, int x, int y, int layer){	
