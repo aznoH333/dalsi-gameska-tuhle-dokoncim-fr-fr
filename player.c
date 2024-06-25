@@ -26,8 +26,9 @@ const float WALK_ACCELERATION = 0.2f;
 const float MAX_WALK_SPEED = 2.0f;
 void playerUpdate(Entity* this){
     Player* data = this->data;
+    Gameplay* gameplay = getGameplay();
 
-    bool isTouchingGround = collidesWithLevel(getGameplay()->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
+    bool isTouchingGround = collidesWithLevel(gameplay->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
     
     
     
@@ -45,6 +46,10 @@ void playerUpdate(Entity* this){
         }
         else if (IsKeyDown(KEY_A) && data->xVelocity > -MAX_WALK_SPEED){
             data->xVelocity -= WALK_ACCELERATION;
+        }
+        // wall collisions
+        if (collidesWithLevel(gameplay->level, this->x + data->xVelocity, this->y, this->w, this->h - 4)){
+            data->xVelocity = 0.0f;
         }
     }
     
@@ -69,7 +74,7 @@ void playerUpdate(Entity* this){
         }
 
         // ceiling collisions
-        if (collidesWithLevel(getGameplay()->level, this->x, this->y - 1 + data->yVelocity, this->w, 1)){
+        if (collidesWithLevel(gameplay->level, this->x, this->y - 1 + data->yVelocity, this->w, 1)){
             data->yVelocity = 0.0f;
         }
 
