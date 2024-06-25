@@ -4,7 +4,8 @@
 #include "entities.h"
 
 struct Player{
-
+    float xVelocity;
+    float yVelocity;
 };
 typedef struct Player Player;
 

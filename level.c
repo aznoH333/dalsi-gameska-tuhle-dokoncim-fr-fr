@@ -266,7 +266,7 @@ void drawLevel(Level* lvl, int drawType){
 }
 
 char getTileAt(Level* lvl, int x, int y){
-    if (x < 0 || y < 0 || x > lvl->width || y > lvl->height){
+    if (x < 0 || y < 0 || x >= lvl->width || y >= lvl->height){
         return 0;
     }
     return lvl->tiles[x][y];
@@ -275,8 +275,13 @@ char getTileAt(Level* lvl, int x, int y){
 
 
 bool collidesWithLevel(Level* lvl, int x, int y, int w, int h){
-    for (float xf = floor(x / 16.0f); xf < ceil((x + w) / 16.0f); xf += 0.25f){
-        for (float yf = floor(y / 16.0f); yf < ceil((x + w) / 16.0f); yf += 0.25f){
+    int xStart = floor(x / 16.0f);
+    int xEnd = ceil((x + w) / 16.0f);
+    int yStart = floor(y / 16.0f);
+    int yEnd = ceil((y + h) / 16.0f);
+    
+    for (float xf = xStart; xf < xEnd; xf += 0.25f){
+        for (float yf = yStart; yf < yEnd; yf += 0.25f){
             if (getTileAt(lvl, (int) xf, (int) yf) != 0){
                 return true;
             }
