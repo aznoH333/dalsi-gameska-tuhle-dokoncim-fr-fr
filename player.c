@@ -12,10 +12,9 @@ Entity* initPlayer(int x, int y){
     p->xVelocity = 0;
     p->yVelocity = 0;
     p->flip = 0;
+    p->fireCooldown = 0;
 
     Entity* out = initEntity(x, y, 16, 20, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
-
-    
 
     return out;
 }
@@ -28,6 +27,7 @@ const float WALK_ACCELERATION = 0.2f;
 const float MAX_WALK_SPEED = 2.0f;
 const int BULLET_SPAWN_OFFSET_Y = 4;
 const int BULLET_SPAWN_OFFSET_X = 8;
+const int FIRE_COOLDWON = 6;
 void playerUpdate(Entity* this){
     Player* data = this->data;
     Gameplay* gameplay = getGameplay();
@@ -99,8 +99,9 @@ void playerUpdate(Entity* this){
     
     // shooting
     {
-        if (IsKeyDown(KEY_SPACE)){
+        if (IsKeyDown(KEY_SPACE) && data->fireCooldown == 0){
             addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, ENTITY_PLAYER));
+            data->fireCooldown = FIRE_COOLDWON;
         }
     }
 
@@ -109,7 +110,7 @@ void playerUpdate(Entity* this){
         this->x += data->xVelocity;
         this->y += data->yVelocity;
         setCameraPos((Vector2){this->x - 250, this->y - 150}); // temp camera movement
-
+        data->fireCooldown -= data->fireCooldown > 0;
     }
 
 
@@ -132,6 +133,12 @@ void playerUpdate(Entity* this){
             }
         }
         
+        // upper animations
+        {
+            if (data->fireCooldown > (FIRE_COOLDWON >> 2)){
+                upperSprite = 6;
+            }
+        }
 
 
         // draw sprites
