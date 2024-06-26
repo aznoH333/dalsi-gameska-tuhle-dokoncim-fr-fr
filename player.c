@@ -4,6 +4,7 @@
 #include "gframework.h"
 #include "level.h"
 #include <stdlib.h>
+#include "bullet.h"
 
 Entity* initPlayer(int x, int y){
     Player* p = malloc(sizeof(Player));
@@ -25,9 +26,12 @@ const float JUMP_STRENGTH = 2.5f;
 const int UPPER_BODY_OFFSET = -6;
 const float WALK_ACCELERATION = 0.2f;
 const float MAX_WALK_SPEED = 2.0f;
+const int BULLET_SPAWN_OFFSET_Y = 4;
+const int BULLET_SPAWN_OFFSET_X = 8;
 void playerUpdate(Entity* this){
     Player* data = this->data;
     Gameplay* gameplay = getGameplay();
+    EntityManager* entities = getEntityManager();
 
     bool isTouchingGround = collidesWithLevel(gameplay->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
     
@@ -54,7 +58,11 @@ void playerUpdate(Entity* this){
         
     
         // wall collisions
-        if (collidesWithLevel(gameplay->level, this->x + ((data->xVelocity > 0) * this->w) + (2 * boolToSign(data->xVelocity > 0.0f)) + data->xVelocity, this->y, 1, this->h - ((data->yVelocity <= 0.0f) * 4))){
+        if (collidesWithLevel(gameplay->level,
+            this->x + ((data->xVelocity > 0) * this->w) + (2 * boolToSign(data->xVelocity > 0.0f)) + data->xVelocity,
+            this->y,
+            1, 
+            this->h - ((data->yVelocity <= 0.0f) * 4))){
             data->xVelocity = 0.0f;
         }
     }
@@ -89,7 +97,12 @@ void playerUpdate(Entity* this){
         }
     }
     
-    
+    // shooting
+    {
+        if (IsKeyDown(KEY_SPACE)){
+            addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, ENTITY_PLAYER));
+        }
+    }
 
     // update values
     {
@@ -115,7 +128,7 @@ void playerUpdate(Entity* this){
             
             // walking animation
             else if (fabs(data->xVelocity) > 1){
-                lowerSprite = getAnimationSprite(1, 3, 6, getGlobalTimer());
+                lowerSprite = getAnimationSprite(1, 3, 5, getGlobalTimer());
             }
         }
         

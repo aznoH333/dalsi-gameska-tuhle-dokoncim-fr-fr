@@ -39,7 +39,7 @@ void vectorRemove(Vector* v, int index){
         gLog(LOG_ERR, "Vector out of bounds access {%d}", index);
     }
 
-    free(v->elements[index]);
+    
 
     for (int i = index; i < v->elementCount - 1; i++){
         v->elements[i] = v->elements[i+1];
