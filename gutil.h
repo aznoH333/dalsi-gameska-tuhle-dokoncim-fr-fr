@@ -17,6 +17,7 @@ float pythagoras(float x1, float y1, float x2, float y2);
 float dirTowards(int x1, int y1, int x2, int y2);
 int min(int a, int b);
 int max(int a, int b);
+int boolToSign(bool a);
 float sign(float input);
 int parseStrToInt(char* str, int size);
 void writeIntAsChar(char* targetStr, int input, int size, int index);

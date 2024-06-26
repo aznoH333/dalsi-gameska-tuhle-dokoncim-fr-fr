@@ -92,6 +92,10 @@ int parseStrToInt(char* str, int size){
     return out;
 }
 
+int boolToSign(bool a){
+    return a * 2 - 1;
+}
+
 void writeIntAsChar(char* targetStr, int input, int size, int index){
     int temp = input;
     for (int i = size - 1; i >= 0; i--){

@@ -51,8 +51,10 @@ void playerUpdate(Entity* this){
             data->xVelocity -= WALK_ACCELERATION;
             data->flip = 1;
         }
+        
+    
         // wall collisions
-        if (collidesWithLevel(gameplay->level, this->x + data->xVelocity, this->y, this->w, this->h - 4)){
+        if (collidesWithLevel(gameplay->level, this->x + ((data->xVelocity > 0) * this->w) + (2 * boolToSign(data->xVelocity > 0.0f)) + data->xVelocity, this->y, 1, this->h - ((data->yVelocity <= 0.0f) * 4))){
             data->xVelocity = 0.0f;
         }
     }
@@ -112,7 +114,7 @@ void playerUpdate(Entity* this){
             }
             
             // walking animation
-            else if (fabs(data->xVelocity) > 0.5){
+            else if (fabs(data->xVelocity) > 1){
                 lowerSprite = getAnimationSprite(1, 3, 6, getGlobalTimer());
             }
         }
