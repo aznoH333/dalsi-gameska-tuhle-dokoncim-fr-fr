@@ -140,6 +140,7 @@ void drawLayer(int layer){
 		drawSpriteData((DrawingData*)vectorGet(drawingLayers[layer], i));
 	}
 	vectorClear(drawingLayers[layer]);
+
 }
 
 //------------------------------------------------------

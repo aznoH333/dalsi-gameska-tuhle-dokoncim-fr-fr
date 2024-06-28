@@ -80,8 +80,18 @@ EntityManager* getEntityManager(){
     return entityManagerInstance;
 }
 
-void unloadEntityManager(EntityManager* manager){
+void removeAllEntities(EntityManager* manager){
+    for (int i = 0; i < manager->entities.elementCount; i++){
+        Entity* ent = vectorGet(&manager->entities, i);
+        ent->clean(ent);
+        free(ent->data);
+    }
     vectorClear(&manager->entities);
+    vectorFree(&manager->entities);
+}
+
+void unloadEntityManager(EntityManager* manager){
+    removeAllEntities(manager);
     
     free(manager);
 }
@@ -110,8 +120,8 @@ void updateEntityManager(EntityManager* manager){
 
         // destroy
         if (ent->shouldDestroy){
-            ent->clean(ent);
             ent->onDestroy(ent);
+            ent->clean(ent);
             free(ent->data);
             free(ent);
             vectorRemove(&manager->entities, i);
