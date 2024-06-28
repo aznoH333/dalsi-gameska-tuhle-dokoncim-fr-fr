@@ -2,6 +2,7 @@
 #include "gframework.h"
 #include "gameplay.h"
 #include "spritedata.h"
+#include "particleEffect.h"
 
 Entity* initBullet(int x, int y, float velocity, int team){
     Bullet* b = malloc(sizeof(Bullet));
@@ -40,7 +41,7 @@ void bulletOnCollide(Entity* this, Entity* other){
 
 }
 void bulletOnDestroy(Entity* this){
-
+    addEntity(getEntityManager(), initStaticParticle(this->x + GetRandomValue(-2, 2), this->y - 6 + GetRandomValue(-2, 2), SPRITE_START_EFFECTS + 22, 10));
 }
 void bulletClean(Entity* this){
 

@@ -16,8 +16,9 @@
 #define LAYER_BACKGROUND 0
 #define LAYER_WORLD 1
 #define LAYER_OBJECTS 2
-#define LAYER_UI 3
-#define LAYER_STATIC_UI 4
+#define LAYER_EFFECTS 3
+#define LAYER_UI 4
+#define LAYER_STATIC_UI 5
 #define LAYER_COUNT LAYER_STATIC_UI + 1
 
 #define FLIP_NONE 0

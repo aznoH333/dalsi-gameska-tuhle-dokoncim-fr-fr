@@ -92,16 +92,21 @@ void updateEntityManager(EntityManager* manager){
         // call update
         ent->updateFunction(ent);
 
-        // collision check
-        for (int j = 0; j < manager->entities.elementCount; j++){
-            if (i != j){
-                Entity* other = vectorGet(&manager->entities, j);
 
-                if (checkBoxCollisions(ent->x, ent->y, ent->w, ent->h, other->x, other->y, other->w, other->h)){
-                    ent->onCollide(ent, other);
+
+        if (ent->identifier != ENTITY_OTHER){
+            // collision check
+            for (int j = 0; j < manager->entities.elementCount; j++){
+                if (i != j){
+                    Entity* other = vectorGet(&manager->entities, j);
+
+                    if (other->identifier != ENTITY_OTHER && checkBoxCollisions(ent->x, ent->y, ent->w, ent->h, other->x, other->y, other->w, other->h)){
+                        ent->onCollide(ent, other);
+                    }
                 }
             }
         }
+        
 
         // destroy
         if (ent->shouldDestroy){
