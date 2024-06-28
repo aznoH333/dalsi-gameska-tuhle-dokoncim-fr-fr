@@ -8,6 +8,7 @@ Entity* initBullet(int x, int y, float velocity, int team){
     Bullet* b = malloc(sizeof(Bullet));
 
     b->velocity = velocity;
+    b->lifeTime = 160;
 
     Entity* out = initEntity(x, y, 16, 8, team, b, &bulletUpdate, &bulletOnCollide, &bulletOnDestroy, &bulletClean);
 
@@ -29,6 +30,10 @@ void bulletUpdate(Entity* this){
     // update
     {
         this->x += data->velocity;
+        data->lifeTime--;
+        if (data->lifeTime <= 0){
+            this->shouldDestroy = true;
+        }
     }
 
     // draw

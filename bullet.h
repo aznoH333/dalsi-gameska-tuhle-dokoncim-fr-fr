@@ -5,6 +5,7 @@
 
 struct Bullet{
     float velocity;
+    int lifeTime;
 };
 typedef struct Bullet Bullet;
 
