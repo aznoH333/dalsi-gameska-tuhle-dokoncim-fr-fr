@@ -100,7 +100,7 @@ void playerUpdate(Entity* this){
     // shooting
     {
         if (IsKeyDown(KEY_SPACE) && data->fireCooldown == 0){
-            addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, ENTITY_PLAYER));
+            addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, ENTITY_PLAYER_PROJECTILE));
             data->fireCooldown = FIRE_COOLDWON;
         }
     }

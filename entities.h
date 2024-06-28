@@ -35,6 +35,8 @@ typedef struct Entity Entity;
 #define ENTITY_PLAYER 0
 #define ENTITY_ENEMY 1
 #define ENTITY_OTHER 2
+#define ENTITY_PLAYER_PROJECTILE 3
+#define ENTITY_ENEMY_PROJECTILE 4
 
 
 

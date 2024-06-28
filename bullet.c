@@ -1,6 +1,7 @@
 #include "bullet.h"
 #include "gframework.h"
 #include "gameplay.h"
+#include "spritedata.h"
 
 Entity* initBullet(int x, int y, float velocity, int team){
     Bullet* b = malloc(sizeof(Bullet));
@@ -31,7 +32,7 @@ void bulletUpdate(Entity* this){
 
     // draw
     {
-        drawF(131, this->x, this->y, data->velocity < 0, LAYER_OBJECTS);
+        drawF(SPRITE_START_EFFECTS + 23, this->x, this->y, data->velocity < 0, LAYER_OBJECTS);
     }
 }
 
