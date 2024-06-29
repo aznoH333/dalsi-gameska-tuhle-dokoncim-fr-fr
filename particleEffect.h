@@ -28,5 +28,6 @@ void particleClean(Entity* this);
 
 void makeParticleAnimated(Entity* particle, int endFrame, int frameDuration);
 void makeParticleMove(Entity* particle, float xVelocity, float yVelocity, float gravity);
+void makeParticleAnimatedSingleLoop(Entity* particle, int endFrame);
 
 #endif

@@ -35,6 +35,14 @@ void makeParticleMove(Entity* particle, float xVelocity, float yVelocity, float 
     p->gravity = gravity;
 }
 
+void makeParticleAnimatedSingleLoop(Entity* particle, int endFrame){
+    Particle* p = particle->data;
+    p->isAnimated = true;
+    p->endFrame = endFrame;
+    p->frameDuration = p->lifeTime / (p->endFrame - p->startFrame);
+}
+
+
 
 void particleUpdate(Entity* this){
     Particle* data = this->data;

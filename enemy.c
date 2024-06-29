@@ -98,7 +98,13 @@ void enemyOnDestroy(Entity* this){
     int max = getRandomIntR(3, 5);
     for (int i = 0; i < max; i++){
         spawnGore(this, e);
-    }    
+    }  
+
+    // spawn explosion
+    Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 7, 15);
+    makeParticleAnimatedSingleLoop(p, SPRITE_START_EFFECTS + 10);
+    addEntity(e, p);
+
     
     
 }
