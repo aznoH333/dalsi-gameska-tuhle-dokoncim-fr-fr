@@ -12,6 +12,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     enemy->enemyType = enemyType;
     enemy->flipDirection = 0;
     enemy->hurtTimer = 0;
+    enemy->animationFrame = 0;
 
     switch (enemyType) {
         case ENEMY_GREY_LIZARD:
@@ -19,11 +20,15 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             enemy->moveSpeed = 1.0f;
             entity->w = 16;
             entity->h = 16;
+            enemy->animationFrameDuration = 10;
+
             break;
         default:
             gLog(LOG_ERR,"Unknown enemy type %d", enemyType);
             break;
     }
+
+    enemy->animationTimer = enemy->animationFrameDuration;
 
 }
 
@@ -42,7 +47,13 @@ const int HURT_TIMER_MAX = 10;
 void enemyUpdate(Entity* this){
     Enemy* data = this->data;
     
-    
+    {// animation
+        data->animationTimer--;
+        if (data->animationTimer <= 0){
+            data->animationTimer = data->animationFrameDuration;
+            data->animationFrame = ++data->animationFrame % 2;
+        }
+    }
     
     
     {// draw
@@ -57,7 +68,7 @@ void enemyUpdate(Entity* this){
 
 
         // draw
-        drawFSC(87, this->x, this->y, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
+        drawFSC(87 + data->animationFrame, this->x, this->y, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
     }
 }
 

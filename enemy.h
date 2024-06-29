@@ -9,6 +9,10 @@ struct Enemy{
     int enemyType;
     int health;
     int hurtTimer;
+    int animationTimer;
+    int animationFrameDuration;
+    int animationFrame;
+
 };
 typedef struct Enemy Enemy;
 
