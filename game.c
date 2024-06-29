@@ -26,6 +26,7 @@
 #include "levelEditor.h"
 #include "gameplay.h"
 #include "entities.h"
+#include "gameCamera.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -54,6 +55,7 @@ int main(void)
     unloadGameplay(g);
 	disposeFramework();
     unloadEntityManager(getEntityManager());
+    unloadCameraManager(getCameraManager());
 
     return 0;
 }

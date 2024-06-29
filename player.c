@@ -5,6 +5,7 @@
 #include "level.h"
 #include <stdlib.h>
 #include "bullet.h"
+#include "gameCamera.h"
 
 Entity* initPlayer(int x, int y){
     Player* p = malloc(sizeof(Player));
@@ -109,8 +110,10 @@ void playerUpdate(Entity* this){
     {
         this->x += data->xVelocity;
         this->y += data->yVelocity;
-        setCameraPos((Vector2){this->x - 250, this->y - 150}); // temp camera movement
+        
         data->fireCooldown -= data->fireCooldown > 0;
+
+        updateGameCameraPosition(getCameraManager(), this->x, this->y);
     }
 
 
