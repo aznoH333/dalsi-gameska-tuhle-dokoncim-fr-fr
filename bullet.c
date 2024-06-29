@@ -9,6 +9,7 @@ Entity* initBullet(int x, int y, float velocity, int team){
 
     b->velocity = velocity;
     b->lifeTime = 160;
+    b->damage = 5;
 
     Entity* out = initEntity(x, y, 16, 8, team, b, &bulletUpdate, &bulletOnCollide, &bulletOnDestroy, &bulletClean);
 

@@ -21,6 +21,7 @@
 *
 ********************************************************************************************/
 #include "gframework.h"
+#include "gutil.h"
 #include "raylib.h"
 #include "levelEditor.h"
 #include "gameplay.h"
@@ -46,7 +47,7 @@ int main(void)
             
         //updateLevelEditor(l);
         updateGameplay(g);
-        
+        textF("fps %d", 10, 10, GetFPS());
         fUpdate();
     }
     //unloadLevelEditor(l);

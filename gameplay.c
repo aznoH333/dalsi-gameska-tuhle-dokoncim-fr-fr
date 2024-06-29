@@ -1,4 +1,5 @@
 #include "gameplay.h"
+#include "enemy.h"
 #include "entities.h"
 #include "level.h"
 #include "player.h"
@@ -41,6 +42,17 @@ void startLevel(Gameplay* g, const char* levelPath){
             }
         }
         addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
+    }
+
+    // temporary spawn all enemies
+    {
+        for (int i = 0; i < g->level->entityeMarkers.elementCount; i++){
+            EntityMarker* marker = vectorGet(&g->level->entityeMarkers, i);
+
+            if (marker->id == 9){
+                addEntity(getEntityManager(), initEnemy(marker->x * 16, marker->y * 16, ENEMY_GREY_LIZARD));
+            }
+        }
     }
 }
 

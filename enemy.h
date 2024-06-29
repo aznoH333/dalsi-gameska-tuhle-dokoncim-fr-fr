@@ -8,6 +8,7 @@ struct Enemy{
     bool flipDirection;
     int enemyType;
     int health;
+    int hurtTimer;
 };
 typedef struct Enemy Enemy;
 

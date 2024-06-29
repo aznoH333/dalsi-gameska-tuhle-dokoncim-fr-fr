@@ -1,9 +1,13 @@
 #include "enemy.h"
+#include "entities.h"
 #include "gframework.h"
+#include "bullet.h"
 
 void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     
     enemy->enemyType = enemyType;
+    enemy->flipDirection = 0;
+    enemy->hurtTimer = 0;
 
     switch (enemyType) {
         case ENEMY_GREY_LIZARD:
@@ -30,15 +34,50 @@ Entity* initEnemy(int x, int y, int type){
     return out;
 }
 
+const int HURT_TIMER_MAX = 10;
 void enemyUpdate(Entity* this){
     Enemy* data = this->data;
     
+    
+    
+    
     {// draw
-        drawF(87, this->x, this->y, 0, LAYER_OBJECTS);
+        // hurt timer
+        data->hurtTimer -= data->hurtTimer > 0;
+        
+        // color and scale
+        float hurtPercentage = (float) data->hurtTimer / HURT_TIMER_MAX;
+        float scaleMultiplier = (hurtPercentage * 0.3f) + 1.0f;
+        float healthColor =  (1 - (hurtPercentage * 0.4));
+        Color c = {255, 255 * healthColor, 255 * healthColor, 255};
+
+
+        // draw
+        drawFSC(87, this->x, this->y, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
     }
 }
-void enemyOnCollide(Entity* this, Entity* other){
 
+
+void takeDamage(Entity* this, int damage){
+    Enemy* data = this->data;
+
+    data->health -= damage;
+    data->hurtTimer = HURT_TIMER_MAX;
+
+    if (data->health <= 0){
+        this->shouldDestroy = true;
+    }
+}
+
+
+void enemyOnCollide(Entity* this, Entity* other){
+    if (other->identifier == ENTITY_PLAYER_PROJECTILE){
+        
+        Bullet* otherData = other->data;
+        takeDamage(this, otherData->damage);
+        other->shouldDestroy = true;
+
+    }
 }
 void enemyOnDestroy(Entity* this){
 

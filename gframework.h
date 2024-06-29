@@ -43,6 +43,8 @@ void resetCameraZoom();
 // drawing
 void drawRFSC(int spriteIndex, int x, int y, float rotation, int flip, float scale, Color c, int layer);
 void drawRSC(int spriteIndex, int x, int y, float rotation, float scale, Color c, int layer);
+void drawFSC(int spriteIndex, int x, int y, int flip, float scale, Color c, int layer);
+
 void drawR(int spriteIndex, int x, int y, float rotation, int layer);
 void drawC(int spriteIndex, int x, int y, Color c, int layer);
 void drawS(int spriteIndex, int x, int y, float scale, int layer);

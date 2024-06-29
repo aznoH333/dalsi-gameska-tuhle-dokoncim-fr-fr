@@ -284,6 +284,10 @@ void drawRSC(int spriteIndex, int x, int y, float rotation, float scale, Color c
 	insertDrawRequest(spriteIndex, x, y, rotation, FLIP_NONE, scale, c, layer, &loadedSheet);
 }
 
+void drawFSC(int spriteIndex, int x, int y, int flip, float scale, Color c, int layer){
+	drawRFSC(spriteIndex, x, y, 0.0f, flip, scale, c, layer);
+}
+
 void drawR(int spriteIndex, int x, int y, float rotation, int layer){
 	drawRSC(spriteIndex, x, y, rotation, 1.0f, WHITE, layer);
 }
