@@ -1,5 +1,6 @@
 #include "particleEffect.h"
 #include "gframework.h"
+#include <stdbool.h>
 
 Entity* initStaticParticle(int x, int y, int sprite, int lifeTime){
     Particle* p = malloc(sizeof(Particle));
@@ -17,16 +18,33 @@ Entity* initStaticParticle(int x, int y, int sprite, int lifeTime){
 
 }
 
+void makeParticleAnimated(Entity* particle, int endFrame, int frameDuration){
+    Particle* p = particle->data;
+
+    p->isAnimated = true;
+    p->endFrame = endFrame;
+    p->frameDuration = frameDuration;
+}
+
+void makeParticleMove(Entity* particle, float xVelocity, float yVelocity, float gravity){
+    Particle* p = particle->data;
+    
+    p->isStatic = false;
+    p->xVelocity = xVelocity;
+    p->yVelocity = yVelocity;
+    p->gravity = gravity;
+}
+
+
 void particleUpdate(Entity* this){
     Particle* data = this->data;
 
     // update movement
     {
         if (!data->isStatic){
-            // todo
             this->x += data->xVelocity;
             this->y += data->yVelocity;
-            this->y += data->gravity;
+            data->yVelocity += data->gravity;
 
         }
     }
@@ -34,7 +52,6 @@ void particleUpdate(Entity* this){
     // animation
     {
         if (data->isAnimated){
-            // TODO
             data->timer--;
 
             if (data->timer <= 0){
@@ -63,7 +80,7 @@ void particleUpdate(Entity* this){
     }
 }
 void particleOnCollide(Entity* this, Entity* other){
-
+    
 }
 
 void particleOnDestroy(Entity* this){
