@@ -4,6 +4,7 @@
 #include "gframework.h"
 #include "bullet.h"
 #include "gutil.h"
+#include "level.h"
 #include "particleEffect.h"
 #include "spritedata.h"
 
@@ -13,6 +14,9 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     enemy->flipDirection = 0;
     enemy->hurtTimer = 0;
     enemy->animationFrame = 0;
+    enemy->gravity = 0.1f;
+    enemy->xVelocity = 0;
+    enemy->yVelocity = 0;
 
     switch (enemyType) {
         case ENEMY_GREY_LIZARD:
@@ -21,6 +25,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             entity->w = 16;
             entity->h = 16;
             enemy->animationFrameDuration = 10;
+            
 
             break;
         default:
@@ -46,7 +51,34 @@ Entity* initEnemy(int x, int y, int type){
 const int HURT_TIMER_MAX = 10;
 void enemyUpdate(Entity* this){
     Enemy* data = this->data;
+    Gameplay* gameplay = getGameplay();
     
+
+    {// walking
+        data->xVelocity = data->moveSpeed * boolToSign(data->flipDirection);
+
+        // falling
+        bool isTouchingGround = collidesWithLevel(gameplay->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
+
+        if (!isTouchingGround){
+            data->yVelocity += data->gravity;
+        }else {
+            data->yVelocity = 0.0f;
+        }
+
+
+        // wall collisions
+        if (collidesWithLevel(gameplay->level, this->x + data->xVelocity, this->y, this->w, this->h - 4)){
+            data->flipDirection = !data->flipDirection;
+        }
+    }
+
+
+    {// update values
+        this->x += data->xVelocity;
+        this->y += data->yVelocity;
+    }
+
     {// animation
         data->animationTimer--;
         if (data->animationTimer <= 0){

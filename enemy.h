@@ -13,6 +13,9 @@ struct Enemy{
     int animationFrameDuration;
     int animationFrame;
 
+    float yVelocity;
+    float xVelocity;
+    float gravity;
 };
 typedef struct Enemy Enemy;
 
