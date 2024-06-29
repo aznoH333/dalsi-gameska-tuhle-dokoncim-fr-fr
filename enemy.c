@@ -87,9 +87,6 @@ void enemyOnCollide(Entity* this, Entity* other){
 
 void spawnGore(Entity* this, EntityManager* e){
     Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 19, 120);
-    
-    gLog(LOG_INF, "%f", getRandomFloatRange(-1, 1));
-    
     makeParticleAnimated(p, SPRITE_START_EFFECTS + 21, 5);
     makeParticleMove(p, getRandomFloatRange(-1.0f, 1.0f), getRandomFloatRange(-3.0f, 1.0f), 0.1f);
     addEntity(e, p);

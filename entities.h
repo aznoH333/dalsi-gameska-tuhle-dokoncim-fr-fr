@@ -18,8 +18,8 @@ typedef struct EntityMarker EntityMarker;
 
 
 struct Entity{
-    int x;
-    int y;
+    float x;
+    float y;
     int w;
     int h;
     int identifier;

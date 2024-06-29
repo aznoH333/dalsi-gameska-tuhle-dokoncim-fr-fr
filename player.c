@@ -78,7 +78,7 @@ void playerUpdate(Entity* this){
             
             if (data->yVelocity != 0.0f){
                 this->y += data->yVelocity;
-                this->y -= this->y % 16;
+                this->y = (int) this->y - ((int)this->y % 16);
                 this->y += 16;
             }
             
