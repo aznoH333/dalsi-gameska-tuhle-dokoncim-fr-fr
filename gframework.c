@@ -128,9 +128,12 @@ void drawSpriteData(DrawingData* data){
 		src.height *= -1;
 	}
 	
-	//Rectangle src = {(data->spriteIndex % data->targetSheet->width) * data->targetSheet->defaultSpriteSize, floor((float)data->spriteIndex / data->targetSheet->width) * data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize, data->targetSheet->defaultSpriteSize};
 	
-	Rectangle dest = {data->x + data->targetSheet->originOffset, data->y + data->targetSheet->originOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
+	//Rectangle dest = {data->x + data->targetSheet->originOffset, data->y + data->targetSheet->originOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
+	float scalingOffset = (data->scale * data->targetSheet->defaultSpriteSize / 4.0f);
+	Rectangle dest = {data->x + data->targetSheet->originOffset - scalingOffset, data->y + data->targetSheet->originOffset - scalingOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
+	
+	
 	Vector2 origin = {data->targetSheet->originOffset, data->targetSheet->originOffset};
 	DrawTexturePro(data->targetSheet->spriteSheetTexture, src, dest, origin, data->rotation, data->c);
 }
