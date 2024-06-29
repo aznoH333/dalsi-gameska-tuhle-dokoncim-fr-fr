@@ -22,6 +22,7 @@ void makeParticleAnimated(Entity* particle, int endFrame, int frameDuration){
     Particle* p = particle->data;
 
     p->isAnimated = true;
+    p->timer = frameDuration;
     p->endFrame = endFrame;
     p->frameDuration = frameDuration;
 }
@@ -40,6 +41,8 @@ void makeParticleAnimatedSingleLoop(Entity* particle, int endFrame){
     p->isAnimated = true;
     p->endFrame = endFrame;
     p->frameDuration = p->lifeTime / (p->endFrame - p->startFrame);
+    p->timer = p->frameDuration;
+
 }
 
 
