@@ -2,6 +2,7 @@
 #define GAME_CAMERA
 
 #include "gvector.h"
+#include <stdbool.h>
 
 #define CAMERA_POINT_FIXED 0
 #define CAMERA_POINT_AUTO 1
@@ -22,6 +23,7 @@ struct CameraManager{
     CameraPoint* nextPoint;
     float currentProgress;
     int currentPointIndex;
+    bool reachedEnd;
 };
 typedef struct CameraManager CameraManager;
 

@@ -14,6 +14,7 @@ CameraManager* initCameraManager(){
     out->nextPoint = 0;
     out->currentProgress = 0;
     out->currentPointIndex = 0;
+    out->reachedEnd = false;
 
     return out;
 }
@@ -61,17 +62,24 @@ void updateCameraManager(CameraManager* manager){
 
     {// check progress
         if (manager->currentProgress >= 1){
-            manager->currentProgress = 0;
-            manager->currentPointIndex++;
 
-            if (manager->currentPointIndex != manager->cameraPoints.elementCount){
+            if (manager->currentPointIndex != manager->cameraPoints.elementCount - 2){
+                manager->currentProgress = 0;
+                manager->currentPointIndex++;
+
                 manager->currentPoint = vectorGet(&manager->cameraPoints, manager->currentPointIndex);
                 manager->nextPoint = vectorGet(&manager->cameraPoints, manager->currentPointIndex + 1);
+            }else {
+                manager->reachedEnd = true;
+                manager->currentPoint = manager->nextPoint;
+                manager->currentProgress = 0;
             }
             gLog(LOG_INF, "progress %d current x %d current y %d", manager->currentPointIndex, manager->currentPoint->x, manager->currentPoint->y);
         }
     }
-    if (IsKeyDown(KEY_F) && manager->currentPointIndex != manager->cameraPoints.elementCount){
+
+    // temporary cheaty camera movement
+    if (IsKeyDown(KEY_F) && manager->reachedEnd == false){
         manager->currentProgress += 0.01;
     }
 
