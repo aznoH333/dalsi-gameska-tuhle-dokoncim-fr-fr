@@ -45,6 +45,7 @@ EntityMarker* initEntityMarker(char* levelData, int markerIndex);
 EntityMarker* initEntityMarkerBasic(int id, int x, int y);
 void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex);
 void disposeEntityMarker(EntityMarker* marker);
+void activateEntityMarker(EntityMarker* marker);
 
 // entities
 Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*), void (*clean)(struct Entity*));

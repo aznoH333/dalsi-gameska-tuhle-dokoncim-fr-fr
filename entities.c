@@ -3,6 +3,7 @@
 #include "gutil.h"
 #include "gvector.h"
 #include <stdlib.h>
+#include "enemy.h"
 
 
 // Entity marker
@@ -35,6 +36,23 @@ void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex){
     writeIntAsChar(fileData, marker->y, 2, markerIndex + 2);
     writeIntAsChar(fileData, marker->id, 2, markerIndex + 4);
 }
+
+void activateEntityMarker(EntityMarker* marker){
+    
+    if (marker->hasBeenActivated){
+        return;
+    }
+
+    marker->hasBeenActivated = true;
+    // hardcoded mess
+    // no real way to make it better tho
+    switch (marker->id) {
+        default: break;
+        // spawn grey lizard
+        case 9: addEntity(getEntityManager(), initEnemy(marker->x * 16, marker->y * 16, ENEMY_GREY_LIZARD)); break;
+    }
+}
+
 
 void disposeEntityMarker(EntityMarker* marker){
     //free(marker);

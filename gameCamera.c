@@ -3,6 +3,8 @@
 #include "gutil.h"
 #include "gvector.h"
 #include <stdlib.h>
+#include "entities.h"
+#include "gameplay.h"
 
 CameraManager* initCameraManager(){
     CameraManager* out = malloc(sizeof(CameraManager));
@@ -59,6 +61,21 @@ void unloadCameraManager(CameraManager* manager){
 
 
 void updateCameraManager(CameraManager* manager){
+    
+    {// activate entity markers
+        Gameplay* g = getGameplay();
+        
+        for (int i = 0; i < g->level->entityeMarkers.elementCount; i++){
+            EntityMarker* marker = vectorGet(&g->level->entityeMarkers, i);
+
+            if (checkBoxCollisions(manager->cameraX, manager->cameraY, SCREEN_WIDTH / DEFAULT_CAMERA_ZOOM, SCREEN_HEIGHT / DEFAULT_CAMERA_ZOOM, marker->x * 16, marker->y * 16, 16, 16)){
+                activateEntityMarker(marker);
+            }
+        }
+    }
+    
+    
+    
     
     {// calculate path to next
         manager->cameraX = (manager->currentProgress * (manager->nextPoint->x - manager->currentPoint->x)) + manager->currentPoint->x;
