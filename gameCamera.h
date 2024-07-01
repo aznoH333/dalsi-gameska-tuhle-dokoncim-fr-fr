@@ -4,7 +4,7 @@
 #include "gvector.h"
 #include <stdbool.h>
 
-#define CAMERA_POINT_FIXED 0
+#define CAMERA_POINT_FREE 0
 #define CAMERA_POINT_AUTO 1
 
 struct CameraPoint{
@@ -24,6 +24,7 @@ struct CameraManager{
     float currentProgress;
     int currentPointIndex;
     bool reachedEnd;
+    float cameraSpeed;
 };
 typedef struct CameraManager CameraManager;
 

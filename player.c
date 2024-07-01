@@ -22,7 +22,7 @@ Entity* initPlayer(int x, int y){
 
 
 const float GRAVITY = 0.1f;
-const float JUMP_STRENGTH = 2.5f;
+const float JUMP_STRENGTH = 3.4f;
 const int UPPER_BODY_OFFSET = -6;
 const float WALK_ACCELERATION = 0.2f;
 const float MAX_WALK_SPEED = 2.0f;

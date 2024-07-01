@@ -11,6 +11,9 @@
 #include <stdio.h>
 
 
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+#define DEFAULT_CAMERA_ZOOM 2.8f
 
 
 #define LAYER_BACKGROUND 0

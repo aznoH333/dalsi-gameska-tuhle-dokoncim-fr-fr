@@ -15,6 +15,7 @@ CameraManager* initCameraManager(){
     out->currentProgress = 0;
     out->currentPointIndex = 0;
     out->reachedEnd = false;
+    out->cameraSpeed = 0;
 
     return out;
 }
@@ -25,6 +26,10 @@ CameraManager* getCameraManager(){
         instance = initCameraManager();
     }
     return instance;
+}
+
+void calculateSegmentSpeed(CameraManager* manager){
+    manager->cameraSpeed = 1 / pythagoras(manager->currentPoint->x, manager->currentPoint->y, manager->nextPoint->x, manager->nextPoint->y);
 }
 
 void addCameraMarker(CameraManager* manager, int x, int y, int type){
@@ -41,6 +46,8 @@ void addCameraMarker(CameraManager* manager, int x, int y, int type){
 
     }else if (manager->cameraPoints.elementCount == 1){
         manager->nextPoint = point;
+        calculateSegmentSpeed(manager);
+
     }
 
     vectorPush(&manager->cameraPoints, point);
@@ -69,18 +76,21 @@ void updateCameraManager(CameraManager* manager){
 
                 manager->currentPoint = vectorGet(&manager->cameraPoints, manager->currentPointIndex);
                 manager->nextPoint = vectorGet(&manager->cameraPoints, manager->currentPointIndex + 1);
+                calculateSegmentSpeed(manager);
+                gLog(LOG_INF, "camera progress %d current x %d current y %d", manager->currentPointIndex, manager->currentPoint->x, manager->currentPoint->y);
+
             }else {
                 manager->reachedEnd = true;
                 manager->currentPoint = manager->nextPoint;
                 manager->currentProgress = 0;
+                gLog(LOG_INF, "camera reached end");
             }
-            gLog(LOG_INF, "progress %d current x %d current y %d", manager->currentPointIndex, manager->currentPoint->x, manager->currentPoint->y);
         }
     }
 
     // temporary cheaty camera movement
     if (IsKeyDown(KEY_F) && manager->reachedEnd == false){
-        manager->currentProgress += 0.01;
+        manager->currentProgress += manager->cameraSpeed;
     }
 
 
@@ -89,4 +99,36 @@ void updateCameraManager(CameraManager* manager){
 
 void updateGameCameraPosition(CameraManager* manager, float x, float y){
     
+    if (manager->currentPoint->cameraPointType != CAMERA_POINT_FREE || manager->reachedEnd){
+        return;
+    }
+
+
+    x -= SCREEN_WIDTH / DEFAULT_CAMERA_ZOOM / 2.0f;
+    y -= SCREEN_HEIGHT / DEFAULT_CAMERA_ZOOM / 2.0f;
+    
+    
+    
+    float xProgress = (x - manager->currentPoint->x) / (manager->nextPoint->x - manager->currentPoint->x);
+
+    if (xProgress > manager->currentProgress){
+        manager->currentProgress = xProgress;
+    }
+
+    
+    /*
+    if (manager->currentPoint->y == manager->nextPoint->y){
+        return;
+    }
+    bool isGoingUp = manager->currentPoint->y > manager->nextPoint->y;
+    
+
+
+    if (isGoingUp && y < manager->cameraY){
+        manager->currentProgress = (y - manager->currentPoint->y) / (manager->nextPoint->y - manager->currentPoint->y);
+    }
+    else if (!isGoingUp && y > manager->cameraY){
+        manager->currentProgress = (y - manager->currentPoint->y) / (manager->nextPoint->y - manager->currentPoint->y);
+    }*/
+
 }
