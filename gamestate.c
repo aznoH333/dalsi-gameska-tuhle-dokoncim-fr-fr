@@ -56,6 +56,7 @@ GameState* getGameState(){
 void changeGameState(GameState* gamestate, int newState){
     unloadCurrentState(gamestate);
     gamestate->currentState = newState;
+    setCameraZoom(DEFAULT_CAMERA_ZOOM);
     loadCurrentState(gamestate);
 }
 

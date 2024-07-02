@@ -31,7 +31,7 @@ CameraManager* getCameraManager(){
 }
 
 void calculateSegmentSpeed(CameraManager* manager){
-    manager->cameraSpeed = 1 / pythagoras(manager->currentPoint->x, manager->currentPoint->y, manager->nextPoint->x, manager->nextPoint->y);
+    manager->cameraSpeed = 0.5 / pythagoras(manager->currentPoint->x, manager->currentPoint->y, manager->nextPoint->x, manager->nextPoint->y);
 }
 
 void addCameraMarker(CameraManager* manager, int x, int y, int type){
@@ -111,6 +111,11 @@ void updateCameraManager(CameraManager* manager){
         }
     }
 
+    {// autoprogress
+        if (manager->currentPoint->cameraPointType == CAMERA_POINT_AUTO){
+            manager->currentProgress += manager->cameraSpeed;
+        }
+    }
 
 
     setCameraPos((Vector2){manager->cameraX, manager->cameraY});
@@ -132,21 +137,5 @@ void updateGameCameraPosition(CameraManager* manager, float x, float y){
     if (xProgress > manager->currentProgress){
         manager->currentProgress = xProgress;
     }
-
-    
-    /*
-    if (manager->currentPoint->y == manager->nextPoint->y){
-        return;
-    }
-    bool isGoingUp = manager->currentPoint->y > manager->nextPoint->y;
-    
-
-
-    if (isGoingUp && y < manager->cameraY){
-        manager->currentProgress = (y - manager->currentPoint->y) / (manager->nextPoint->y - manager->currentPoint->y);
-    }
-    else if (!isGoingUp && y > manager->cameraY){
-        manager->currentProgress = (y - manager->currentPoint->y) / (manager->nextPoint->y - manager->currentPoint->y);
-    }*/
 
 }

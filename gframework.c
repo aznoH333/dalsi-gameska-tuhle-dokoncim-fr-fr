@@ -123,8 +123,8 @@ void drawSpriteData(DrawingData* data){
 	}
 	
 	
-	float scalingOffset = ((data->scale - 1) * data->targetSheet->defaultSpriteSize / 2);
-	Rectangle dest = {data->x + data->targetSheet->originOffset - scalingOffset, data->y + data->targetSheet->originOffset - scalingOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
+	
+	Rectangle dest = {data->x + data->targetSheet->originOffset, data->y + data->targetSheet->originOffset, data->targetSheet->defaultSpriteSize * data->scale, data->targetSheet->defaultSpriteSize * data->scale};
 	
 	
 	Vector2 origin = {data->targetSheet->originOffset, data->targetSheet->originOffset};
