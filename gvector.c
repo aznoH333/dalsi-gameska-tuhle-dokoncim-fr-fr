@@ -7,12 +7,13 @@
 // tohle je chyba, ktere budu pozdeji litovat
 // anyway...
 
+// uz ty chyby lituju
 
-Vector initVector(){
-    Vector out;
-    out.elements = malloc(sizeof(void*) * 10);
-    out.elementCount = 0; 
-    out.allocatedSize = 10;   
+Vector* initVector(){
+    Vector* out = malloc(sizeof(Vector));
+    out->elements = malloc(sizeof(void*) * 10);
+    out->elementCount = 0; 
+    out->allocatedSize = 10;   
     return out;
 }
 
@@ -67,4 +68,5 @@ void vectorClear(Vector* v){
 void vectorFree(Vector* v){
     vectorClear(v);
     free(v->elements);
+    free(v);
 }

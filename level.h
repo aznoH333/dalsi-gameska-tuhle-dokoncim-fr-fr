@@ -19,7 +19,7 @@ struct Level {
     int width;
     int height;
     File* levelFile;
-    Vector entityeMarkers;
+    Vector* entityeMarkers;
 
 };
 typedef struct Level Level;

@@ -14,12 +14,20 @@
 
 
 
+LevelEditor* editorInstance = 0;
+LevelEditor* getLevelEditor(){
+    gLog(LOG_INF, "%p", editorInstance);
+    if (editorInstance == 0) {
+        editorInstance = initLevelEditor();
+    }
+    return editorInstance;
+}
 
-
-LevelEditor* initLevelEditor(const char* levelPath){
+LevelEditor* initLevelEditor(){
+    gLog(LOG_INF, "Initialized level editor");
     LevelEditor* out = malloc(sizeof(LevelEditor));
 
-    out->level = loadLevel(levelPath);
+    out->level = 0;
 
     out->cameraPos = (Vector2) {0, 0};
     out->cameraZoom = 1.0f;
@@ -129,14 +137,14 @@ void updateLevelEditor(LevelEditor* editor){
         ){
             if (editor->placeMode == PLACE_MODE_ENTITES){ // entity markers
                 if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-                    vectorPush(&editor->level->entityeMarkers, initEntityMarkerBasic(editor->selectedTile, editor->cursorInWorldX, editor->cursorInWorldY));
+                    vectorPush(editor->level->entityeMarkers, initEntityMarkerBasic(editor->selectedTile, editor->cursorInWorldX, editor->cursorInWorldY));
                 }else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)){
                     // find and remove entities
-                    for (int i = 0; i < editor->level->entityeMarkers.elementCount; i++){
-                        EntityMarker* m = vectorGet(&editor->level->entityeMarkers, i);
+                    for (int i = 0; i < editor->level->entityeMarkers->elementCount; i++){
+                        EntityMarker* m = vectorGet(editor->level->entityeMarkers, i);
 
                         if (m->x == editor->cursorInWorldX && m->y == editor->cursorInWorldY){
-                            vectorRemove(&editor->level->entityeMarkers, i);
+                            vectorRemove(editor->level->entityeMarkers, i);
                             i--;
                         }
                     }

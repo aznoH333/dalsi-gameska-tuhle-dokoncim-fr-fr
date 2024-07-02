@@ -9,7 +9,7 @@ struct Vector{
 typedef struct Vector Vector;
 
 
-Vector initVector();
+Vector* initVector();
 void vectorResize(Vector* v);
 void vectorPush(Vector* v, void* element);
 void vectorRemove(Vector* v, int index);

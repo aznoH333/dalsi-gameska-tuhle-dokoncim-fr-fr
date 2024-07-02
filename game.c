@@ -24,6 +24,7 @@
 #include "gutil.h"
 #include "raylib.h"
 
+#include "levelEditor.h"
 #include "gamestate.h"
 
 //------------------------------------------------------------------------------------
@@ -32,20 +33,21 @@
 int main(void)
 {
     initFramework();
- 
-    GameState* game = getGameState();
+    
 
+    GameState* game = getGameState();
+    
 
     // Main game loop
     while (!WindowShouldClose())
     {
             
-        updateGameState(game);
+        //updateGameState(game);
         textF("fps %d", 10, 10, GetFPS());
         fUpdate();
     }
     
-    disposeGameState(game);
+    //disposeGameState(game);
 	disposeFramework();
     
 

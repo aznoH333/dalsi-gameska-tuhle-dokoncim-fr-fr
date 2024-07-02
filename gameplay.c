@@ -42,8 +42,8 @@ void startLevel(Gameplay* g, const char* levelPath){
 
         for (int x = 0; x < g->level->width; x++){
             for (int y = 0; y < g->level->height; y++){
-                for (int i = 0; i < g->level->entityeMarkers.elementCount; i++){
-                    EntityMarker* marker = vectorGet(&g->level->entityeMarkers, i);
+                for (int i = 0; i < g->level->entityeMarkers->elementCount; i++){
+                    EntityMarker* marker = vectorGet(g->level->entityeMarkers, i);
 
                     if (marker->x == x && marker->y == y && (marker->id == 2 || marker->id == 3)){
                         addCameraMarker(m, x * 16, y * 16, marker->id - 2);
@@ -62,8 +62,8 @@ void startLevel(Gameplay* g, const char* levelPath){
     // find player
     {
         EntityMarker* playerMarker;
-        for (int i = 0; i < g->level->entityeMarkers.elementCount; i++){
-            playerMarker = vectorGet(&g->level->entityeMarkers, i);
+        for (int i = 0; i < g->level->entityeMarkers->elementCount; i++){
+            playerMarker = vectorGet(g->level->entityeMarkers, i);
             
             if (playerMarker->id == 0){
                 break;

@@ -53,7 +53,7 @@ Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void 
 
 // entity manager
 struct EntityManager{
-    Vector entities;
+    Vector* entities;
 };
 typedef struct EntityManager EntityManager;
 

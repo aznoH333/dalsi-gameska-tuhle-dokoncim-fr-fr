@@ -58,7 +58,7 @@ Level* loadLevel(const char* levePath){
         
         // read markers
         for (int i = markersStart; i < f->contentsLength; i+=6){
-            vectorPush(&out->entityeMarkers, initEntityMarker(f->contents, i));
+            vectorPush(out->entityeMarkers, initEntityMarker(f->contents, i));
         }
     }
 
@@ -97,8 +97,8 @@ void saveLevel(Level* lvl){
 
     {
         // save markers
-        for (int i = 0; i < lvl->entityeMarkers.elementCount; i++){
-            saveEntityMarker(vectorGet(&lvl->entityeMarkers, i), newContents, contentsIndex);
+        for (int i = 0; i < lvl->entityeMarkers->elementCount; i++){
+            saveEntityMarker(vectorGet(lvl->entityeMarkers, i), newContents, contentsIndex);
             contentsIndex += 6;
         }
     }
@@ -128,11 +128,11 @@ void unloadLevel(Level* level){
         free(level->background[i]);
     }
 
-    for (int i = 0; i < level->entityeMarkers.elementCount; i++){
-        disposeEntityMarker(vectorGet(&level->entityeMarkers, i));
+    for (int i = 0; i < level->entityeMarkers->elementCount; i++){
+        disposeEntityMarker(vectorGet(level->entityeMarkers, i));
     }
 
-    vectorFree(&level->entityeMarkers);
+    vectorFree(level->entityeMarkers);
 
     free(level->tiles);
     free(level->background);
@@ -263,8 +263,8 @@ void drawLevel(Level* lvl, int drawType){
         return;
     }
     // draw markers
-    for (int i = 0; i < lvl->entityeMarkers.elementCount; i++){
-        EntityMarker* marker = vectorGet(&lvl->entityeMarkers, i);
+    for (int i = 0; i < lvl->entityeMarkers->elementCount; i++){
+        EntityMarker* marker = vectorGet(lvl->entityeMarkers, i);
         drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
     }
 }

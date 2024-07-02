@@ -18,7 +18,7 @@ typedef struct CameraPoint CameraPoint;
 struct CameraManager{
     float cameraX;
     float cameraY;
-    Vector cameraPoints;
+    Vector* cameraPoints;
     CameraPoint* currentPoint;
     CameraPoint* nextPoint;
     float currentProgress;

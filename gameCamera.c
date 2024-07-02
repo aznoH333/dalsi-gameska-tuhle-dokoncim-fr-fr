@@ -43,20 +43,20 @@ void addCameraMarker(CameraManager* manager, int x, int y, int type){
 
     gLog(LOG_INF, "Added camera marker x: %d y: %d type: %d", x, y, type);
 
-    if (manager->cameraPoints.elementCount == 0){
+    if (manager->cameraPoints->elementCount == 0){
         manager->currentPoint = point;
 
-    }else if (manager->cameraPoints.elementCount == 1){
+    }else if (manager->cameraPoints->elementCount == 1){
         manager->nextPoint = point;
         calculateSegmentSpeed(manager);
 
     }
 
-    vectorPush(&manager->cameraPoints, point);
+    vectorPush(manager->cameraPoints, point);
 }
 
 void unloadCameraManager(CameraManager* manager){
-    vectorFree(&manager->cameraPoints);
+    vectorFree(manager->cameraPoints);
 }
 
 
@@ -65,8 +65,8 @@ void updateCameraManager(CameraManager* manager){
     {// activate entity markers
         Gameplay* g = getGameplay();
         
-        for (int i = 0; i < g->level->entityeMarkers.elementCount; i++){
-            EntityMarker* marker = vectorGet(&g->level->entityeMarkers, i);
+        for (int i = 0; i < g->level->entityeMarkers->elementCount; i++){
+            EntityMarker* marker = vectorGet(g->level->entityeMarkers, i);
 
             if (checkBoxCollisions(manager->cameraX, manager->cameraY, SCREEN_WIDTH / DEFAULT_CAMERA_ZOOM, SCREEN_HEIGHT / DEFAULT_CAMERA_ZOOM, marker->x * 16, marker->y * 16, 16, 16)){
                 activateEntityMarker(marker);
@@ -87,12 +87,12 @@ void updateCameraManager(CameraManager* manager){
     {// check progress
         if (manager->currentProgress >= 1){
 
-            if (manager->currentPointIndex != manager->cameraPoints.elementCount - 2){
+            if (manager->currentPointIndex != manager->cameraPoints->elementCount - 2){
                 manager->currentProgress = 0;
                 manager->currentPointIndex++;
 
-                manager->currentPoint = vectorGet(&manager->cameraPoints, manager->currentPointIndex);
-                manager->nextPoint = vectorGet(&manager->cameraPoints, manager->currentPointIndex + 1);
+                manager->currentPoint = vectorGet(manager->cameraPoints, manager->currentPointIndex);
+                manager->nextPoint = vectorGet(manager->cameraPoints, manager->currentPointIndex + 1);
                 calculateSegmentSpeed(manager);
                 gLog(LOG_INF, "camera progress %d current x %d current y %d", manager->currentPointIndex, manager->currentPoint->x, manager->currentPoint->y);
 
@@ -123,7 +123,6 @@ void updateGameCameraPosition(CameraManager* manager, float x, float y){
 
     x -= SCREEN_WIDTH / DEFAULT_CAMERA_ZOOM / 2.0f;
     y -= SCREEN_HEIGHT / DEFAULT_CAMERA_ZOOM / 2.0f;
-    
     
     
     float xProgress = (x - manager->currentPoint->x) / (manager->nextPoint->x - manager->currentPoint->x);

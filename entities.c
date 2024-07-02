@@ -99,24 +99,24 @@ EntityManager* getEntityManager(){
 }
 
 void removeAllEntities(EntityManager* manager){
-    for (int i = 0; i < manager->entities.elementCount; i++){
-        Entity* ent = vectorGet(&manager->entities, i);
+    for (int i = 0; i < manager->entities->elementCount; i++){
+        Entity* ent = vectorGet(manager->entities, i);
         ent->clean(ent);
         free(ent->data);
     }
-    vectorClear(&manager->entities);
-    vectorFree(&manager->entities);
+    vectorClear(manager->entities);
+    vectorFree(manager->entities);
 }
 
 void unloadEntityManager(EntityManager* manager){
     removeAllEntities(manager);
-    
+    vectorFree(manager->entities);
     free(manager);
 }
 
 void updateEntityManager(EntityManager* manager){
-    for (int i = 0; i < manager->entities.elementCount; i++){
-        Entity* ent = vectorGet(&manager->entities, i);
+    for (int i = 0; i < manager->entities->elementCount; i++){
+        Entity* ent = vectorGet(manager->entities, i);
         // call update
         ent->updateFunction(ent);
 
@@ -124,9 +124,9 @@ void updateEntityManager(EntityManager* manager){
 
         if (ent->identifier != ENTITY_OTHER){
             // collision check
-            for (int j = 0; j < manager->entities.elementCount; j++){
+            for (int j = 0; j < manager->entities->elementCount; j++){
                 if (i != j){
-                    Entity* other = vectorGet(&manager->entities, j);
+                    Entity* other = vectorGet(manager->entities, j);
 
                     if (other->identifier != ENTITY_OTHER && checkBoxCollisions(ent->x, ent->y, ent->w, ent->h, other->x, other->y, other->w, other->h)){
                         ent->onCollide(ent, other);
@@ -142,12 +142,12 @@ void updateEntityManager(EntityManager* manager){
             ent->clean(ent);
             free(ent->data);
             free(ent);
-            vectorRemove(&manager->entities, i);
+            vectorRemove(manager->entities, i);
             i--;
         }
     }
 }
 
 void addEntity(EntityManager* manager, Entity* entity){
-    vectorPush(&manager->entities, entity);
+    vectorPush(manager->entities, entity);
 }

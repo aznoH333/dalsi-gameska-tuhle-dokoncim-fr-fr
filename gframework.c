@@ -72,7 +72,7 @@ struct DrawingData{
 typedef struct DrawingData DrawingData;
 
 
-Vector drawingLayers[LAYER_STATIC_UI];
+Vector* drawingLayers[LAYER_COUNT];
 void initDrawingLayers(){
 	for (int i = 0; i < LAYER_COUNT; i++){
 		drawingLayers[i] = initVector();
@@ -81,7 +81,7 @@ void initDrawingLayers(){
 
 void cleanDrawingLayers(){
 	for (int i = 0; i < LAYER_COUNT; i++){
-		vectorFree(&drawingLayers[i]);
+		vectorFree(drawingLayers[i]);
 	}
 }
 
@@ -100,7 +100,7 @@ void insertDrawRequest(int spriteIndex, int x, int y, float rotation, int flip, 
 
 
 	// push to vector
-	vectorPush(&drawingLayers[layer], data);
+	vectorPush(drawingLayers[layer], data);
 }
 
 void drawSpriteData(DrawingData* data){
@@ -132,10 +132,10 @@ void drawSpriteData(DrawingData* data){
 }
 
 void drawLayer(int layer){
-	for (int i = 0; i < drawingLayers[layer].elementCount;i++){
-		drawSpriteData((DrawingData*)vectorGet(&drawingLayers[layer], i));
+	for (int i = 0; i < drawingLayers[layer]->elementCount;i++){
+		drawSpriteData((DrawingData*)vectorGet(drawingLayers[layer], i));
 	}
-	vectorClear(&drawingLayers[layer]);
+	vectorClear(drawingLayers[layer]);
 
 }
 
