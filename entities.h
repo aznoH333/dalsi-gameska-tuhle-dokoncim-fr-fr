@@ -60,6 +60,7 @@ typedef struct EntityManager EntityManager;
 EntityManager* getEntityManager();
 void unloadEntityManager(EntityManager* manager);
 void updateEntityManager(EntityManager* manager);
+void removeAllEntities(EntityManager* manager);
 void addEntity(EntityManager* manager, Entity* entity);
 
 

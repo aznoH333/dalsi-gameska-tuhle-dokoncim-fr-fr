@@ -34,6 +34,7 @@ CameraManager* getCameraManager();
 void updateCameraManager(CameraManager* manager);
 void updateGameCameraPosition(CameraManager* manager, float x, float y);
 void addCameraMarker(CameraManager* manager, int x, int y, int type);
+void clearCameraMarkers(CameraManager* manager);
 void unloadCameraManager(CameraManager* manager);
 
 

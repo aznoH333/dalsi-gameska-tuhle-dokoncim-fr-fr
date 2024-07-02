@@ -105,7 +105,6 @@ void removeAllEntities(EntityManager* manager){
         free(ent->data);
     }
     vectorClear(manager->entities);
-    vectorFree(manager->entities);
 }
 
 void unloadEntityManager(EntityManager* manager){

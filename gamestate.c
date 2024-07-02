@@ -8,9 +8,10 @@ void unloadCurrentState(GameState* gamestate){
         case GAME_STATE_MAIN_MENU:
             break;
         case GAME_STATE_EDITOR:
+            unloadLevelEditor(gamestate->editor);
             break;
         case GAME_STATE_GAME:
-            
+            unloadGameplay(gamestate->gameplay);
             break;
     }
 }
@@ -21,6 +22,7 @@ void loadCurrentState(GameState* gamestate){
         case GAME_STATE_MAIN_MENU:
             break;
         case GAME_STATE_EDITOR:
+            loadLevelEditorLevel(gamestate->editor, "./gamedata/1.lvl");
             break;
         case GAME_STATE_GAME:
             startLevel(gamestate->gameplay, "./gamedata/1.lvl");
@@ -35,7 +37,7 @@ GameState* initGameState(){
 
     out->currentState = GAME_STATE_GAME;
     out->gameplay = getGameplay();
-    //out->editor = getLevelEditor();
+    out->editor = getLevelEditor();
     loadCurrentState(out);
 
     return out;
@@ -60,17 +62,29 @@ void changeGameState(GameState* gamestate, int newState){
 
 
 void disposeGameState(GameState* gamestate){
-    //unloadLevelEditor(gamestate->editor);
-    unloadGameplay(gamestate->gameplay);
+    disposeLevelEditor(gamestate->editor);
+    disposeGameplay(gamestate->gameplay);
     unloadEntityManager(getEntityManager());
     unloadCameraManager(getCameraManager());
 }
 
 void updateGameState(GameState* gamestate){
+    if (IsKeyPressed(KEY_ONE)){
+        changeGameState(gamestate, 0);
+    }
+    if (IsKeyPressed(KEY_TWO)){
+        changeGameState(gamestate, 1);
+    }
+    if (IsKeyPressed(KEY_THREE)){
+        changeGameState(gamestate, 2);
+    }
+    
+    
     switch (gamestate->currentState) {
         case GAME_STATE_MAIN_MENU:
             break;
         case GAME_STATE_EDITOR:
+            updateLevelEditor(gamestate->editor);
             break;
         case GAME_STATE_GAME:
             updateGameplay(gamestate->gameplay);

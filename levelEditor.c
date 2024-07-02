@@ -12,19 +12,7 @@
 #define PLACE_MODE_ENTITES 1
 #define PLACE_MODE_BACKGROUND 2
 
-
-
-LevelEditor* editorInstance = 0;
-LevelEditor* getLevelEditor(){
-    gLog(LOG_INF, "%p", editorInstance);
-    if (editorInstance == 0) {
-        editorInstance = initLevelEditor();
-    }
-    return editorInstance;
-}
-
 LevelEditor* initLevelEditor(){
-    gLog(LOG_INF, "Initialized level editor");
     LevelEditor* out = malloc(sizeof(LevelEditor));
 
     out->level = 0;
@@ -43,10 +31,27 @@ LevelEditor* initLevelEditor(){
     return out;
 }
 
+LevelEditor* editorInstance = 0;
+LevelEditor* getLevelEditor(){
+    if (editorInstance == 0) {
+        editorInstance = initLevelEditor();
+    }
+    return editorInstance;
+}
+
+
+
+void loadLevelEditorLevel(LevelEditor* editor, const char* path){
+    editor->level = loadLevel(path);
+}
 
 
 void unloadLevelEditor(LevelEditor* editor){
     unloadLevel(editor->level);
+}
+
+void disposeLevelEditor(LevelEditor* editor){
+    unloadLevelEditor(editor);
     free(editor);
 }
 

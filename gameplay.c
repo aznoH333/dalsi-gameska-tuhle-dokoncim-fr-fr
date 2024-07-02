@@ -77,7 +77,14 @@ void startLevel(Gameplay* g, const char* levelPath){
 void unloadGameplay(Gameplay* g){
     if (g->hasLoadedLevel){
         unloadLevel(g->level);
+        clearCameraMarkers(getCameraManager());
+        removeAllEntities(getEntityManager());
+        g->hasLoadedLevel = false;
     }
+}
+
+void disposeGameplay(Gameplay* g){
+    unloadGameplay(g);
     free(g);
 }
 

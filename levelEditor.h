@@ -37,8 +37,9 @@ struct LevelEditor{
 typedef struct LevelEditor LevelEditor;
 
 LevelEditor* getLevelEditor();
-LevelEditor* initLevelEditor();
+void loadLevelEditorLevel(LevelEditor* editor, const char* path);
 void unloadLevelEditor(LevelEditor* editor);
+void disposeLevelEditor(LevelEditor* editor);
 void updateLevelEditor(LevelEditor* editor);
 
 #endif

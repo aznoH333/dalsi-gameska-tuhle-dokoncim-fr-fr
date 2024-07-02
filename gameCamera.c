@@ -55,6 +55,12 @@ void addCameraMarker(CameraManager* manager, int x, int y, int type){
     vectorPush(manager->cameraPoints, point);
 }
 
+void clearCameraMarkers(CameraManager* manager){
+    vectorClear(manager->cameraPoints);
+    manager->currentProgress = 0;
+}
+
+
 void unloadCameraManager(CameraManager* manager){
     vectorFree(manager->cameraPoints);
 }
@@ -105,10 +111,6 @@ void updateCameraManager(CameraManager* manager){
         }
     }
 
-    // temporary cheaty camera movement
-    if (IsKeyDown(KEY_F) && manager->reachedEnd == false){
-        manager->currentProgress += manager->cameraSpeed;
-    }
 
 
     setCameraPos((Vector2){manager->cameraX, manager->cameraY});

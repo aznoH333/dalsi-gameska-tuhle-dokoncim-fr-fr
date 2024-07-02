@@ -42,7 +42,7 @@ int main(void)
     while (!WindowShouldClose())
     {
             
-        //updateGameState(game);
+        updateGameState(game);
         textF("fps %d", 10, 10, GetFPS());
         fUpdate();
     }
