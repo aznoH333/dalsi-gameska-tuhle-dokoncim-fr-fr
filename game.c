@@ -23,10 +23,8 @@
 #include "gframework.h"
 #include "gutil.h"
 #include "raylib.h"
-#include "levelEditor.h"
-#include "gameplay.h"
-#include "entities.h"
-#include "gameCamera.h"
+
+#include "gamestate.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -34,28 +32,22 @@
 int main(void)
 {
     initFramework();
-    
-    // TODO main menu of some kind
-
-    //LevelEditor* l = initLevelEditor("./gamedata/1.lvl");
-    Gameplay* g = getGameplay();
-    startLevel(g, "./gamedata/1.lvl");
+ 
+    GameState* game = getGameState();
 
 
     // Main game loop
     while (!WindowShouldClose())
     {
             
-        //updateLevelEditor(l);
-        updateGameplay(g);
+        updateGameState(game);
         textF("fps %d", 10, 10, GetFPS());
         fUpdate();
     }
-    //unloadLevelEditor(l);
-    unloadGameplay(g);
+    
+    disposeGameState(game);
 	disposeFramework();
-    unloadEntityManager(getEntityManager());
-    unloadCameraManager(getCameraManager());
+    
 
     return 0;
 }

@@ -7,6 +7,7 @@
 
 struct Gameplay{
     Level* level;
+    bool hasLoadedLevel;
 };
 
 typedef struct Gameplay Gameplay;

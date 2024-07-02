@@ -207,7 +207,11 @@ void writeTileData(Level* lvl, char* fileData, int index, char** tileData){
 // try to make this simpler
 const Color MARKER_COLOR = {255, 255, 255, 200};
 void drawLevel(Level* lvl, int drawType){
-    
+    if (lvl == 0){
+        gLog(LOG_ERR, "Attempted to draw unloaded level");
+    }
+
+
     bool drawForeGround = drawType != LEVEL_DRAW_EDITOR_BACKGROUND;
     bool highlightBlacks = drawType != LEVEL_DRAW_GAME;
     bool drawBackGround = drawType != LEVEL_DRAW_EDITOR_TILES;

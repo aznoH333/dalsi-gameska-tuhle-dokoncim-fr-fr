@@ -56,9 +56,11 @@ void* vectorGet(Vector* v, int index){
 }
 
 void vectorClear(Vector* v){
+    
     for (int i = 0; i < v->elementCount; i++){
         free(v->elements[i]);
     }
+    
     v->elementCount = 0;
 }
 

@@ -10,6 +10,7 @@
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
     output->level = 0;
+    output->hasLoadedLevel = false;
     return output;    
 }
 
@@ -25,12 +26,13 @@ Gameplay* getGameplay(){
 void startLevel(Gameplay* g, const char* levelPath){
     // level load
     {
-        if (g->level != 0){
+        if (g->hasLoadedLevel){
             unloadLevel(g->level);
         }
             
         
         g->level = loadLevel(levelPath);
+        g->hasLoadedLevel = true;
     }
 
     // setup camera markers
@@ -73,7 +75,9 @@ void startLevel(Gameplay* g, const char* levelPath){
 
 
 void unloadGameplay(Gameplay* g){
-    unloadLevel(g->level);
+    if (g->hasLoadedLevel){
+        unloadLevel(g->level);
+    }
     free(g);
 }
 
