@@ -69,25 +69,22 @@ void playerUpdate(Entity* this){
     
     // vertical movement
     {
-        
         if (!isTouchingGround){
             data->yVelocity += GRAVITY;
         }else {
             // fix y
-            /*
+            
             if (data->yVelocity != 0.0f){
-                this->y += data->yVelocity;
-                this->y = (int) this->y - ((int)this->y % 16);
-                this->y += this->h;
+                this->y = (int) this->y - ((int) this->y % 16) + (this->h - 16) + 3; // proč +3 já nevím, ale funguje to perfektně
             }
-            */
+            
 
             data->yVelocity = 0.0f;
 
         }
 
         // ceiling collisions
-        if (collidesWithLevel(gameplay->level, this->x, this->y - 1 + data->yVelocity, this->w, 1)){
+        if (collidesWithLevel(gameplay->level, this->x, this->y + data->yVelocity, this->w, 1)){
             data->yVelocity = 0.0f;
         }
 
