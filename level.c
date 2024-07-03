@@ -213,8 +213,9 @@ void drawLevel(Level* lvl, int drawType){
 
 
     bool drawForeGround = drawType != LEVEL_DRAW_EDITOR_BACKGROUND;
-    bool highlightBlacks = drawType != LEVEL_DRAW_GAME;
+    bool highlightBlacks = drawType != LEVEL_DRAW_GAME && drawType != LEVEL_DRAW_CAMERA_VIEW;
     bool drawBackGround = drawType != LEVEL_DRAW_EDITOR_TILES;
+    bool doCameraPreview = drawType == LEVEL_DRAW_CAMERA_VIEW;
     
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){
@@ -257,16 +258,39 @@ void drawLevel(Level* lvl, int drawType){
 
         }
     }
+    
+
+    {// draw camera previews
+        if (doCameraPreview){
+            for (int i = 0; i < lvl->entityeMarkers->elementCount; i++){
+                EntityMarker* marker = vectorGet(lvl->entityeMarkers, i);
+
+                if (marker->id == 2 || marker->id == 3){
+                    // draw frame
+                    for (int x = 0; x < SCREEN_WIDTH / DEFAULT_CAMERA_ZOOM; x += 16){
+                        for (int y = 0; y < SCREEN_HEIGHT / DEFAULT_CAMERA_ZOOM; y += 16){
+                            drawC(8, marker->x * 16 + x, marker->y * 16 + y, MARKER_COLOR, LAYER_UI);
+                            drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
-    if (!highlightBlacks){
-        return;
+    {
+        // draw entities
+        if (!highlightBlacks){
+            return;
+        }
+        // draw markers
+        for (int i = 0; i < lvl->entityeMarkers->elementCount; i++){
+            EntityMarker* marker = vectorGet(lvl->entityeMarkers, i);
+            drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
+        }
     }
-    // draw markers
-    for (int i = 0; i < lvl->entityeMarkers->elementCount; i++){
-        EntityMarker* marker = vectorGet(lvl->entityeMarkers, i);
-        drawC(SPRITE_START_MARKERS + marker->id, marker->x * 16, marker->y * 16, MARKER_COLOR, LAYER_OBJECTS);
-    }
+    
 }
 
 char getTileAt(Level* lvl, int x, int y){

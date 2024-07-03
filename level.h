@@ -11,7 +11,8 @@
 #define LEVEL_DRAW_EDITOR 1
 #define LEVEL_DRAW_EDITOR_TILES 2
 #define LEVEL_DRAW_EDITOR_BACKGROUND 3
-#define LEVEL_DRAW_COUNT 4
+#define LEVEL_DRAW_CAMERA_VIEW 4
+#define LEVEL_DRAW_COUNT 5
 
 struct Level {
     char** tiles;

@@ -299,6 +299,7 @@ void updateLevelEditor(LevelEditor* editor){
                 case LEVEL_DRAW_EDITOR_BACKGROUND: viewMode = "background"; break;
                 case LEVEL_DRAW_EDITOR_TILES: viewMode = "tiles"; break;
                 case LEVEL_DRAW_GAME: viewMode = "preview"; break;
+                case LEVEL_DRAW_CAMERA_VIEW: viewMode = "camera"; break;
             }
 
             textF("viewmode %s", 8, 690, viewMode);
