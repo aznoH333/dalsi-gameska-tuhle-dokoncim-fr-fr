@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include "raylib.h"
 #include <dirent.h>
+#include <string.h>
 
 //------------------------------------------------------------------------------------
 // logging
@@ -96,24 +97,30 @@ bool checkBoxCollisions(int x1, int y1, int w1, int h1, int x2, int y2, int w2, 
 //------------------------------------------------------------------------------------
 // files
 //------------------------------------------------------------------------------------
-char** getFolderContents(const char* folderPath){
-    struct dirent *de;  // Pointer for directory entry 
+Vector* getFolderContents(const char* folderPath){
+    struct dirent *directoryEntry;
+    
+    Vector* output = initVector();
+    DIR *directory = opendir(folderPath); 
   
-    // opendir() returns a pointer of DIR type.  
-    DIR *dr = opendir(folderPath); 
-  
-    if (dr == NULL)  // opendir returns NULL if couldn't open directory 
+    if (directory == NULL)
     { 
         gLog(LOG_ERR, "Failed to open directory [%s]", folderPath);
     }
   
-    // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html 
-    // for readdir() 
-    while ((de = readdir(dr)) != NULL) 
-            printf("%s\n", de->d_name); 
+    while ((directoryEntry = readdir(directory)) != NULL) {
+        char* fileName = malloc(sizeof(char) * 256);
+        fileName = memcpy(fileName, directoryEntry->d_name, 256);
+
+        if (strStartsWith(fileName, ".")){
+            free(fileName);
+        }else {
+            vectorPush(output, fileName);
+        }
+    }
   
-    closedir(dr);
-    return 0;
+    closedir(directory);
+    return output;
 }
 
 //------------------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 
 
 #include <stdbool.h> 
+#include "gvector.h"
 
 // loging
 #define LOG_ERR 1
@@ -34,7 +35,7 @@ int strLength(char* str);
 const char* boolToStr(bool value);
 
 // file stuff
-char** getFolderContents(const char* folderPath);
+Vector* getFolderContents(const char* folderPath);
 
 // animations
 int getAnimationSprite(int startFrame, int endFrame, int frameDuration, int timer);

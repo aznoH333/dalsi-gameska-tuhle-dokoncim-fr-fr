@@ -34,16 +34,18 @@ int main(void)
 {
     initFramework();
     
-    getFolderContents("./resources/sounds/");
-    GameState* game = getGameState();
+    Vector* files = getFolderContents("./resources/sounds/");
+    for (int i = 0; i < files->elementCount; i++){
+        gLog(LOG_INF, "file name [%s]", vectorGet(files, i));
+    }
+    vectorFree(files);
     
-
+    GameState* game = getGameState();
 
 
     // Main game loop
     while (!WindowShouldClose())
     {
-            
         updateGameState(game);
         textF("fps %d", 10, 10, GetFPS());
         fUpdate();
