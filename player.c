@@ -15,7 +15,7 @@ Entity* initPlayer(int x, int y){
     p->flip = 0;
     p->fireCooldown = 0;
 
-    Entity* out = initEntity(x, y, 16, 20, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
+    Entity* out = initEntity(x, y - 6, 16, 22, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 
     return out;
 }
@@ -26,7 +26,7 @@ const float JUMP_STRENGTH = 3.4f;
 const int UPPER_BODY_OFFSET = -6;
 const float WALK_ACCELERATION = 0.2f;
 const float MAX_WALK_SPEED = 2.0f;
-const int BULLET_SPAWN_OFFSET_Y = 4;
+const int BULLET_SPAWN_OFFSET_Y = 10;
 const int BULLET_SPAWN_OFFSET_X = 8;
 const int FIRE_COOLDWON = 6;
 void playerUpdate(Entity* this){
@@ -35,7 +35,6 @@ void playerUpdate(Entity* this){
     EntityManager* entities = getEntityManager();
 
     bool isTouchingGround = collidesWithLevel(gameplay->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
-    
     
     
     // horizontal movement
@@ -57,13 +56,12 @@ void playerUpdate(Entity* this){
             data->flip = 1;
         }
         
-    
         // wall collisions
         if (collidesWithLevel(gameplay->level,
             this->x + ((data->xVelocity > 0) * this->w) + (2 * boolToSign(data->xVelocity > 0.0f)) + data->xVelocity,
             this->y,
             1, 
-            this->h - ((data->yVelocity <= 0.0f) * 4))){
+            this->h - 1)){
             data->xVelocity = 0.0f;
         }
     }
@@ -76,13 +74,13 @@ void playerUpdate(Entity* this){
             data->yVelocity += GRAVITY;
         }else {
             // fix y
-            
+            /*
             if (data->yVelocity != 0.0f){
                 this->y += data->yVelocity;
                 this->y = (int) this->y - ((int)this->y % 16);
-                this->y += 16;
+                this->y += this->h;
             }
-            
+            */
 
             data->yVelocity = 0.0f;
 
@@ -145,8 +143,8 @@ void playerUpdate(Entity* this){
 
 
         // draw sprites
-        drawF(lowerSprite, this->x, this->y, data->flip, LAYER_OBJECTS);
-        drawF(upperSprite, this->x, this->y + UPPER_BODY_OFFSET, data->flip, LAYER_OBJECTS);
+        drawF(lowerSprite, this->x, this->y - UPPER_BODY_OFFSET, data->flip, LAYER_OBJECTS);
+        drawF(upperSprite, this->x, this->y, data->flip, LAYER_OBJECTS);
     }
 }
 
