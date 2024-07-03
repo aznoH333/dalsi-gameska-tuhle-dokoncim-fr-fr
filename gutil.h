@@ -27,6 +27,15 @@ float getRandomFloat();
 float getRandomFloatRange(float min, float max);
 bool randomChance(float chance);
 
+// strings
+bool strStartsWith(char* str, char* start);
+bool strEndsWith(char* str, char* end);
+int strLength(char* str);
+const char* boolToStr(bool value);
+
+// file stuff
+char** getFolderContents(const char* folderPath);
+
 // animations
 int getAnimationSprite(int startFrame, int endFrame, int frameDuration, int timer);
 

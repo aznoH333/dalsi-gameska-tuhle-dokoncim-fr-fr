@@ -347,6 +347,7 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color){
 void initFramework(){
 	SetTraceLogLevel(LOG_WARNING);
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_NAME);
+	InitAudioDevice();
 	SetTargetFPS(60);
 	renderTexture = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
 	loadedSheet = initSpriteSheet("resources/spritesheet.png", DEFAULT_SPRITE_SIZE);
@@ -366,6 +367,7 @@ void disposeFramework(){
 	disposeFont();
 	UnloadRenderTexture(renderTexture);
 	cleanDrawingLayers();
+	CloseAudioDevice();
 	CloseWindow();
 }
 

@@ -34,9 +34,11 @@ int main(void)
 {
     initFramework();
     
-
+    getFolderContents("./resources/sounds/");
     GameState* game = getGameState();
     
+
+
 
     // Main game loop
     while (!WindowShouldClose())

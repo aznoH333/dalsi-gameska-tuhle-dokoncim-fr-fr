@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "raylib.h"
+#include <dirent.h>
 
 //------------------------------------------------------------------------------------
 // logging
@@ -36,8 +37,52 @@ void gLog(int level, const char* str, ...){
 }
 
 //------------------------------------------------------------------------------------
+// strings
+//------------------------------------------------------------------------------------
+bool strStartsWith(char* str, char* start){
+    int i = 0;
+    while (start[i] != 0){
+        if (str[i] != start[i]){
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+
+bool strEndsWith(char* str, char* end){
+    int length = strLength(str) - 1;
+    int lengthEnd = strLength(end) - 1;
+
+    for (int i = lengthEnd; i > 0; i--){
+        if (str[length - i] != end[lengthEnd - i]){
+            return false;
+        }
+    }
+    return true;
+}
+
+int strLength(char* str){
+    int i = 0;
+    while (str[i] != 0){i++;}
+    return i;
+}
+
+const char* boolToStr(bool value){
+    if (value){
+        return "true";
+    }else {
+        return "false";
+    }
+}
+
+
+//------------------------------------------------------------------------------------
 // misc
 //------------------------------------------------------------------------------------
+
+
 bool checkBoxCollisions(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2){
     return x1 + w1 > x2 &&
            x1 < x2 + w2 &&
@@ -45,6 +90,31 @@ bool checkBoxCollisions(int x1, int y1, int w1, int h1, int x2, int y2, int w2, 
            y1 < y2 + h2;
 }
 
+
+
+
+//------------------------------------------------------------------------------------
+// files
+//------------------------------------------------------------------------------------
+char** getFolderContents(const char* folderPath){
+    struct dirent *de;  // Pointer for directory entry 
+  
+    // opendir() returns a pointer of DIR type.  
+    DIR *dr = opendir(folderPath); 
+  
+    if (dr == NULL)  // opendir returns NULL if couldn't open directory 
+    { 
+        gLog(LOG_ERR, "Failed to open directory [%s]", folderPath);
+    }
+  
+    // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html 
+    // for readdir() 
+    while ((de = readdir(dr)) != NULL) 
+            printf("%s\n", de->d_name); 
+  
+    closedir(dr);
+    return 0;
+}
 
 //------------------------------------------------------------------------------------
 // math
