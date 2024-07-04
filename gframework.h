@@ -6,7 +6,7 @@
 #include "gutil.h"
 #include <math.h>
 #include <string.h>
-#include "gvector.h"
+#include "gcollections.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -55,6 +55,10 @@ void drawF(int spriteIndex, int x, int y, int flip, int layer);
 void draw(int spriteIndex, int x, int y, int layer);
 
 void drawFancyText(const char* text, int x, int y, int scale, Color color);
+
+
+// sounds
+void playSound(const char* soundName);
 
 // controll functions
 void fUpdate();

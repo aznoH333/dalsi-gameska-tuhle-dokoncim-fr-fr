@@ -123,6 +123,7 @@ void enemyOnCollide(Entity* this, Entity* other){
         Bullet* otherData = other->data;
         takeDamage(this, otherData->damage);
         other->shouldDestroy = true;
+        playSound("hurt_small.wav");
 
     }
 }
@@ -145,6 +146,7 @@ void enemyOnDestroy(Entity* this){
 
     // spawn explosion
     Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 7, 15);
+    playSound("small_explosion.wav");
     makeParticleAnimatedSingleLoop(p, SPRITE_START_EFFECTS + 10);
     addEntity(e, p);
 

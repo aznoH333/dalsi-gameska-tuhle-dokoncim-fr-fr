@@ -87,15 +87,17 @@ void playerUpdate(Entity* this){
         if (collidesWithLevel(gameplay->level, this->x, this->y + data->yVelocity, this->w, 1)){
             data->yVelocity = 0.0f;
         }
-
+        // jumping
         if (IsKeyDown(KEY_W) && isTouchingGround){
             data->yVelocity -= JUMP_STRENGTH;
+            playSound("walk.wav");
         }
     }
     
     // shooting
     {
         if (IsKeyDown(KEY_SPACE) && data->fireCooldown == 0){
+            playSound("shoot.wav");
             addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, ENTITY_PLAYER_PROJECTILE));
             data->fireCooldown = FIRE_COOLDWON;
         }

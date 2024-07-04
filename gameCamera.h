@@ -1,7 +1,7 @@
 #ifndef GAME_CAMERA
 #define GAME_CAMERA
 
-#include "gvector.h"
+#include "gcollections.h"
 #include <stdbool.h>
 
 #define CAMERA_POINT_FREE 0

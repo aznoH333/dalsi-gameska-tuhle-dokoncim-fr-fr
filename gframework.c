@@ -342,6 +342,47 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color){
 }
 
 //------------------------------------------------------
+// sounds
+//------------------------------------------------------
+Map* soundMap;
+void playSound(const char* soundName){
+	Sound* s = mapGet(soundMap, soundName);
+	PlaySound(*s);
+}
+
+void loadSounds(){
+	soundMap = initMap();
+	Vector* soundFiles = getFolderContents("./resources/sounds/");
+
+	for (int i = 0; i < soundFiles->elementCount; i++){
+		// copy file name
+		char* fileName = vectorGet(soundFiles, i);
+		char* mapKey = malloc(sizeof(char) * (strLength(fileName) + 1));
+		memcpy(mapKey, fileName, sizeof(char) * (strLength(fileName) + 1));
+		// copy sound to heap
+		char* soundFilePath = strConcat("./resources/sounds/", fileName);
+		Sound s = LoadSound(soundFilePath);
+		free(soundFilePath);
+		Sound* mapValue = malloc(sizeof(Sound));
+		memcpy(mapValue, &s, sizeof(s));
+
+		// put in map
+		mapPut(soundMap, mapKey, mapValue);
+    }
+    vectorFree(soundFiles);
+}
+
+void unloadSounds(){
+	for (int i = 0; i < soundMap->elements->elementCount; i++){
+		Sound* s = vectorGet(soundMap->elements, i);
+		UnloadSound(*s);
+	}
+	
+	mapFree(soundMap);
+}
+
+
+//------------------------------------------------------
 // init
 //------------------------------------------------------
 void initFramework(){
@@ -355,6 +396,7 @@ void initFramework(){
 	renderTextureOffset = ((GetScreenWidth()) / 2) - (SCREEN_WIDTH / 2);
 	//ToggleFullscreen();
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
+	loadSounds();
 	initDrawingLayers();
 	initFont();
 }
@@ -368,6 +410,7 @@ void disposeFramework(){
 	UnloadRenderTexture(renderTexture);
 	cleanDrawingLayers();
 	CloseAudioDevice();
+	unloadSounds();
 	CloseWindow();
 }
 

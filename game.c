@@ -33,13 +33,10 @@
 int main(void)
 {
     initFramework();
+
+
     
-    Vector* files = getFolderContents("./resources/sounds/");
-    for (int i = 0; i < files->elementCount; i++){
-        gLog(LOG_INF, "file name [%s]", vectorGet(files, i));
-    }
-    vectorFree(files);
-    
+
     GameState* game = getGameState();
 
 

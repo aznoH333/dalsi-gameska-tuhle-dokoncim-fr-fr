@@ -3,7 +3,7 @@
 
 
 #include <stdbool.h> 
-#include "gvector.h"
+#include "gcollections.h"
 
 // loging
 #define LOG_ERR 1
@@ -31,8 +31,10 @@ bool randomChance(float chance);
 // strings
 bool strStartsWith(char* str, char* start);
 bool strEndsWith(char* str, char* end);
-int strLength(char* str);
+bool strEquals(const char* str1, const char* str2);
+int strLength(const char* str);
 const char* boolToStr(bool value);
+char* strConcat(const char* str1, const char* str2);
 
 // file stuff
 Vector* getFolderContents(const char* folderPath);

@@ -64,7 +64,7 @@ bool strEndsWith(char* str, char* end){
     return true;
 }
 
-int strLength(char* str){
+int strLength(const char* str){
     int i = 0;
     while (str[i] != 0){i++;}
     return i;
@@ -76,6 +76,37 @@ const char* boolToStr(bool value){
     }else {
         return "false";
     }
+}
+
+bool strEquals(const char* str1, const char* str2){
+    int i = 0;
+    while (str1[i] != 0){
+        if (str1[i] != str2[i]){
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+char* strConcat(const char* str1, const char* str2){
+    int charCount = (strLength(str1) + strLength(str2) + 1);
+    char* output = malloc(charCount * sizeof(char));
+
+    int index = 0;
+    int length1 = strLength(str1);
+    for (int i = 0; i < length1; i++){
+        output[index] = str1[i];
+        index++;
+    }
+    int length2 = strLength(str2);
+    for (int i = 0; i < length2; i++){
+        output[index] = str2[i];
+        index++;
+    }
+    output[index] = 0;
+
+    return output;
 }
 
 

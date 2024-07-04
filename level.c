@@ -2,7 +2,7 @@
 #include "gframework.h"
 #include "gutil.h"
 #include "entities.h"
-#include "gvector.h"
+#include "gcollections.h"
 #include "spritedata.h"
 
 #define MIN_LEVEL_FILE_SIZE 4
