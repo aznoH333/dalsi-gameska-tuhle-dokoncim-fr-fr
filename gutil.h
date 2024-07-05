@@ -35,6 +35,8 @@ bool strEquals(const char* str1, const char* str2);
 int strLength(const char* str);
 const char* boolToStr(bool value);
 char* strConcat(const char* str1, const char* str2);
+char* intToStr(int value);
+
 
 // file stuff
 Vector* getFolderContents(const char* folderPath);

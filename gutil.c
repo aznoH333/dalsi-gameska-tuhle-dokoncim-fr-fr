@@ -110,6 +110,38 @@ char* strConcat(const char* str1, const char* str2){
 }
 
 
+char* intToStr(int value){
+    char* output = malloc(10);
+    
+    
+    // edge case
+    if (value == 0){
+        output[0] = '0';
+        output[1] = 0;
+        return output;
+    }
+    
+    // convert to str
+    int iteration = 0;
+    while(value > 0){
+        output[iteration] = value % 10 + '0';
+        value = (value - (value % 10)) / 10;
+        iteration++;
+    }
+    output[iteration] = 0;
+
+    // reverse output
+    int length = strLength(output) - 1;
+    for (int i = 0; i < length >> 1; i++){
+        int temp = output[length - i];
+        output[length - i] = output[i];
+        output[i] = temp;
+    }
+
+    return output;
+}
+
+
 //------------------------------------------------------------------------------------
 // misc
 //------------------------------------------------------------------------------------

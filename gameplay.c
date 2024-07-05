@@ -71,6 +71,12 @@ void startLevel(Gameplay* g, const char* levelPath){
         }
         addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
     }
+
+
+    // play music
+    {
+        playMusic(0);
+    }
 }
 
 

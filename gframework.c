@@ -270,8 +270,6 @@ void textF(const char* text, int x, int y, ...){
 //------------------------------------------------------
 // drawing
 //------------------------------------------------------
-
-
 void drawRFSC(int spriteIndex, int x, int y, float rotation, int flip, float scale, Color c, int layer){
 	insertDrawRequest(spriteIndex, x, y, rotation, flip, scale, c, layer, &loadedSheet);
 }
@@ -305,13 +303,14 @@ void draw(int spriteIndex, int x, int y, int layer){
 }
 
 
-
+void updateMusic();
 void fUpdate(){
 	BeginTextureMode(renderTexture);
     BeginMode2D(cam);
 	updateCamera();
 	fTimer++;
     ClearBackground(BACKGROUND_COLOR);
+	updateMusic();
 	
 	for (int i = 0; i < LAYER_STATIC_UI; i++){
 		drawLayer(i);
@@ -381,6 +380,61 @@ void unloadSounds(){
 	mapFree(soundMap);
 }
 
+//------------------------------------------------------
+// music
+//------------------------------------------------------
+Vector* musicList;
+
+#define MUSIC_TRACK_COUNT 1
+int currentMusicTrack = -1;
+Music* currentMusicTrackPtr = 0;
+void playMusic(int songId){
+	if (songId > MUSIC_TRACK_COUNT || songId < 0){
+		gLog(LOG_ERR, "Music track [%d] not found", songId);
+	}
+	currentMusicTrack = songId;
+	currentMusicTrackPtr = vectorGet(musicList, songId);
+
+	PlayMusicStream(*currentMusicTrackPtr);
+}
+
+void loadMusic(){
+	musicList = initVector();
+
+	for (int i = 0; i < MUSIC_TRACK_COUNT; i++){
+		// construct name
+		char* songId = intToStr(i);
+		char* songTempPath = strConcat("./resources/music/", songId);
+		free(songId);
+		char* songPath = strConcat(songTempPath, ".wav");
+		free(songTempPath);
+
+		// load song
+		Music m = LoadMusicStream(songPath);
+		free(songPath);
+
+		// insert into vector
+		Music* song = malloc(sizeof(Music));
+		memcpy(song, &m, sizeof(Music));
+
+		vectorPush(musicList, song);
+	}
+}
+
+void unloadMusic(){
+	for (int i = 0; i < musicList->elementCount; i++){
+		Music* m = vectorGet(musicList, i);
+		UnloadMusicStream(*m);
+	}
+
+	vectorFree(musicList);
+}
+
+void updateMusic(){
+	UpdateMusicStream(*currentMusicTrackPtr);
+}
+
+
 
 //------------------------------------------------------
 // init
@@ -397,6 +451,7 @@ void initFramework(){
 	//ToggleFullscreen();
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
 	loadSounds();
+	loadMusic();
 	initDrawingLayers();
 	initFont();
 }
@@ -411,6 +466,7 @@ void disposeFramework(){
 	cleanDrawingLayers();
 	CloseAudioDevice();
 	unloadSounds();
+	unloadMusic();
 	CloseWindow();
 }
 

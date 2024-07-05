@@ -60,6 +60,9 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color);
 // sounds
 void playSound(const char* soundName);
 
+// music
+void playMusic(int songId);
+
 // controll functions
 void fUpdate();
 void initFramework();

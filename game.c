@@ -35,8 +35,6 @@ int main(void)
     initFramework();
 
 
-    
-
     GameState* game = getGameState();
 
 
