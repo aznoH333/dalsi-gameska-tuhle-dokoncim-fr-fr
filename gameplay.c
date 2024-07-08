@@ -10,6 +10,8 @@
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
     output->level = 0;
+    output->playerX = 0.0f;
+    output->playerY = 0.0f;
     output->hasLoadedLevel = false;
     return output;    
 }
@@ -75,9 +77,27 @@ void startLevel(Gameplay* g, const char* levelPath){
 
     // play music
     {
-        // disabled until passable music is produced
-        //playMusic(0);
+        playMusic(0);
     }
+}
+
+void setPlayerCoordinates(Gameplay* gameplay, float x, float y){
+    gameplay->playerX = x;
+    gameplay->playerY = y;
+}
+
+
+EntityMarker* getCollidingMarker(Gameplay* g, Entity* entity){
+
+    for (int i = 0; i < g->level->entityeMarkers->elementCount; i++){
+        EntityMarker* marker = vectorGet(g->level->entityeMarkers, i);
+
+        if (checkBoxCollisions(marker->x * 16, marker->y * 16, 16, 16, entity->x, entity->y, entity->w, entity->h)){
+            return marker;
+        }
+    }
+
+    return 0;
 }
 
 

@@ -16,6 +16,8 @@ struct Enemy{
     float yVelocity;
     float xVelocity;
     float gravity;
+
+    bool isTouchingGround;
 };
 typedef struct Enemy Enemy;
 

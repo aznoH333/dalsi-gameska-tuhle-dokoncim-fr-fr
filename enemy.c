@@ -17,6 +17,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     enemy->gravity = 0.1f;
     enemy->xVelocity = 0;
     enemy->yVelocity = 0;
+    enemy->isTouchingGround = true;
 
     switch (enemyType) {
         case ENEMY_GREY_LIZARD:
@@ -48,19 +49,30 @@ Entity* initEnemy(int x, int y, int type){
     return out;
 }
 
+
+
+void enemyTryJump(Entity* this){
+    Enemy* data = this->data;
+    if (data->isTouchingGround){
+        data->yVelocity = -3.0f;
+    }
+}
+
 const int HURT_TIMER_MAX = 10;
 void enemyUpdate(Entity* this){
     Enemy* data = this->data;
     Gameplay* gameplay = getGameplay();
     
 
+    
+
     {// walking
         data->xVelocity = data->moveSpeed * boolToSign(data->flipDirection);
 
         // falling
-        bool isTouchingGround = collidesWithLevel(gameplay->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
+        data->isTouchingGround = collidesWithLevel(gameplay->level, this->x, this->y + this->h + data->yVelocity, this->w, 1);
 
-        if (!isTouchingGround){
+        if (!data->isTouchingGround){
             data->yVelocity += data->gravity;
         }else {
             data->yVelocity = 0.0f;
@@ -71,8 +83,38 @@ void enemyUpdate(Entity* this){
         if (collidesWithLevel(gameplay->level, this->x + data->xVelocity, this->y, this->w, this->h - 4)){
             data->flipDirection = !data->flipDirection;
         }
+
+        // ceiling collision
+        if (data->isTouchingGround == false && data->yVelocity < 0.0f && collidesWithLevel(gameplay->level, this->x, this->y - 2, this->w, 4)){
+            data->yVelocity = 0.0f;
+        }
     }
 
+    {// marker collisions
+        EntityMarker* collidingMarker = getCollidingMarker(gameplay, this);
+
+        if (collidingMarker != 0){
+            switch (collidingMarker->id){
+                case 4: // jump marker
+                    enemyTryJump(this);
+                    break;
+                case 5: // split jump marker
+                    enemyTryJump(this); // TODO
+                    break;
+                case 6: // decide jump marker
+                    if (gameplay->playerY + 8 < this->y){
+                        enemyTryJump(this);
+                    }
+                    break;
+                case 7: // turn left marker
+                    data->flipDirection = false;
+                    break;
+                case 8: // turn right marker
+                    data->flipDirection = true;
+                    break;
+            }
+        }
+    }
 
     {// update values
         this->x += data->xVelocity;

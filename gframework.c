@@ -431,7 +431,7 @@ void unloadMusic(){
 }
 
 void updateMusic(){
-	UpdateMusicStream(*currentMusicTrackPtr);
+	//UpdateMusicStream(*currentMusicTrackPtr);
 }
 
 

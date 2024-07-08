@@ -111,6 +111,9 @@ void playerUpdate(Entity* this){
         data->fireCooldown -= data->fireCooldown > 0;
 
         updateGameCameraPosition(getCameraManager(), this->x, this->y);
+
+        // update gameplay
+        setPlayerCoordinates(gameplay, this->x, this->y);
     }
 
 

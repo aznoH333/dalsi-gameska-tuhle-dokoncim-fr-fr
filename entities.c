@@ -54,6 +54,8 @@ void activateEntityMarker(EntityMarker* marker){
 }
 
 
+
+
 void disposeEntityMarker(EntityMarker* marker){
     //free(marker);
 }
