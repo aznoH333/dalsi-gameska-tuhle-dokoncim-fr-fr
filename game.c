@@ -38,9 +38,7 @@ int main(void)
     GameState* game = getGameState();
 
     // TODO
-    // 1. super rare bug that skips current camera point (cause unknown)
-    // 2. get some decent tunes
-    // 3. enemy marker interaction
+    // 1. get some decent tunes
 
     // Main game loop
     while (!WindowShouldClose())

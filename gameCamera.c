@@ -58,6 +58,8 @@ void addCameraMarker(CameraManager* manager, int x, int y, int type){
 void clearCameraMarkers(CameraManager* manager){
     vectorClear(manager->cameraPoints);
     manager->currentProgress = 0;
+    manager->currentPointIndex = 0;
+    manager->reachedEnd = false;
 }
 
 
