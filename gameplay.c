@@ -75,7 +75,8 @@ void startLevel(Gameplay* g, const char* levelPath){
 
     // play music
     {
-        playMusic(0);
+        // disabled until passable music is produced
+        //playMusic(0);
     }
 }
 
