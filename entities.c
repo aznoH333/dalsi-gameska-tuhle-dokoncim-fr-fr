@@ -46,11 +46,28 @@ void activateEntityMarker(EntityMarker* marker){
     marker->hasBeenActivated = true;
     // hardcoded mess
     // no real way to make it better tho
+    // ... you could make a lookup table dumbass >:(
+    int enemyType = -1;
+    
     switch (marker->id) {
         default: break;
-        // spawn grey lizard
-        case 9: addEntity(getEntityManager(), initEnemy(marker->x * 16, marker->y * 16, ENEMY_GREY_LIZARD)); break;
+
+        case 9:     enemyType = ENEMY_GREY_LIZARD; break;
+        case 11:    enemyType = ENEMY_GREEN_LIZARD; break;
+        case 13:    enemyType = ENEMY_PINK_LIZARD; break;
+
+        case 15:    enemyType = ENEMY_GREY_ROBOT; break;
+        case 17:    enemyType = ENEMY_GREEN_ROBOT; break;
+
+        case 31:    enemyType = ENEMY_GREEN_SOLDIER; break;
+        case 32:    enemyType = ENEMY_GREY_SOLDIER; break;
+        case 33:    enemyType = ENEMY_BLUE_SOLDIER; break;
+        case 34:    enemyType = ENEMY_RED_SOLDIER; break;
+        
     }
+    if (enemyType != -1){
+        addEntity(getEntityManager(), initEnemy(marker->x * 16, marker->y * 16, enemyType));
+    }   
 }
 
 

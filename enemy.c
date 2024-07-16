@@ -8,6 +8,24 @@
 #include "particleEffect.h"
 #include "spritedata.h"
 
+
+
+
+void initBasicEnemy(Enemy* enemy){
+    enemy->health = 20;
+    enemy->moveSpeed = 0.6f;
+    enemy->animationFrameDuration = 10;
+    enemy->aiType = AI_BASIC;
+}
+
+void initSoldierEnemy(Enemy* enemy){
+    enemy->health = 25;
+    enemy->moveSpeed = 0.6f;
+    enemy->animationFrameDuration = 8;
+    enemy->aiType = AI_GRUNT;
+}
+
+
 void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     
     enemy->enemyType = enemyType;
@@ -18,17 +36,70 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     enemy->xVelocity = 0;
     enemy->yVelocity = 0;
     enemy->isTouchingGround = true;
+    entity->w = 16;
+    entity->h = 16;
+    enemy->bodyType = BODY_FLESH;
 
     switch (enemyType) {
         case ENEMY_GREY_LIZARD:
-            enemy->health = 20;
-            enemy->moveSpeed = 1.0f;
-            entity->w = 16;
-            entity->h = 16;
-            enemy->animationFrameDuration = 10;
-            
-
+            initBasicEnemy(enemy);
+            enemy->baseSprite = 87;
             break;
+
+        case ENEMY_GREEN_LIZARD:
+            initBasicEnemy(enemy);
+            enemy->health = 23;
+            enemy->moveSpeed = 1.0f;
+            enemy->baseSprite = 89;
+            break;
+
+        case ENEMY_PINK_LIZARD:
+            initBasicEnemy(enemy);
+            enemy->health = 26;
+            enemy->baseSprite = 91;
+            break;
+
+        case ENEMY_GREY_ROBOT:
+            initBasicEnemy(enemy);
+            enemy->health = 75;
+            enemy->baseSprite = 93;
+            enemy->bodyType = BODY_ROBOT;
+            break;  
+
+        case ENEMY_GREEN_ROBOT:  
+            initBasicEnemy(enemy);
+            enemy->health = 65;
+            enemy->moveSpeed = 1.0f;
+            enemy->baseSprite = 95;
+            enemy->bodyType = BODY_ROBOT;
+            break;  
+
+
+        case ENEMY_GREEN_SOLDIER:
+            initSoldierEnemy(enemy);
+            enemy->baseSprite = 114;
+            break;
+        
+        case ENEMY_GREY_SOLDIER:
+            initSoldierEnemy(enemy);
+            enemy->moveSpeed = 0.5f;
+            enemy->baseSprite = 116;
+            enemy->health = 50;
+            break;
+
+        case ENEMY_BLUE_SOLDIER:
+            initSoldierEnemy(enemy);
+            enemy->baseSprite = 118;
+            enemy->health = 30;
+            break;
+
+        case ENEMY_RED_SOLDIER:
+            initSoldierEnemy(enemy);
+            enemy->health = 33;
+            enemy->baseSprite = 120;
+            break;
+        
+
         default:
             gLog(LOG_ERR,"Unknown enemy type %d", enemyType);
             break;
@@ -142,7 +213,7 @@ void enemyUpdate(Entity* this){
 
 
         // draw
-        drawFSC(87 + data->animationFrame, this->x, this->y, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
+        drawFSC(data->baseSprite + data->animationFrame, this->x, this->y, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
     }
 }
 
