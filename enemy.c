@@ -23,6 +23,16 @@ void initSoldierEnemy(Enemy* enemy){
     enemy->moveSpeed = 0.6f;
     enemy->animationFrameDuration = 8;
     enemy->aiType = AI_GRUNT;
+    
+}
+void gunnerUpdate(Entity* this);
+void initSoldierData(Entity* entity, int fireRate){
+    ExtraGunnerData* g = malloc(sizeof(ExtraGunnerData));
+    g->fireRate = fireRate;
+    g->cooldown = fireRate;
+    entity->updateFunction = &gunnerUpdate;
+
+    entity->extraIndex = allocateExtraEntityData(getEntityManager(), g);
 }
 
 
@@ -78,6 +88,8 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
         case ENEMY_GREEN_SOLDIER:
             initSoldierEnemy(enemy);
             enemy->baseSprite = 114;
+            initSoldierData(entity, 85);
+
             break;
         
         case ENEMY_GREY_SOLDIER:
@@ -85,18 +97,23 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             enemy->moveSpeed = 0.5f;
             enemy->baseSprite = 116;
             enemy->health = 50;
+            initSoldierData(entity, 120);
             break;
 
         case ENEMY_BLUE_SOLDIER:
             initSoldierEnemy(enemy);
             enemy->baseSprite = 118;
             enemy->health = 30;
+            initSoldierData(entity, 85);
+
             break;
 
         case ENEMY_RED_SOLDIER:
             initSoldierEnemy(enemy);
             enemy->health = 33;
             enemy->baseSprite = 120;
+            initSoldierData(entity, 78);
+
             break;
         
 
@@ -113,6 +130,9 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
 
 Entity* initEnemy(int x, int y, int type){
     Enemy* enemy = malloc(sizeof(Enemy));
+    
+    
+    
     Entity* out = initEntity(x, y, 16, 16, ENTITY_ENEMY, enemy, &enemyUpdate, &enemyOnCollide, &enemyOnDestroy, &enemyClean);
 
     initEnemyBasedOnType(enemy, out, type);
@@ -130,10 +150,32 @@ void enemyTryJump(Entity* this){
 }
 
 const int HURT_TIMER_MAX = 10;
+
+void gunnerUpdate(Entity* this){
+    EntityManager* m = getEntityManager();
+    ExtraGunnerData* gunnerData = getExtraEntityData(m, this->extraIndex);
+    Enemy* data = this->data;
+    Gameplay* gameplay = getGameplay();
+    //gLog(LOG_INF,"got here \n eIndex [%d] prt [%p]", this->extraIndex, this);
+
+    {// shooting
+        if (gunnerData->cooldown > 0){
+            gunnerData->cooldown -= 1; 
+        }else if (gameplay->playerX < this->x != data->flipDirection){
+            
+            // fire
+            gunnerData->cooldown = gunnerData->fireRate;
+            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, ENTITY_ENEMY));
+            
+        }
+    }
+
+    enemyUpdate(this);
+}
+
 void enemyUpdate(Entity* this){
     Enemy* data = this->data;
     Gameplay* gameplay = getGameplay();
-    
 
     
 
@@ -267,5 +309,7 @@ void enemyOnDestroy(Entity* this){
     
 }
 void enemyClean(Entity* this){
-    
+    if (this->extraIndex != -1){
+        removeExtraEntityData(getEntityManager(), this->extraIndex);
+    }
 }

@@ -25,6 +25,7 @@ struct Entity{
     int identifier;
     bool shouldDestroy;
     void* data;
+    int extraIndex;
     void (*updateFunction)(struct Entity*);
     void (*onCollide)(struct Entity*, struct Entity*);
     void (*onDestroy)(struct Entity*);
@@ -54,6 +55,7 @@ Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void 
 // entity manager
 struct EntityManager{
     Vector* entities;
+    Vector* extraEntityData;
 };
 typedef struct EntityManager EntityManager;
 
@@ -62,7 +64,10 @@ void unloadEntityManager(EntityManager* manager);
 void updateEntityManager(EntityManager* manager);
 void removeAllEntities(EntityManager* manager);
 void addEntity(EntityManager* manager, Entity* entity);
-
-
+// returns index to extra data
+int allocateExtraEntityData(EntityManager* manager, void* data);
+// frees extra data and decrements necesarry indicies
+void removeExtraEntityData(EntityManager* manager, int extraDataIndex);
+void* getExtraEntityData(EntityManager* manager, int extraDataIndex);
 
 #endif

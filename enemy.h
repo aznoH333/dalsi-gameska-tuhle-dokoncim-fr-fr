@@ -2,6 +2,9 @@
 #define ENEMY
 
 #include "entities.h"
+#include "extraEntityData.h"
+
+
 
 struct Enemy{
     float moveSpeed;
@@ -21,6 +24,8 @@ struct Enemy{
     float gravity;
 
     bool isTouchingGround;
+
+
 };
 typedef struct Enemy Enemy;
 

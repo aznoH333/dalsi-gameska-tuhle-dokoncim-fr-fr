@@ -85,6 +85,7 @@ Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void 
     out->y = y;
     out->w = w;
     out->h = h;
+    out->extraIndex = -1;
     out->identifier = identifier;
     out->shouldDestroy = false;
     out->data = data;
@@ -105,6 +106,7 @@ EntityManager* initEntityManager(){
     EntityManager* out = malloc(sizeof(EntityManager));
 
     out->entities = initVector();
+    out->extraEntityData = initVector();
 
     return out;
 }
@@ -129,6 +131,7 @@ void removeAllEntities(EntityManager* manager){
 void unloadEntityManager(EntityManager* manager){
     removeAllEntities(manager);
     vectorFree(manager->entities);
+    vectorFree(manager->extraEntityData);
     free(manager);
 }
 
@@ -168,4 +171,28 @@ void updateEntityManager(EntityManager* manager){
 
 void addEntity(EntityManager* manager, Entity* entity){
     vectorPush(manager->entities, entity);
+}
+
+
+int allocateExtraEntityData(EntityManager* manager, void* data){
+    vectorPush(manager->extraEntityData, data);
+    return manager->extraEntityData->elementCount - 1;
+}
+
+void removeExtraEntityData(EntityManager* manager, int extraDataIndex){
+    vectorRemove(manager->extraEntityData, extraDataIndex);
+
+
+    // decrement all indicies
+    for (int i = 0; i < manager->entities->elementCount; i++){
+        Entity* e = vectorGet(manager->entities, i);
+
+        if (e->extraIndex > extraDataIndex){
+            e->extraIndex--;
+        }
+    }
+}
+
+void* getExtraEntityData(EntityManager* manager, int extraDataIndex){
+    return vectorGet(manager->extraEntityData, extraDataIndex);
 }
