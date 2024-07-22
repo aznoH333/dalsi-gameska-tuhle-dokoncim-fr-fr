@@ -48,6 +48,7 @@ typedef struct Enemy Enemy;
 // body type
 #define BODY_FLESH 0
 #define BODY_ROBOT 1
+#define BODY_LARGE 2
 
 
 

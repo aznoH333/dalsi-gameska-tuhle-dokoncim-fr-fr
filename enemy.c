@@ -278,26 +278,58 @@ void enemyOnCollide(Entity* this, Entity* other){
         Bullet* otherData = other->data;
         takeDamage(this, otherData->damage);
         other->shouldDestroy = true;
-        playSound("hurt_small.wav");
+        
+        const char* soundName;
+        Enemy* data = this->data;
+        switch (data->bodyType) {
+            case BODY_FLESH:    soundName = "hurt_small.wav"; break;
+            case BODY_ROBOT:    soundName = "hurt_metal.wav"; break;
+            case BODY_LARGE:    soundName = "hurt_large.wav"; break;
+        }
+
+        playSound(soundName);
 
     }
 }
 
 
-void spawnGore(Entity* this, EntityManager* e){
-    Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 19, 120);
-    makeParticleAnimated(p, SPRITE_START_EFFECTS + 21, 5);
+void spawnGore(Entity* this, EntityManager* e, bool isRobot){
+    
+    int start = 19 - (isRobot * 3);
+    int end = 21 - (isRobot * 3);
+    
+    Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + start, 120);
+    makeParticleAnimated(p, SPRITE_START_EFFECTS + end, 5);
     makeParticleMove(p, getRandomFloatRange(-1.0f, 1.0f), getRandomFloatRange(-3.0f, 1.0f), 0.1f);
     addEntity(e, p);
+}
+
+void spawnRobotHusk(Entity* this, EntityManager* e){
+    Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 15, 420);
+    addEntity(e, p);
+
 }
 
 void enemyOnDestroy(Entity* this){
     // spawn gore
     EntityManager* e = getEntityManager();
+    Enemy* data = this->data;
     int max = getRandomIntR(3, 5);
+
+    if (data->bodyType == BODY_LARGE){
+        max += 3;
+    }
+
+    
     for (int i = 0; i < max; i++){
-        spawnGore(this, e);
-    }  
+        spawnGore(this, e, data->bodyType == BODY_ROBOT);
+    } 
+
+    if (data->bodyType == BODY_ROBOT){
+        spawnRobotHusk(this, e);
+    } 
+    
+    
 
     // spawn explosion
     Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 7, 15);
