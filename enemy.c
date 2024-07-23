@@ -253,9 +253,12 @@ void enemyUpdate(Entity* this){
         float healthColor =  (1 - (hurtPercentage * 0.4));
         Color c = {255, 255 * healthColor, 255 * healthColor, 255};
 
+        float sizingOffsetX = (1.0f - scaleMultiplier) * 0.5f * this->w;
+        float sizingOffsetY = (1.0f - scaleMultiplier) * this->h;
+
 
         // draw
-        drawFSC(data->baseSprite + data->animationFrame, this->x, this->y, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
+        drawFSC(data->baseSprite + data->animationFrame, this->x + sizingOffsetX, this->y + sizingOffsetY, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
     }
 }
 

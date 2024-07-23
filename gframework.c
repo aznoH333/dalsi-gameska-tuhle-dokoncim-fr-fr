@@ -346,7 +346,9 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color){
 Map* soundMap;
 void playSound(const char* soundName){
 	Sound* s = mapGet(soundMap, soundName);
+	SetSoundVolume(*s, 0.6f);
 	PlaySound(*s);
+	
 }
 
 void loadSounds(){
