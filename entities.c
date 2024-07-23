@@ -4,6 +4,7 @@
 #include "gcollections.h"
 #include <stdlib.h>
 #include "enemy.h"
+#include "enemySpawner.h"
 
 
 // Entity marker
@@ -37,6 +38,39 @@ void saveEntityMarker(EntityMarker* marker, char* fileData, int markerIndex){
     writeIntAsChar(fileData, marker->id, 2, markerIndex + 4);
 }
 
+
+
+int getEnemyTypeFromMarker(int markerId){
+    switch (markerId) {
+        default: return -1;
+        // enemies
+        case 9:     return ENEMY_GREY_LIZARD;
+        case 11:    return ENEMY_GREEN_LIZARD;
+        case 13:    return ENEMY_PINK_LIZARD;
+
+        case 15:    return ENEMY_GREY_ROBOT;
+        case 17:    return ENEMY_GREEN_ROBOT;
+
+        case 31:    return ENEMY_GREEN_SOLDIER;
+        case 32:    return ENEMY_GREY_SOLDIER;
+        case 33:    return ENEMY_BLUE_SOLDIER;
+        case 34:    return ENEMY_RED_SOLDIER;
+    }
+}
+
+int getEnemySpawnerType(int markerId){
+    switch (markerId) {
+        default: return -1;
+        case 10: return SPAWNER_GREY_LIZARD;
+        case 12: return SPAWNER_GREEN_LIZARD;
+        case 14: return SPAWNER_PINK_LIZARD;
+
+        case 16: return SPAWNER_GREY_ROBOT;
+        case 18: return SPAWNER_GREEN_ROBOT;
+    }
+}
+
+
 void activateEntityMarker(EntityMarker* marker){
     
     if (marker->hasBeenActivated){
@@ -44,30 +78,22 @@ void activateEntityMarker(EntityMarker* marker){
     }
 
     marker->hasBeenActivated = true;
-    // hardcoded mess
-    // no real way to make it better tho
-    // ... you could make a lookup table dumbass >:(
-    int enemyType = -1;
     
-    switch (marker->id) {
-        default: break;
-
-        case 9:     enemyType = ENEMY_GREY_LIZARD; break;
-        case 11:    enemyType = ENEMY_GREEN_LIZARD; break;
-        case 13:    enemyType = ENEMY_PINK_LIZARD; break;
-
-        case 15:    enemyType = ENEMY_GREY_ROBOT; break;
-        case 17:    enemyType = ENEMY_GREEN_ROBOT; break;
-
-        case 31:    enemyType = ENEMY_GREEN_SOLDIER; break;
-        case 32:    enemyType = ENEMY_GREY_SOLDIER; break;
-        case 33:    enemyType = ENEMY_BLUE_SOLDIER; break;
-        case 34:    enemyType = ENEMY_RED_SOLDIER; break;
-        
-    }
+    // enemies
+    int enemyType = getEnemyTypeFromMarker(marker->id);
+    
     if (enemyType != -1){
         addEntity(getEntityManager(), initEnemy(marker->x * 16, marker->y * 16, enemyType));
+        return;
     }   
+
+    // enemy spawners
+    int spawnerType = getEnemySpawnerType(marker->id);
+
+    if (spawnerType != -1){
+        addEntity(getEntityManager(), initSpawner(marker->x * 16, marker->y * 16, spawnerType));
+        return;
+    }
 }
 
 
