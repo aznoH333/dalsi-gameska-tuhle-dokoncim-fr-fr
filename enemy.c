@@ -306,6 +306,7 @@ void spawnGore(Entity* this, EntityManager* e, bool isRobot){
 
 void spawnRobotHusk(Entity* this, EntityManager* e){
     Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 15, 420);
+    makeParticleChangeTransparency(p, 255, 0);
     addEntity(e, p);
 
 }

@@ -11,6 +11,9 @@ Entity* initStaticParticle(int x, int y, int sprite, int lifeTime){
     p->lifeTime = lifeTime;
     p->startFrame = sprite;
     p->currentSprite = 0;
+    p->startingTransparency = 255;
+    p->endTransparency = 255;
+    p->startingLifeTime = lifeTime;
 
     Entity* out = initEntity(x, y, 0, 0, ENTITY_OTHER, p, &particleUpdate, &particleOnCollide, &particleOnDestroy, &particleClean);
 
@@ -43,6 +46,12 @@ void makeParticleAnimatedSingleLoop(Entity* particle, int endFrame){
     p->frameDuration = p->lifeTime / (p->endFrame - p->startFrame);
     p->timer = p->frameDuration;
 
+}
+
+void makeParticleChangeTransparency(Entity* particle, int startingTransparency, int endTransparency){
+    Particle* p = particle->data;
+    p->startingTransparency = startingTransparency;
+    p->endTransparency = endTransparency;
 }
 
 
@@ -87,9 +96,16 @@ void particleUpdate(Entity* this){
 
     // draw
     {
-        draw(data->currentSprite + data->startFrame, this->x, this->y, LAYER_EFFECTS);
+        float lifePercentage = 1.0f - ((float)data->lifeTime / data->startingLifeTime);
+        Color c = {255, 255, 255, (unsigned char)lerp(data->startingTransparency, data->endTransparency, lifePercentage)};
+        drawC(data->currentSprite + data->startFrame, this->x, this->y, c, LAYER_EFFECTS);
     }
 }
+
+
+
+
+
 void particleOnCollide(Entity* this, Entity* other){
     
 }

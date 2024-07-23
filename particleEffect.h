@@ -10,11 +10,14 @@ struct Particle{
     float xVelocity;
     float yVelocity;
     int lifeTime;
+    int startingLifeTime;
     int frameDuration;
     int startFrame;
     int endFrame;
     int timer;
     int currentSprite;
+    int startingTransparency;
+    int endTransparency;
 };
 typedef struct Particle Particle;
 
@@ -29,5 +32,6 @@ void particleClean(Entity* this);
 void makeParticleAnimated(Entity* particle, int endFrame, int frameDuration);
 void makeParticleMove(Entity* particle, float xVelocity, float yVelocity, float gravity);
 void makeParticleAnimatedSingleLoop(Entity* particle, int endFrame);
+void makeParticleChangeTransparency(Entity* particle, int startingTransparency, int endTransparency);
 
 #endif
