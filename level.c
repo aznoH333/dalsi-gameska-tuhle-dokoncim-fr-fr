@@ -28,6 +28,7 @@ Level* loadLevel(const char* levePath){
         out->height = parseStrToInt(h, 2);
     }
 
+    gLog(LOG_INF, "level info x[%d] y[%d]", out->width, out->height);
     
     if (f->contentsLength < MIN_LEVEL_FILE_SIZE + out->width + out->height){
         gLog(LOG_ERROR, "Level data corrupted %s", levePath);
@@ -36,16 +37,6 @@ Level* loadLevel(const char* levePath){
     
     // read tile data
     {
-        /*
-        out->tiles = malloc(sizeof(char*) * out->width);
-
-        for (int x = 0; x < out->width; x++){
-            out->tiles[x] = malloc(sizeof(char) * out->height);
-            for (int y = 0; y < out->height; y++){
-                out->tiles[x][y] = f->contents[(x * out->height) + y + LEVEL_DATA_START];
-            }
-        }*/
-
         out->tiles = readTileData(out, out->levelFile->contents, LEVEL_DATA_START);
         out->background = readTileData(out, out->levelFile->contents, LEVEL_DATA_START + (out->width * out->height));
     }
@@ -92,7 +83,8 @@ void saveLevel(Level* lvl){
         writeTileData(lvl, newContents, LEVEL_DATA_START, lvl->tiles);
         writeTileData(lvl, newContents, LEVEL_DATA_START + (lvl->width * lvl->height), lvl->background);
         contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height * 2);
-
+        gLog(LOG_INF, "level info | tiles start [%d] | background start [%d] | entities start [%d]", LEVEL_DATA_START, LEVEL_DATA_START + (lvl->width * lvl->height), LEVEL_DATA_START + (lvl->width * lvl->height * 2));
+        gLog(LOG_INF, "misc info width [%d] height [%d]", lvl->width, lvl->height);
     }
 
     {
@@ -163,6 +155,16 @@ void resizeLevelTileData(Level* level, int newWidth, int newHeight, char*** tile
         free((*tileData)[i]);
     }
     free(*tileData);
+
+    // remove out of bounds markers
+    for (int i = 0; i < level->entityeMarkers->elementCount; i++){
+        EntityMarker* m = vectorGet(level->entityeMarkers, i);
+
+        if (!checkBoxCollisions(m->x, m->y, 1, 1, 0, 0, newWidth, newHeight)){
+            vectorRemove(level->entityeMarkers, i);
+            i--;
+        }
+    }
 
     *tileData = newLevelContent;
 }

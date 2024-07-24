@@ -35,7 +35,7 @@ void loadCurrentState(GameState* gamestate){
 GameState* initGameState(){
     GameState* out = malloc(sizeof(GameState));
 
-    out->currentState = GAME_STATE_GAME;
+    out->currentState = GAME_STATE_EDITOR;
     out->gameplay = getGameplay();
     out->editor = getLevelEditor();
     loadCurrentState(out);

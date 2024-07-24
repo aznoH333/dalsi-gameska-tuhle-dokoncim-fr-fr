@@ -6,7 +6,7 @@
 #include "gutil.h"
 
 
-#define MAX_FILE_SIZE 10000
+#define MAX_FILE_SIZE 1000000
 
 struct File{
     char* contents;

@@ -239,8 +239,8 @@ int boolToSign(bool a){
 void writeIntAsChar(char* targetStr, int input, int size, int index){
     int temp = input;
     for (int i = size - 1; i >= 0; i--){
-        targetStr[i + index] = temp % CHAR_MAX;
-        temp /= CHAR_MAX;
+        targetStr[i + index] = temp % (CHAR_MAX + 1);
+        temp /= (CHAR_MAX + 1);
     }
 }
 
