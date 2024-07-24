@@ -39,7 +39,7 @@ int main(void)
 
     // TODO
     // 1. get some decent tunes
-    // 2. level saving is busted
+    // 2. sometimes markers get activated and deactivated at wierd times
 
     // Main game loop
     while (!WindowShouldClose())
