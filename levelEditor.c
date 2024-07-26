@@ -97,7 +97,16 @@ void useEditTool(LevelEditor* editor){
     
     switch (editor->currentPlaceTool) {
         case PLACE_TOOL_PENCIL: targetArray[editor->cursorInWorldX][editor->cursorInWorldY] = placingTile; break;
-        case PLACE_TOOL_BUCKET: fillTiles(targetArray, editor->level->width, editor->level->height, editor->cursorInWorldX, editor->cursorInWorldY, targetArray[editor->cursorInWorldX][editor->cursorInWorldY], placingTile); break;
+        case PLACE_TOOL_BUCKET: 
+            fillTiles(
+                targetArray, 
+                editor->level->width, 
+                editor->level->height, 
+                editor->cursorInWorldX, 
+                editor->cursorInWorldY, 
+                targetArray[editor->cursorInWorldX][editor->cursorInWorldY], 
+                placingTile); 
+            break;
     }
     
         
