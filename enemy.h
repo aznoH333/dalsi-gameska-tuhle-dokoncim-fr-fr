@@ -51,7 +51,7 @@ typedef struct Enemy Enemy;
 #define BODY_LARGE 2
 
 
-
+Entity* initEnemyDirectional(int x, int y, int type, bool flipDirection);
 Entity* initEnemy(int x, int y, int type);
 void enemyUpdate(Entity* this);
 void enemyOnCollide(Entity* this, Entity* other);

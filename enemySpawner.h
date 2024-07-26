@@ -10,6 +10,7 @@ struct EnemySpawner{
     int spawnSprite;
     int enemySpawnCount;
     int cooldown;
+    bool direction;
 };
 
 typedef struct EnemySpawner EnemySpawner;

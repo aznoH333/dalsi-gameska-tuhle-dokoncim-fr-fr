@@ -127,6 +127,13 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
 }
 
 
+Entity* initEnemyDirectional(int x, int y, int type, bool flipDirection){
+    Entity* enemy = initEnemy(x, y, type);
+    Enemy* e = enemy->data;
+    e->flipDirection = flipDirection;
+    return enemy;
+}
+
 
 Entity* initEnemy(int x, int y, int type){
     Enemy* enemy = malloc(sizeof(Enemy));

@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "spritedata.h"
 #include "particleEffect.h"
+#include "gameplay.h"
 
 void initBasedOnType(EnemySpawner* data, int type){
     switch (type) {
@@ -41,6 +42,7 @@ Entity* initSpawner(int x, int y, int type){
     initBasedOnType(data, type);
     data->cooldown = DEFAULT_COOLDOWN;
     data->enemySpawnCount = 25;
+    data->direction = false;
     Entity* out = initEntity(x, y, 16, 16, ENTITY_OTHER, data, &spawnerUpdate, &spawnerOnCollide, &spawnerOnDestroy, &spawnerClean);
     return out;
 }
@@ -52,15 +54,21 @@ void spawnerUpdate(Entity* this){
 
     if (data->cooldown == SPAWN_ANIMATION_SPEED){
         // init particle
+        data->direction = getGameplay()->playerX > this->x;
         Entity* p = initStaticParticle(this->x, this->y, data->spawnSprite, SPAWN_ANIMATION_SPEED);
         makeParticleChangeTransparency(p, 0, 255);
+        
+        if (data->direction){
+            flipParticle(p);
+        }
+        
         addEntity(getEntityManager(), p);
     }
 
     else if (data->cooldown == 0){
         data->cooldown = DEFAULT_COOLDOWN;
         // spawn enemy
-        Entity* enemy = initEnemy(this->x, this->y, data->enemyId);
+        Entity* enemy = initEnemyDirectional(this->x, this->y, data->enemyId, data->direction);
         addEntity(getEntityManager(), enemy);
         data->enemySpawnCount--;
         if (data->enemySpawnCount == 0){

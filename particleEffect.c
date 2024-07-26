@@ -14,6 +14,7 @@ Entity* initStaticParticle(int x, int y, int sprite, int lifeTime){
     p->startingTransparency = 255;
     p->endTransparency = 255;
     p->startingLifeTime = lifeTime;
+    p->isFlipped = false;
 
     Entity* out = initEntity(x, y, 0, 0, ENTITY_OTHER, p, &particleUpdate, &particleOnCollide, &particleOnDestroy, &particleClean);
 
@@ -98,12 +99,14 @@ void particleUpdate(Entity* this){
     {
         float lifePercentage = 1.0f - ((float)data->lifeTime / data->startingLifeTime);
         Color c = {255, 255, 255, (unsigned char)lerp(data->startingTransparency, data->endTransparency, lifePercentage)};
-        drawC(data->currentSprite + data->startFrame, this->x, this->y, c, LAYER_EFFECTS);
+        drawFC(data->currentSprite + data->startFrame, this->x, this->y, data->isFlipped, c, LAYER_EFFECTS);
     }
 }
 
 
-
+void flipParticle(Entity* particle){
+    ((Particle*) (particle->data))->isFlipped = true;
+}
 
 
 void particleOnCollide(Entity* this, Entity* other){

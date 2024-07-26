@@ -282,6 +282,10 @@ void drawFSC(int spriteIndex, int x, int y, int flip, float scale, Color c, int 
 	drawRFSC(spriteIndex, x, y, 0.0f, flip, scale, c, layer);
 }
 
+void drawFC(int spriteIndex, int x, int y, bool flip, Color c, int layer){
+	drawRFSC(spriteIndex, x, y, 0.0f, flip, 1.0f, c, layer);
+}
+
 void drawR(int spriteIndex, int x, int y, float rotation, int layer){
 	drawRSC(spriteIndex, x, y, rotation, 1.0f, WHITE, layer);
 }

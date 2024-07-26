@@ -6,6 +6,7 @@
 struct Particle{
     bool isStatic;
     bool isAnimated;
+    bool isFlipped;
     float gravity;
     float xVelocity;
     float yVelocity;
@@ -33,5 +34,6 @@ void makeParticleAnimated(Entity* particle, int endFrame, int frameDuration);
 void makeParticleMove(Entity* particle, float xVelocity, float yVelocity, float gravity);
 void makeParticleAnimatedSingleLoop(Entity* particle, int endFrame);
 void makeParticleChangeTransparency(Entity* particle, int startingTransparency, int endTransparency);
+void flipParticle(Entity* particle);
 
 #endif
