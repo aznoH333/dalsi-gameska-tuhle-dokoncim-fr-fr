@@ -30,6 +30,7 @@ struct LevelEditor{
     // tile selection
     int selectedTile;
     int placeMode;
+    int currentPlaceTool;
 
     int viewMode;
     

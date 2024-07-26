@@ -12,6 +12,9 @@
 #define PLACE_MODE_ENTITES 1
 #define PLACE_MODE_BACKGROUND 2
 
+#define PLACE_TOOL_PENCIL 0
+#define PLACE_TOOL_BUCKET 1
+
 LevelEditor* initLevelEditor(){
     LevelEditor* out = malloc(sizeof(LevelEditor));
 
@@ -26,6 +29,7 @@ LevelEditor* initLevelEditor(){
 
     out->selectedTile = 1;
     out->placeMode = PLACE_MODE_TILES;
+    out->currentPlaceTool = PLACE_TOOL_PENCIL;
 
     out->viewMode = LEVEL_DRAW_EDITOR;
     return out;
@@ -58,6 +62,48 @@ void disposeLevelEditor(LevelEditor* editor){
 #define TILE_PICKER_X 0
 #define TILE_PICKER_Y 0
 #define TILE_PICKER_WIDTH 8
+
+void fillTiles(char** targetArray, int sizeX, int sizeY, int targetX, int targetY, int targetTileId, int placingTile){
+    if (targetTileId == placingTile) return;
+    
+    if (checkBoxCollisions(0, 0, sizeX, sizeY, targetX, targetY, 1, 1) && targetArray[targetX][targetY] == targetTileId){
+        targetArray[targetX][targetY] = placingTile;
+
+        fillTiles(targetArray, sizeX, sizeY, targetX - 1, targetY, targetTileId, placingTile);
+        fillTiles(targetArray, sizeX, sizeY, targetX + 1, targetY, targetTileId, placingTile);
+        fillTiles(targetArray, sizeX, sizeY, targetX, targetY - 1, targetTileId, placingTile);
+        fillTiles(targetArray, sizeX, sizeY, targetX, targetY + 1, targetTileId, placingTile);
+
+    }
+
+    return;
+}
+
+
+void useEditTool(LevelEditor* editor){
+    char** targetArray = (editor->placeMode == PLACE_MODE_TILES ? editor->level->tiles : editor->level->background);
+                
+    int placingTile;
+
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
+        placingTile = editor->selectedTile;
+    }else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)){
+        placingTile = 0;
+    }else {
+        return;
+    }
+    
+    
+    
+    switch (editor->currentPlaceTool) {
+        case PLACE_TOOL_PENCIL: targetArray[editor->cursorInWorldX][editor->cursorInWorldY] = placingTile; break;
+        case PLACE_TOOL_BUCKET: fillTiles(targetArray, editor->level->width, editor->level->height, editor->cursorInWorldX, editor->cursorInWorldY, targetArray[editor->cursorInWorldX][editor->cursorInWorldY], placingTile); break;
+    }
+    
+        
+    
+}
+
 
 
 void tileSelector(LevelEditor* editor, int operationType);
@@ -155,13 +201,8 @@ void updateLevelEditor(LevelEditor* editor){
                     }
                 }
             }else { // tiles
-                char** targetArray = (editor->placeMode == PLACE_MODE_TILES ? editor->level->tiles : editor->level->background);
                 
-                if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
-                    targetArray[editor->cursorInWorldX][editor->cursorInWorldY] = editor->selectedTile;
-                }else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)){
-                    targetArray[editor->cursorInWorldX][editor->cursorInWorldY] = 0;
-                }
+                useEditTool(editor);
             }
         }
     }
@@ -173,9 +214,9 @@ void updateLevelEditor(LevelEditor* editor){
     // entity selection
     tileSelector(editor, OPERATION_SELECT_ENTITY);
 
-    
+    // background controls
     {
-        // background controls
+        
         if(IsKeyPressed(KEY_B) && editor->placeMode == PLACE_MODE_TILES){
             editor->placeMode = PLACE_MODE_BACKGROUND;
         }else if (IsKeyPressed(KEY_B) && editor->placeMode == PLACE_MODE_BACKGROUND){
@@ -229,6 +270,17 @@ void updateLevelEditor(LevelEditor* editor){
         }
     }
 
+    // tool switching
+    {
+        if (IsKeyPressed(KEY_F)){
+            editor->currentPlaceTool++;
+            if (editor->currentPlaceTool > PLACE_TOOL_BUCKET){
+                editor->currentPlaceTool = 0;
+            }
+        }
+    }
+
+
     // displaying state
     {
         // mode display
@@ -244,6 +296,8 @@ void updateLevelEditor(LevelEditor* editor){
             
             textF(currentMode, 540, 8);
         }
+
+
 
         // place mode display
         if (editor->currentOperation == OPERATION_EDIT)
@@ -279,6 +333,18 @@ void updateLevelEditor(LevelEditor* editor){
             // show coordinates
             if (checkBoxCollisions(0, 0, editor->level->width, editor->level->height, editor->cursorInWorldX, editor->cursorInWorldY, 1, 1)){
                 textF("x %d y %d", 1110, 136, editor->cursorInWorldX, editor->cursorInWorldY);
+            }
+
+            // show current tool
+            {   // display type
+                const char* currentTool;
+
+                switch (editor->currentPlaceTool) {
+                    case PLACE_TOOL_PENCIL: currentTool = "pencil"; break;
+                    case PLACE_TOOL_BUCKET: currentTool = "fill"; break;
+                }
+                
+                textF("tool %s", 1080, 158, currentTool);
             }
             
         }
