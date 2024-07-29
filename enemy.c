@@ -348,9 +348,9 @@ void enemyOnDestroy(Entity* this){
     
     int deathEffectId = 0;
     switch (data->bodyType) {
-        case BODY_FLESH: deathEffectId = GRAPHICS_DEATH_SMALL; break;
-        case BODY_ROBOT: deathEffectId = GRAPHICS_DEATH_ROBOT; break;
-        case BODY_LARGE: deathEffectId = GRAPHICS_DEATH_LARGE; break;
+        case BODY_FLESH: deathEffectId = GRAPHICS_DEATH_SMALL; screenShake(1.2f); break;
+        case BODY_ROBOT: deathEffectId = GRAPHICS_DEATH_ROBOT; screenShake(1.8f); break;
+        case BODY_LARGE: deathEffectId = GRAPHICS_DEATH_LARGE; screenShake(2.5f); break;
     }
     
     
