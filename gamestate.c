@@ -1,6 +1,6 @@
 #include "gamestate.h"
 #include "gameCamera.h"
-
+#include "gameprogress.h"
 
 
 void unloadCurrentState(GameState* gamestate){
@@ -65,6 +65,7 @@ void changeGameState(GameState* gamestate, int newState){
 void disposeGameState(GameState* gamestate){
     disposeLevelEditor(gamestate->editor);
     disposeGameplay(gamestate->gameplay);
+    unloadGameProgress();
     unloadEntityManager(getEntityManager());
     unloadCameraManager(getCameraManager());
 }

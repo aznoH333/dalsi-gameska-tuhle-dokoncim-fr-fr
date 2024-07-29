@@ -40,6 +40,7 @@ int main(void)
     // TODO
     // 1. get some decent tunes
     // 2. sometimes markers get activated and deactivated at wierd times
+    // 3. unloading level causes a crash
 
     // Main game loop
     while (!WindowShouldClose())
@@ -49,7 +50,7 @@ int main(void)
         fUpdate();
     }
     
-    //disposeGameState(game);
+    disposeGameState(game);
 	disposeFramework();
     
 

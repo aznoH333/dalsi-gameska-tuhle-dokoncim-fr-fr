@@ -8,6 +8,7 @@
 #include "particleEffect.h"
 #include "spritedata.h"
 #include "extraGraphics.h"
+#include "gameprogress.h"
 
 
 
@@ -322,6 +323,26 @@ void spawnRobotHusk(Entity* this, EntityManager* e){
 
 }
 
+int scoreBasedOnEnemyType(int enemyType){
+    switch (enemyType) {
+        case ENEMY_GREEN_LIZARD:
+        case ENEMY_GREY_LIZARD:
+        case ENEMY_PINK_LIZARD:
+            return 100;
+        case ENEMY_GREEN_SOLDIER:
+        case ENEMY_BLUE_SOLDIER:
+        case ENEMY_RED_SOLDIER:
+            return 200;
+        case ENEMY_GREY_SOLDIER:
+        case ENEMY_GREY_ROBOT:
+        case ENEMY_GREEN_ROBOT:
+            return 500;
+        
+        default:
+            return 500;
+    }
+}
+
 void enemyOnDestroy(Entity* this){
     // spawn gore
     EntityManager* e = getEntityManager();
@@ -353,7 +374,8 @@ void enemyOnDestroy(Entity* this){
         case BODY_LARGE: deathEffectId = GRAPHICS_DEATH_LARGE; screenShake(2.5f); break;
     }
     
-    
+    int score = scoreBasedOnEnemyType(data->enemyType);
+    addScore(this->x, this->y, score);
     Entity* deathEffect = initExtraGraphic(this->x, this->y, deathEffectId);
     addEntity(e, deathEffect);
 
