@@ -52,10 +52,12 @@ void loadLevelEditorLevel(LevelEditor* editor, const char* path){
 
 void unloadLevelEditor(LevelEditor* editor){
     unloadLevel(editor->level);
+    editor->level = 0;
 }
 
 void disposeLevelEditor(LevelEditor* editor){
-    unloadLevelEditor(editor);
+    if (editor->level != 0)
+        unloadLevelEditor(editor);
     free(editor);
 }
 
