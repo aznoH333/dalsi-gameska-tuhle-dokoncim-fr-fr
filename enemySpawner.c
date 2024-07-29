@@ -35,7 +35,7 @@ void initBasedOnType(EnemySpawner* data, int type){
     }
 }
 
-const int DEFAULT_COOLDOWN = 70;
+const int DEFAULT_COOLDOWN = 90;
 const int SPAWN_ANIMATION_SPEED = 20;
 Entity* initSpawner(int x, int y, int type){
     EnemySpawner* data = malloc(sizeof(EnemySpawner));
