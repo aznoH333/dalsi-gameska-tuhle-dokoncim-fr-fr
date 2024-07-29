@@ -53,26 +53,26 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     switch (enemyType) {
         case ENEMY_GREY_LIZARD:
             initBasicEnemy(enemy);
-            enemy->baseSprite = 87;
+            enemy->baseSprite = SPRITE_START_ENTITIES;
             break;
 
         case ENEMY_GREEN_LIZARD:
             initBasicEnemy(enemy);
             enemy->health = 23;
             enemy->moveSpeed = 1.0f;
-            enemy->baseSprite = 89;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 2;
             break;
 
         case ENEMY_PINK_LIZARD:
             initBasicEnemy(enemy);
             enemy->health = 26;
-            enemy->baseSprite = 91;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 4;
             break;
 
         case ENEMY_GREY_ROBOT:
             initBasicEnemy(enemy);
             enemy->health = 75;
-            enemy->baseSprite = 93;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 6;
             enemy->bodyType = BODY_ROBOT;
             break;  
 
@@ -80,14 +80,14 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             initBasicEnemy(enemy);
             enemy->health = 65;
             enemy->moveSpeed = 1.0f;
-            enemy->baseSprite = 95;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 8;
             enemy->bodyType = BODY_ROBOT;
             break;  
 
 
         case ENEMY_GREEN_SOLDIER:
             initSoldierEnemy(enemy);
-            enemy->baseSprite = 114;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 27;
             initSoldierData(entity, 85);
 
             break;
@@ -95,14 +95,14 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
         case ENEMY_GREY_SOLDIER:
             initSoldierEnemy(enemy);
             enemy->moveSpeed = 0.5f;
-            enemy->baseSprite = 116;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 29;
             enemy->health = 50;
             initSoldierData(entity, 120);
             break;
 
         case ENEMY_BLUE_SOLDIER:
             initSoldierEnemy(enemy);
-            enemy->baseSprite = 118;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 31;
             enemy->health = 30;
             initSoldierData(entity, 85);
 
@@ -111,7 +111,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
         case ENEMY_RED_SOLDIER:
             initSoldierEnemy(enemy);
             enemy->health = 33;
-            enemy->baseSprite = 120;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 33;
             initSoldierData(entity, 78);
 
             break;
