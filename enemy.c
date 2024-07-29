@@ -7,6 +7,7 @@
 #include "level.h"
 #include "particleEffect.h"
 #include "spritedata.h"
+#include "extraGraphics.h"
 
 
 
@@ -343,10 +344,18 @@ void enemyOnDestroy(Entity* this){
     
 
     // spawn explosion
-    Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 7, 15);
     playSound("small_explosion.wav");
-    makeParticleAnimatedSingleLoop(p, SPRITE_START_EFFECTS + 10);
-    addEntity(e, p);
+    
+    int deathEffectId = 0;
+    switch (data->bodyType) {
+        case BODY_FLESH: deathEffectId = GRAPHICS_DEATH_SMALL; break;
+        case BODY_ROBOT: deathEffectId = GRAPHICS_DEATH_ROBOT; break;
+        case BODY_LARGE: deathEffectId = GRAPHICS_DEATH_LARGE; break;
+    }
+    
+    
+    Entity* deathEffect = initExtraGraphic(this->x, this->y, deathEffectId);
+    addEntity(e, deathEffect);
 
     
     
