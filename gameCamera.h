@@ -6,6 +6,7 @@
 
 #define CAMERA_POINT_FREE 0
 #define CAMERA_POINT_AUTO 1
+#define CAMERA_SPECIAL 2
 
 struct CameraPoint{
     int x;
@@ -25,6 +26,7 @@ struct CameraManager{
     int currentPointIndex;
     bool reachedEnd;
     float cameraSpeed;
+    int markerCameraType;
 };
 typedef struct CameraManager CameraManager;
 

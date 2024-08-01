@@ -1,5 +1,4 @@
 #include "gameplay.h"
-#include "enemy.h"
 #include "entities.h"
 #include "gameCamera.h"
 #include "level.h"
@@ -13,6 +12,7 @@ Gameplay* initGameplay(){
     output->playerX = 0.0f;
     output->playerY = 0.0f;
     output->hasLoadedLevel = false;
+    output->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
     return output;    
 }
 
@@ -23,6 +23,17 @@ Gameplay* getGameplay(){
         gameplayInstance = initGameplay();
     }
     return gameplayInstance;
+}
+
+bool isCameraMarker(int cameraMarkerId){
+    return isInRange(cameraMarkerId, 2, 3) || isInRange(cameraMarkerId, 23, 28);
+}
+
+int getMarkerType(int markerId){
+    if (markerId <= 3){
+        return markerId - 2;
+    }
+    return CAMERA_SPECIAL;
 }
 
 void startLevel(Gameplay* g, const char* levelPath){
@@ -47,8 +58,8 @@ void startLevel(Gameplay* g, const char* levelPath){
                 for (int i = 0; i < g->level->entityeMarkers->elementCount; i++){
                     EntityMarker* marker = vectorGet(g->level->entityeMarkers, i);
 
-                    if (marker->x == x && marker->y == y && (marker->id == 2 || marker->id == 3)){
-                        addCameraMarker(m, x * 16, y * 16, marker->id - 2);
+                    if (marker->x == x && marker->y == y && isCameraMarker(marker->id)){
+                        addCameraMarker(m, x * 16, y * 16, getMarkerType(marker->id));
                         markerCount++;
                     }
                 }
@@ -115,6 +126,9 @@ void disposeGameplay(Gameplay* g){
     free(g);
 }
 
+void setMarkerEffect(int markerEffect){
+    getGameplay()->currentPassiveMarkerEffect = markerEffect;
+}
 
 
 void updateGameplay(Gameplay* g){

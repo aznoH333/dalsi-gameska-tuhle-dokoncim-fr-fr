@@ -215,6 +215,11 @@ int max(int a, int b){
     return b;
 }
 
+bool isInRange(int value, int min, int max){
+    return value >= min && value <= max;
+}
+
+
 float sign(float input){
 	if (input == 0){
 		return 0;

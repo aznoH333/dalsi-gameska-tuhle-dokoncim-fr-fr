@@ -18,6 +18,7 @@ CameraManager* initCameraManager(){
     out->currentPointIndex = 0;
     out->reachedEnd = false;
     out->cameraSpeed = 0;
+    out->markerCameraType = 0;
 
     return out;
 }
@@ -45,9 +46,10 @@ void addCameraMarker(CameraManager* manager, int x, int y, int type){
 
     if (manager->cameraPoints->elementCount == 0){
         manager->currentPoint = point;
-
+        manager->markerCameraType = point->cameraPointType;
     }else if (manager->cameraPoints->elementCount == 1){
         manager->nextPoint = point;
+        
         calculateSegmentSpeed(manager);
 
     }
@@ -101,6 +103,10 @@ void updateCameraManager(CameraManager* manager){
 
                 manager->currentPoint = vectorGet(manager->cameraPoints, manager->currentPointIndex);
                 manager->nextPoint = vectorGet(manager->cameraPoints, manager->currentPointIndex + 1);
+                if (manager->currentPoint->cameraPointType != CAMERA_SPECIAL){
+                    manager->markerCameraType = manager->currentPoint->cameraPointType;
+                }
+                
                 calculateSegmentSpeed(manager);
                 gLog(LOG_INF, "camera progress %d current x %d current y %d", manager->currentPointIndex, manager->currentPoint->x, manager->currentPoint->y);
 
@@ -108,13 +114,14 @@ void updateCameraManager(CameraManager* manager){
                 manager->reachedEnd = true;
                 manager->currentPoint = manager->nextPoint;
                 manager->currentProgress = 0;
+                
                 gLog(LOG_INF, "camera reached end");
             }
         }
     }
 
     {// autoprogress
-        if (manager->currentPoint->cameraPointType == CAMERA_POINT_AUTO){
+        if (manager->markerCameraType == CAMERA_POINT_AUTO){
             manager->currentProgress += manager->cameraSpeed;
         }
     }
@@ -125,7 +132,7 @@ void updateCameraManager(CameraManager* manager){
 
 void updateGameCameraPosition(CameraManager* manager, float x, float y){
     
-    if (manager->currentPoint->cameraPointType != CAMERA_POINT_FREE || manager->reachedEnd){
+    if (manager->markerCameraType != CAMERA_POINT_FREE || manager->reachedEnd){
         return;
     }
 
