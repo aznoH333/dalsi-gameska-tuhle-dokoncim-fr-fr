@@ -4,7 +4,7 @@
 #include "gameCamera.h"
 #include "level.h"
 #include "player.h"
-
+#include "gameprogress.h"
 
 
 Gameplay* initGameplay(){
@@ -119,6 +119,7 @@ void disposeGameplay(Gameplay* g){
 
 void updateGameplay(Gameplay* g){
     drawLevel(g->level, LEVEL_DRAW_GAME);
+    displayPlayerUi();
     updateEntityManager(getEntityManager());
     updateCameraManager(getCameraManager());
 }

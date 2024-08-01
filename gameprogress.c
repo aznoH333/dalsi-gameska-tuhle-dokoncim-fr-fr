@@ -3,12 +3,14 @@
 #include "spritedata.h"
 #include "gutil.h"
 #include "particleEffect.h"
+#include "gframework.h"
 
 GameProgress* gameProgressInstance;
 
 GameProgress* initGameProgress(){
     GameProgress* output = malloc(sizeof(GameProgress));
     output->score = 0;
+    output->scoreSizeMultiplier = 0;
     return output;
 }
 
@@ -37,11 +39,13 @@ void setupParticleValues(int ammount, int* zeroCount, int* numeralSprite){
     }
 }
 
+const int MAX_SCORE_SIZE_MULTIPLIER = 10;
+
 void addScore(int x, int y, int ammount){
     
     // add score
     getGameProgress()->score += ammount;
-
+    getGameProgress()->scoreSizeMultiplier = MAX_SCORE_SIZE_MULTIPLIER;
 
 
     // setup vars
@@ -60,3 +64,15 @@ void addScore(int x, int y, int ammount){
     }
     
 }
+
+void displayPlayerUi(){
+    GameProgress* g = getGameProgress();
+    g->scoreSizeMultiplier -= g->scoreSizeMultiplier > 0;
+
+
+    // score display
+    float multiplierPercentage = ((float)g->scoreSizeMultiplier / MAX_SCORE_SIZE_MULTIPLIER);
+    // i have no clue why but an offset of 20 produces the correct results
+    drawTextF("score %010d", 1000 - (20 * multiplierPercentage), 8, 2.0f + (0.3f * multiplierPercentage), WHITE, LAYER_STATIC_UI, g->score);
+}
+
