@@ -40,6 +40,8 @@ void initSoldierData(Entity* entity, int fireRate){
 void flyUpdate(Entity* this);
 void initFlyData(Entity* this){
     ExtraFlyData* f = malloc(sizeof(ExtraFlyData));
+    ((Enemy*)this->data)->flipDirection = getGameplay()->playerX > this->x;
+    
     f->targetHeight = getGameplay()->playerY + getRandomIntR(-20, 20);
     f->movingDown = getGameplay()->playerY > this->y;
     this->updateFunction = &flyUpdate;
@@ -130,16 +132,19 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             initFlyData(entity);
             enemy->health = 10;
             enemy->baseSprite = SPRITE_START_ENTITIES + 15;
+            enemy->animationFrameDuration = 2;
             break;
         case ENEMY_RED_FLY:
             initFlyData(entity);
             enemy->health = 15;
             enemy->baseSprite = SPRITE_START_ENTITIES + 17;
+            enemy->animationFrameDuration = 2;
             break;
         case ENEMY_BLUE_FLY:
             initFlyData(entity);
             enemy->health = 17;
             enemy->baseSprite = SPRITE_START_ENTITIES + 19;
+            enemy->animationFrameDuration = 2;
             break;
 
 
@@ -300,12 +305,9 @@ void flyUpdate(Entity* this){
     Enemy* data = this->data;
     ExtraFlyData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
 
-    // move verticaly
-    if (extraData->movingDown){
-        data->yVelocity += 0.1f;
-    }else {
-        data->yVelocity -= 0.1f;
-    }
+    data->yVelocity = (extraData->targetHeight - this->y) * 0.02f;
+
+    data->xVelocity += boolToSign(data->flipDirection) * 0.04f;
 
     genericEnemyUpdate(this);
 }
