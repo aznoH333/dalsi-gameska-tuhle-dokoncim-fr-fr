@@ -12,6 +12,7 @@ struct CameraPoint{
     int x;
     int y;
     int cameraPointType;
+    int extraIndex;
 };
 typedef struct CameraPoint CameraPoint;
 
@@ -35,7 +36,7 @@ CameraManager* getCameraManager();
 
 void updateCameraManager(CameraManager* manager);
 void updateGameCameraPosition(CameraManager* manager, float x, float y);
-void addCameraMarker(CameraManager* manager, int x, int y, int type);
+void addCameraMarker(CameraManager* manager, int x, int y, int type, int extraEffect);
 void clearCameraMarkers(CameraManager* manager);
 void unloadCameraManager(CameraManager* manager);
 

@@ -35,12 +35,13 @@ void calculateSegmentSpeed(CameraManager* manager){
     manager->cameraSpeed = 0.5 / pythagoras(manager->currentPoint->x, manager->currentPoint->y, manager->nextPoint->x, manager->nextPoint->y);
 }
 
-void addCameraMarker(CameraManager* manager, int x, int y, int type){
+void addCameraMarker(CameraManager* manager, int x, int y, int type, int extraEffect){
     CameraPoint* point = malloc(sizeof(CameraPoint));
 
     point->x = x;
     point->y = y;
     point->cameraPointType = type;
+    point->extraIndex = extraEffect;
 
     gLog(LOG_INF, "Added camera marker x: %d y: %d type: %d", x, y, type);
 
@@ -69,6 +70,21 @@ void unloadCameraManager(CameraManager* manager){
     vectorFree(manager->cameraPoints);
 }
 
+void activateCameraMarkerEffect(CameraManager* this){
+    CameraPoint* point = this->currentPoint;
+    if (point->cameraPointType != CAMERA_SPECIAL){
+        this->markerCameraType = point->cameraPointType;
+    }
+
+    // do script effect
+    else{
+        setMarkerEffect(point->extraIndex);
+    }
+
+
+
+    gLog(LOG_INF, "camera progress %d current x %d current y %d", this->currentPointIndex, this->currentPoint->x, this->currentPoint->y);
+}
 
 void updateCameraManager(CameraManager* manager){
     
@@ -103,12 +119,8 @@ void updateCameraManager(CameraManager* manager){
 
                 manager->currentPoint = vectorGet(manager->cameraPoints, manager->currentPointIndex);
                 manager->nextPoint = vectorGet(manager->cameraPoints, manager->currentPointIndex + 1);
-                if (manager->currentPoint->cameraPointType != CAMERA_SPECIAL){
-                    manager->markerCameraType = manager->currentPoint->cameraPointType;
-                }
-                
                 calculateSegmentSpeed(manager);
-                gLog(LOG_INF, "camera progress %d current x %d current y %d", manager->currentPointIndex, manager->currentPoint->x, manager->currentPoint->y);
+                
 
             }else {
                 manager->reachedEnd = true;
@@ -117,6 +129,8 @@ void updateCameraManager(CameraManager* manager){
                 
                 gLog(LOG_INF, "camera reached end");
             }
+
+            activateCameraMarkerEffect(manager);
         }
     }
 

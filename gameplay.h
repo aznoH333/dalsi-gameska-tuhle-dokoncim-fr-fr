@@ -19,6 +19,8 @@ typedef struct Gameplay Gameplay;
 #define MARKER_EFFECT_FLY_GREY 1
 #define MARKER_EFFECT_FLY_RED 2
 #define MARKER_EFFECT_FLY_BLUE 3
+#define MARKER_EFFECT_STOP 4
+#define MARKER_EFFECT_CUSTOM_SCRIPT 5
 
 Gameplay* getGameplay();
 void unloadGameplay(Gameplay* g);

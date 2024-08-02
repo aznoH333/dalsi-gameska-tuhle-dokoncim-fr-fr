@@ -36,6 +36,19 @@ int getMarkerType(int markerId){
     return CAMERA_SPECIAL;
 }
 
+int getMarkerEffect(int markerId){
+    switch (markerId) {
+        case 2:
+        case 3: return MARKER_EFFECT_NONE;
+        case 23: return MARKER_EFFECT_STOP;
+        case 24: return MARKER_EFFECT_FLY_GREY;
+        case 25: return MARKER_EFFECT_FLY_RED;
+        case 26: return MARKER_EFFECT_FLY_BLUE;
+        case 27: return MARKER_EFFECT_CUSTOM_SCRIPT;
+        default: gLog(LOG_ERR, "Unrecognized script id [%d]", markerId); return 0;
+    }
+}
+
 void startLevel(Gameplay* g, const char* levelPath){
     // level load
     {
@@ -59,7 +72,7 @@ void startLevel(Gameplay* g, const char* levelPath){
                     EntityMarker* marker = vectorGet(g->level->entityeMarkers, i);
 
                     if (marker->x == x && marker->y == y && isCameraMarker(marker->id)){
-                        addCameraMarker(m, x * 16, y * 16, getMarkerType(marker->id));
+                        addCameraMarker(m, x * 16, y * 16, getMarkerType(marker->id), getMarkerEffect(marker->id));
                         markerCount++;
                     }
                 }
@@ -128,6 +141,7 @@ void disposeGameplay(Gameplay* g){
 
 void setMarkerEffect(int markerEffect){
     getGameplay()->currentPassiveMarkerEffect = markerEffect;
+    gLog(LOG_INF, "changed marker effect [%d]", markerEffect);
 }
 
 
