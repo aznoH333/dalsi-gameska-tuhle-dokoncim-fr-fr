@@ -39,11 +39,14 @@ typedef struct Enemy Enemy;
 #define ENEMY_GREY_SOLDIER 6
 #define ENEMY_BLUE_SOLDIER 7
 #define ENEMY_RED_SOLDIER 8
+#define ENEMY_GREY_FLY 9
+#define ENEMY_RED_FLY 10
+#define ENEMY_BLUE_FLY 11
 
 // ai
 #define AI_BASIC 0
 #define AI_GRUNT 1
-
+#define AI_FLY 2
 
 // body type
 #define BODY_FLESH 0

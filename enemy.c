@@ -37,6 +37,14 @@ void initSoldierData(Entity* entity, int fireRate){
     entity->extraIndex = allocateExtraEntityData(getEntityManager(), g);
 }
 
+void flyUpdate(Entity* this);
+void initFlyData(Entity* this){
+    ExtraFlyData* f = malloc(sizeof(ExtraFlyData));
+    f->targetHeight = getGameplay()->playerY + getRandomIntR(-20, 20);
+    f->movingDown = getGameplay()->playerY > this->y;
+    this->updateFunction = &flyUpdate;
+    this->extraIndex = allocateExtraEntityData(getEntityManager(), f);
+}
 
 void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     
@@ -118,6 +126,22 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
 
             break;
         
+        case ENEMY_GREY_FLY:
+            initFlyData(entity);
+            enemy->health = 10;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 15;
+            break;
+        case ENEMY_RED_FLY:
+            initFlyData(entity);
+            enemy->health = 15;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 17;
+            break;
+        case ENEMY_BLUE_FLY:
+            initFlyData(entity);
+            enemy->health = 17;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 19;
+            break;
+
 
         default:
             gLog(LOG_ERR,"Unknown enemy type %d", enemyType);
@@ -139,8 +163,6 @@ Entity* initEnemyDirectional(int x, int y, int type, bool flipDirection){
 
 Entity* initEnemy(int x, int y, int type){
     Enemy* enemy = malloc(sizeof(Enemy));
-    
-    
     
     Entity* out = initEntity(x, y, 16, 16, ENTITY_ENEMY, enemy, &enemyUpdate, &enemyOnCollide, &enemyOnDestroy, &enemyClean);
 
@@ -182,11 +204,44 @@ void gunnerUpdate(Entity* this){
     enemyUpdate(this);
 }
 
+void genericEnemyUpdate(Entity* this){
+    Enemy* data = this->data;
+    {// update values
+        this->x += data->xVelocity;
+        this->y += data->yVelocity;
+    }
+
+    {// animation
+        data->animationTimer--;
+        if (data->animationTimer <= 0){
+            data->animationTimer = data->animationFrameDuration;
+            data->animationFrame = ++data->animationFrame % 2;
+        }
+    }
+    
+    
+    {// draw
+        // hurt timer
+        data->hurtTimer -= data->hurtTimer > 0;
+        
+        // color and scale
+        float hurtPercentage = (float) data->hurtTimer / HURT_TIMER_MAX;
+        float scaleMultiplier = (hurtPercentage * 0.3f) + 1.0f;
+        float healthColor =  (1 - (hurtPercentage * 0.4));
+        Color c = {255, 255 * healthColor, 255 * healthColor, 255};
+
+        float sizingOffsetX = (1.0f - scaleMultiplier) * 0.5f * this->w;
+        float sizingOffsetY = (1.0f - scaleMultiplier) * this->h;
+
+
+        // draw
+        drawFSC(data->baseSprite + data->animationFrame, this->x + sizingOffsetX, this->y + sizingOffsetY, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
+    }
+}
+
 void enemyUpdate(Entity* this){
     Enemy* data = this->data;
     Gameplay* gameplay = getGameplay();
-
-    
 
     {// walking
         data->xVelocity = data->moveSpeed * boolToSign(data->flipDirection);
@@ -237,40 +292,23 @@ void enemyUpdate(Entity* this){
             }
         }
     }
-
-    {// update values
-        this->x += data->xVelocity;
-        this->y += data->yVelocity;
-    }
-
-    {// animation
-        data->animationTimer--;
-        if (data->animationTimer <= 0){
-            data->animationTimer = data->animationFrameDuration;
-            data->animationFrame = ++data->animationFrame % 2;
-        }
-    }
-    
-    
-    {// draw
-        // hurt timer
-        data->hurtTimer -= data->hurtTimer > 0;
-        
-        // color and scale
-        float hurtPercentage = (float) data->hurtTimer / HURT_TIMER_MAX;
-        float scaleMultiplier = (hurtPercentage * 0.3f) + 1.0f;
-        float healthColor =  (1 - (hurtPercentage * 0.4));
-        Color c = {255, 255 * healthColor, 255 * healthColor, 255};
-
-        float sizingOffsetX = (1.0f - scaleMultiplier) * 0.5f * this->w;
-        float sizingOffsetY = (1.0f - scaleMultiplier) * this->h;
-
-
-        // draw
-        drawFSC(data->baseSprite + data->animationFrame, this->x + sizingOffsetX, this->y + sizingOffsetY, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
-    }
+    genericEnemyUpdate(this);
 }
 
+
+void flyUpdate(Entity* this){
+    Enemy* data = this->data;
+    ExtraFlyData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
+
+    // move verticaly
+    if (extraData->movingDown){
+        data->yVelocity += 0.1f;
+    }else {
+        data->yVelocity -= 0.1f;
+    }
+
+    genericEnemyUpdate(this);
+}
 
 void takeDamage(Entity* this, int damage){
     Enemy* data = this->data;

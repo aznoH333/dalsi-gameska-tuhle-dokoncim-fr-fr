@@ -4,7 +4,7 @@
 #include "level.h"
 #include "player.h"
 #include "gameprogress.h"
-
+#include "enemy.h"
 
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -140,14 +140,59 @@ void disposeGameplay(Gameplay* g){
 }
 
 void setMarkerEffect(int markerEffect){
-    getGameplay()->currentPassiveMarkerEffect = markerEffect;
-    gLog(LOG_INF, "changed marker effect [%d]", markerEffect);
+    if (markerEffect == MARKER_EFFECT_NONE){
+        return;
+    }
+
+    if (markerEffect == MARKER_EFFECT_STOP){
+        getGameplay()->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
+    }else {
+        getGameplay()->currentPassiveMarkerEffect = markerEffect;
+    }
+
+    
 }
+
+
+void doFlyEffect(Gameplay* this, int flyType){
+    if (getGlobalTimer() % 80 == 0){
+        // get camera position
+        CameraManager* camera = getCameraManager();
+
+        int x = camera->cameraX;
+        int y = camera->cameraY;
+
+        // pick x
+        x += getRandomInt(DEFAULT_GAME_WIDTH);
+        if (randomChance(0.5f)){
+            y += DEFAULT_GAME_HEIGHT;
+        }
+
+        addEntity(getEntityManager(), initEnemy(x, y, ENEMY_GREY_FLY + flyType));
+    }
+}
+
+void updateScripts(Gameplay* this){
+    switch (this->currentPassiveMarkerEffect) {
+        default:
+        case MARKER_EFFECT_NONE: return;
+        case MARKER_EFFECT_FLY_GREY:
+        case MARKER_EFFECT_FLY_RED:
+        case MARKER_EFFECT_FLY_BLUE:
+            doFlyEffect(this, this->currentPassiveMarkerEffect - 1);
+            return;
+        case MARKER_EFFECT_CUSTOM_SCRIPT:
+            gLog(LOG_ERR, "Not yet implemented");
+            return;        
+    }
+}
+
 
 
 void updateGameplay(Gameplay* g){
     drawLevel(g->level, LEVEL_DRAW_GAME);
     displayPlayerUi();
+    updateScripts(g);
     updateEntityManager(getEntityManager());
     updateCameraManager(getCameraManager());
 }

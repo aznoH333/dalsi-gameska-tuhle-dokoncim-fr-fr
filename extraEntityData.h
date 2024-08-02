@@ -7,6 +7,12 @@ struct ExtraGunnerData{
 };
 typedef struct ExtraGunnerData ExtraGunnerData;
 
+struct ExtraFlyData{
+    int targetHeight;
+    char movingDown;
+};
+typedef struct ExtraFlyData ExtraFlyData;
+
 
 
 #endif
