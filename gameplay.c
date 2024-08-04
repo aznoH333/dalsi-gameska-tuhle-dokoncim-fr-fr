@@ -110,7 +110,7 @@ void startLevel(Gameplay* g, const char* levelPath){
 
     // play music
     {
-        playMusic(0);
+        playMusic(g->level->songId);
     }
 
     // reset scripts
@@ -226,7 +226,7 @@ void setWaterHeight(int height){
     
 }
 
-
+const Color WATER_COLOR = {255, 255, 255, 155};
 void updateWater(Gameplay* this){
     if (this->targetWaterHeight == -1){
         return;
@@ -246,10 +246,10 @@ void updateWater(Gameplay* this){
     // draw water
     float maxCameraY = getCameraManager()->cameraY + DEFAULT_GAME_HEIGHT;
     for (int i = 0; i < DEFAULT_GAME_WIDTH + 16; i += 16){
-        draw(SPRITE_START_WATER + 2, i + x, waterHeight, LAYER_EFFECTS);
+        drawC(SPRITE_START_WATER + this->level->waterType, i + x, waterHeight, WATER_COLOR, LAYER_EFFECTS);
         // draw rest of water
         for (float j = waterHeight + 16.0f; j < maxCameraY; j += 16){
-            draw(SPRITE_START_WATER + 3, i + x, j, LAYER_EFFECTS);
+            drawC(SPRITE_START_WATER + 3 + this->level->waterType, i + x, j, WATER_COLOR, LAYER_EFFECTS);
         }
     }
 }

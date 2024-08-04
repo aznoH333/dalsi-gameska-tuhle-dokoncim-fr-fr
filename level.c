@@ -6,7 +6,7 @@
 #include "spritedata.h"
 
 #define MIN_LEVEL_FILE_SIZE 4
-#define LEVEL_DATA_START 4
+#define LEVEL_DATA_START 6
 
 char** readTileData(Level* lvl, char* fileData, int index);
 void writeTileData(Level* lvl, char* fileData, int index, char** tileData);
@@ -15,7 +15,7 @@ Level* loadLevel(const char* levePath){
     File* f = initFile(levePath);
 
     if (f->contentsLength < MIN_LEVEL_FILE_SIZE){
-        gLog(LOG_ERROR, "Invalid file : %s", levePath);
+        gLog(LOG_ERR, "Invalid file : %s", levePath);
     }
 
     Level* out = malloc(sizeof(Level));
@@ -26,12 +26,16 @@ Level* loadLevel(const char* levePath){
         out->width = parseStrToInt(w, 2);
         char h[4] = {f->contents[2], f->contents[3]};
         out->height = parseStrToInt(h, 2);
+
+        // read water
+        out->waterType = f->contents[4];
+        out->songId = f->contents[5];
     }
 
     gLog(LOG_INF, "level info x[%d] y[%d]", out->width, out->height);
     
     if (f->contentsLength < MIN_LEVEL_FILE_SIZE + out->width + out->height){
-        gLog(LOG_ERROR, "Level data corrupted %s", levePath);
+        gLog(LOG_ERR, "Level data corrupted %s", levePath);
     }
     
     
@@ -53,11 +57,14 @@ Level* loadLevel(const char* levePath){
         }
     }
 
+    out->waterType = 2;
+    out->songId = 0;
+
     return out;
 }
 
 void saveLevel(Level* lvl){
-    gLog(LOG_INFO, "Saving level to file %s", lvl->levelFile->filePath);
+    gLog(LOG_INF, "Saving level to file %s", lvl->levelFile->filePath);
 
     // construct file contents
     char newContents[MAX_FILE_SIZE];
@@ -67,6 +74,8 @@ void saveLevel(Level* lvl){
         // write header
         writeIntAsChar(newContents, lvl->width, 2, 0);
         writeIntAsChar(newContents, lvl->height, 2, 2);
+        newContents[4] = lvl->waterType;
+        newContents[5] = lvl->songId;
         contentsIndex = LEVEL_DATA_START;
     }
 

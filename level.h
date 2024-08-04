@@ -19,9 +19,11 @@ struct Level {
     char** background;
     int width;
     int height;
+    char waterType;
+    char songId;
     File* levelFile;
     Vector* entityeMarkers;
-
+    
 };
 typedef struct Level Level;
 
