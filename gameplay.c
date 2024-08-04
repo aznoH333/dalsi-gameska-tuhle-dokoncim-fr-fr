@@ -2,6 +2,7 @@
 #include "entities.h"
 #include "gameCamera.h"
 #include "gframework.h"
+#include "gutil.h"
 #include "level.h"
 #include "player.h"
 #include "gameprogress.h"
@@ -55,6 +56,8 @@ int getMarkerEffect(int markerId){
 }
 
 void startLevel(Gameplay* g, const char* levelPath){
+    resetWater();
+    
     // level load
     {
         if (g->hasLoadedLevel){
@@ -100,6 +103,7 @@ void startLevel(Gameplay* g, const char* levelPath){
                 break;
             }
         }
+        updateGameCameraPosition(getCameraManager(), playerMarker->x * 16, playerMarker->y * 16);
         addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
     }
 
@@ -108,6 +112,20 @@ void startLevel(Gameplay* g, const char* levelPath){
     {
         playMusic(0);
     }
+
+    // reset scripts
+    {
+        g->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
+    }
+}
+
+void resetWater(){
+    Gameplay* g = getGameplay();
+    // reset water
+    g->targetWaterHeight = -1;
+    g->startWaterHeight = -1;
+    g->waterProgress = 0;
+    gLog(LOG_INF, "?? [%d] [%d] [%f]", g->targetWaterHeight, g->startWaterHeight, g->waterProgress);
 }
 
 void setPlayerCoordinates(Gameplay* gameplay, float x, float y){
@@ -132,10 +150,10 @@ EntityMarker* getCollidingMarker(Gameplay* g, Entity* entity){
 
 void unloadGameplay(Gameplay* g){
     if (g->hasLoadedLevel){
-        unloadLevel(g->level);
         clearCameraMarkers(getCameraManager());
         removeAllEntities(getEntityManager());
         g->hasLoadedLevel = false;
+        unloadLevel(g->level);
     }
 }
 
@@ -194,6 +212,7 @@ void updateScripts(Gameplay* this){
 
 void setWaterHeight(int height){
     Gameplay* g = getGameplay();
+    gLog(LOG_INF, "!! [%d] [%d] [%f]", g->targetWaterHeight, g->startWaterHeight, g->waterProgress);
     
     if (g->targetWaterHeight == -1){// first set
         g->targetWaterHeight = height;
@@ -233,8 +252,6 @@ void updateWater(Gameplay* this){
             draw(SPRITE_START_WATER + 3, i + x, j, LAYER_EFFECTS);
         }
     }
-
-    
 }
 
 void updateGameplay(Gameplay* g){

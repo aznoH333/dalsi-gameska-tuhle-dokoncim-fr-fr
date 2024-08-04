@@ -88,6 +88,11 @@ void activateCameraMarkerEffect(CameraManager* this){
 
 void updateCameraManager(CameraManager* manager){
     
+    {// calculate path to next
+        manager->cameraX = (manager->currentProgress * (manager->nextPoint->x - manager->currentPoint->x)) + manager->currentPoint->x;
+        manager->cameraY = (manager->currentProgress * (manager->nextPoint->y - manager->currentPoint->y)) + manager->currentPoint->y;
+    }
+    
     {// activate entity markers
         Gameplay* g = getGameplay();
         
@@ -99,16 +104,6 @@ void updateCameraManager(CameraManager* manager){
             }
         }
     }
-    
-    
-    
-    
-    {// calculate path to next
-        manager->cameraX = (manager->currentProgress * (manager->nextPoint->x - manager->currentPoint->x)) + manager->currentPoint->x;
-        manager->cameraY = (manager->currentProgress * (manager->nextPoint->y - manager->currentPoint->y)) + manager->currentPoint->y;
-    }
-
-
 
     {// check progress
         if (manager->currentProgress >= 1){

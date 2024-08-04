@@ -307,7 +307,7 @@ void flyUpdate(Entity* this){
 
     data->yVelocity = (extraData->targetHeight - this->y) * 0.02f;
 
-    data->xVelocity += boolToSign(data->flipDirection) * 0.04f;
+    data->xVelocity += boolToSign(data->flipDirection) * 0.02f;
 
     genericEnemyUpdate(this);
 }

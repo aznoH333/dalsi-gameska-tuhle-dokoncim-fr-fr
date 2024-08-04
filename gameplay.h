@@ -34,4 +34,5 @@ void setMarkerEffect(int markerEffect);
 EntityMarker* getCollidingMarker(Gameplay* g, Entity* entity);
 void setPlayerCoordinates(Gameplay* gameplay, float x, float y);
 void setWaterHeight(int height);
+void resetWater();
 #endif

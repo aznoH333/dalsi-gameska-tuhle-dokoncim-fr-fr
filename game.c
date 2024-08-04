@@ -39,7 +39,10 @@ int main(void)
 
     // TODO
     // 1. get some decent tunes
-    // 2. sometimes markers get activated and deactivated at wierd times
+    // 2. level water parameter
+    // 3. level music setter
+    // 4. level name? sett
+    // 5. level editor menu
 
     // Main game loop
     while (!WindowShouldClose())
