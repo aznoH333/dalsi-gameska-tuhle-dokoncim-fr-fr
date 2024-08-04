@@ -368,6 +368,9 @@ int scoreBasedOnEnemyType(int enemyType){
         case ENEMY_GREEN_LIZARD:
         case ENEMY_GREY_LIZARD:
         case ENEMY_PINK_LIZARD:
+        case ENEMY_GREY_FLY:
+        case ENEMY_RED_FLY:
+        case ENEMY_BLUE_FLY:
             return 100;
         case ENEMY_GREEN_SOLDIER:
         case ENEMY_BLUE_SOLDIER:
@@ -399,7 +402,13 @@ void enemyOnDestroy(Entity* this){
     } 
 
     if (data->bodyType == BODY_ROBOT){
-        spawnRobotHusk(this, e);
+        if (data->isTouchingGround){
+            spawnRobotHusk(this, e);
+        }else {
+            for (int i = 0; i < max; i++){
+                spawnGore(this, e, data->bodyType == BODY_ROBOT);
+            } 
+        }
     } 
     
     
