@@ -1,5 +1,6 @@
 
 #include "entities.h"
+#include "gameplay.h"
 #include "gutil.h"
 #include "gcollections.h"
 #include <stdlib.h>
@@ -71,6 +72,8 @@ int getEnemySpawnerType(int markerId){
 }
 
 
+
+
 void activateEntityMarker(EntityMarker* marker){
     
     if (marker->hasBeenActivated){
@@ -93,6 +96,11 @@ void activateEntityMarker(EntityMarker* marker){
     if (spawnerType != -1){
         addEntity(getEntityManager(), initSpawner(marker->x * 16, marker->y * 16, spawnerType));
         return;
+    }
+
+    // water
+    if (marker->id == 39){
+        setWaterHeight(marker->y * 16);
     }
 }
 

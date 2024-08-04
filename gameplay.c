@@ -1,10 +1,12 @@
 #include "gameplay.h"
 #include "entities.h"
 #include "gameCamera.h"
+#include "gframework.h"
 #include "level.h"
 #include "player.h"
 #include "gameprogress.h"
 #include "enemy.h"
+#include "spritedata.h"
 
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -13,6 +15,9 @@ Gameplay* initGameplay(){
     output->playerY = 0.0f;
     output->hasLoadedLevel = false;
     output->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
+    output->startWaterHeight = -1;
+    output->targetWaterHeight = -1;
+    output->waterProgress = 0.0f;
     return output;    
 }
 
@@ -187,7 +192,50 @@ void updateScripts(Gameplay* this){
     }
 }
 
+void setWaterHeight(int height){
+    Gameplay* g = getGameplay();
+    
+    if (g->targetWaterHeight == -1){// first set
+        g->targetWaterHeight = height;
+        g->startWaterHeight = height;
+        g->waterProgress = 1.0f;
+    }else {// normal set
+        g->startWaterHeight = g->targetWaterHeight;
+        g->targetWaterHeight = height;
+        g->waterProgress = 0.0f;
+    }
+    
+}
 
+
+void updateWater(Gameplay* this){
+    if (this->targetWaterHeight == -1){
+        return;
+    }
+
+    // calculate y
+    float waterHeight = lerp(this->startWaterHeight, this->targetWaterHeight,this->waterProgress) + (sin(getGlobalTimer() * 0.02f) * 5.0f);
+    if (this->waterProgress < 1.0f){
+        this->waterProgress += 0.01f;
+    }else {
+        this->waterProgress = 1.0f;
+    }
+    
+    // calculate x
+    float x = getCameraManager()->cameraX - (getGlobalTimer() % 16);
+
+    // draw water
+    float maxCameraY = getCameraManager()->cameraY + DEFAULT_GAME_HEIGHT;
+    for (int i = 0; i < DEFAULT_GAME_WIDTH + 16; i += 16){
+        draw(SPRITE_START_WATER + 2, i + x, waterHeight, LAYER_EFFECTS);
+        // draw rest of water
+        for (float j = waterHeight + 16.0f; j < maxCameraY; j += 16){
+            draw(SPRITE_START_WATER + 3, i + x, j, LAYER_EFFECTS);
+        }
+    }
+
+    
+}
 
 void updateGameplay(Gameplay* g){
     drawLevel(g->level, LEVEL_DRAW_GAME);
@@ -195,4 +243,5 @@ void updateGameplay(Gameplay* g){
     updateScripts(g);
     updateEntityManager(getEntityManager());
     updateCameraManager(getCameraManager());
+    updateWater(g);
 }

@@ -10,6 +10,9 @@ struct Gameplay{
     bool hasLoadedLevel;
     float playerX;
     float playerY;
+    int targetWaterHeight;
+    int startWaterHeight;
+    float waterProgress;
     int currentPassiveMarkerEffect;
 };
 
@@ -30,5 +33,5 @@ void updateGameplay(Gameplay* g);
 void setMarkerEffect(int markerEffect);
 EntityMarker* getCollidingMarker(Gameplay* g, Entity* entity);
 void setPlayerCoordinates(Gameplay* gameplay, float x, float y);
-
+void setWaterHeight(int height);
 #endif

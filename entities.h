@@ -52,6 +52,7 @@ void activateEntityMarker(EntityMarker* marker);
 Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void (*updateFunction)(struct Entity*), void (*onCollide)(struct Entity*, struct Entity*), void (*onDestroy)(struct Entity*), void (*clean)(struct Entity*));
 
 
+
 // entity manager
 struct EntityManager{
     Vector* entities;
