@@ -14,6 +14,8 @@
 #define LEVEL_DRAW_CAMERA_VIEW 4
 #define LEVEL_DRAW_COUNT 5
 
+#define LEVEL_NAME_LENGTH 10
+
 struct Level {
     char** tiles;
     char** background;
@@ -23,6 +25,7 @@ struct Level {
     char songId;
     File* levelFile;
     Vector* entityeMarkers;
+    char name[LEVEL_NAME_LENGTH];
     
 };
 typedef struct Level Level;

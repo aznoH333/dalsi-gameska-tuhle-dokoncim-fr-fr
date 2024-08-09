@@ -6,7 +6,7 @@
 #include "spritedata.h"
 
 #define MIN_LEVEL_FILE_SIZE 4
-#define LEVEL_DATA_START 6
+#define LEVEL_DATA_START 6 + LEVEL_NAME_LENGTH
 
 char** readTileData(Level* lvl, char* fileData, int index);
 void writeTileData(Level* lvl, char* fileData, int index, char** tileData);
@@ -30,6 +30,11 @@ Level* loadLevel(const char* levePath){
         // read water
         out->waterType = f->contents[4];
         out->songId = f->contents[5];
+
+        // read level name
+        for (int i = 0; i < LEVEL_NAME_LENGTH; i++){
+            out->name[i] = f->contents[6 + i];
+        }
     }
 
     gLog(LOG_INF, "level info x[%d] y[%d]", out->width, out->height);
@@ -76,6 +81,11 @@ void saveLevel(Level* lvl){
         writeIntAsChar(newContents, lvl->height, 2, 2);
         newContents[4] = lvl->waterType;
         newContents[5] = lvl->songId;
+        // save name
+        for (int i = 0; i < LEVEL_NAME_LENGTH; i++){
+            newContents[6 + i] = lvl->name[i];
+        }
+
         contentsIndex = LEVEL_DATA_START;
     }
 

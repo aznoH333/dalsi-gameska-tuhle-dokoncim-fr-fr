@@ -6,8 +6,8 @@
 #define OPERATION_RESIZE 1
 #define OPERATION_SELECT_TILE 2
 #define OPERATION_SELECT_ENTITY 3
-
-
+#define OPERATION_MENU 4
+#define MENU_ITEMS 4
 #define PLACE_MODE_TILES 0
 #define PLACE_MODE_ENTITES 1
 #define PLACE_MODE_BACKGROUND 2
@@ -32,6 +32,8 @@ LevelEditor* initLevelEditor(){
     out->currentPlaceTool = PLACE_TOOL_PENCIL;
 
     out->viewMode = LEVEL_DRAW_EDITOR;
+
+    out->currentSelectedOption = 0;
     return out;
 }
 
@@ -118,6 +120,7 @@ void useEditTool(LevelEditor* editor){
 
 
 void tileSelector(LevelEditor* editor, int operationType);
+void drawUiIntSelector(char* value, int maxValue, int x, int y, const char* textName, bool isSelected);
 void updateLevelEditor(LevelEditor* editor){
     drawLevel(editor->level, editor->viewMode);
     
@@ -236,7 +239,7 @@ void updateLevelEditor(LevelEditor* editor){
     }
 
     // camera movement
-    {
+    if (editor->currentOperation != OPERATION_MENU){
         float cameraSpeed = max(2 * (editor->cameraZoom), 1);
 
         if (IsKeyDown(KEY_LEFT_SHIFT)){
@@ -275,7 +278,7 @@ void updateLevelEditor(LevelEditor* editor){
 
     // toggle view mode
     {
-        if (IsKeyPressed(KEY_V)){
+        if (IsKeyPressed(KEY_V) && editor->currentOperation != OPERATION_MENU){
             editor->viewMode++;
             editor->viewMode %= LEVEL_DRAW_COUNT;
         }
@@ -283,7 +286,7 @@ void updateLevelEditor(LevelEditor* editor){
 
     // tool switching
     {
-        if (IsKeyPressed(KEY_F)){
+        if (IsKeyPressed(KEY_F) && editor->currentOperation != OPERATION_MENU){
             editor->currentPlaceTool++;
             if (editor->currentPlaceTool > PLACE_TOOL_BUCKET){
                 editor->currentPlaceTool = 0;
@@ -303,6 +306,7 @@ void updateLevelEditor(LevelEditor* editor){
                 case OPERATION_RESIZE: currentMode = "resize level"; break;
                 case OPERATION_SELECT_TILE: currentMode = "select tile"; break;
                 case OPERATION_SELECT_ENTITY: currentMode = "select entity"; break;
+                case OPERATION_MENU: currentMode = "editor menu"; break;
             }
             
             textF(currentMode, 540, 8);
@@ -383,7 +387,81 @@ void updateLevelEditor(LevelEditor* editor){
         }
         
     }
+
+    // editor menu
+    {
+        if (editor->currentOperation == OPERATION_EDIT && IsKeyDown(KEY_M)){
+            editor->currentOperation = OPERATION_MENU;
+        }
+
+
+        if (editor->currentOperation == OPERATION_MENU){
+            
+            drawUiIntSelector(&editor->level->songId, 4, 500, 200, "bg music id", editor->currentSelectedOption == 0);
+            drawUiIntSelector(&editor->level->waterType, 3, 500, 232, "water type", editor->currentSelectedOption == 1);
+
+            // level name
+            {
+                textF("name %s", 500, 264, editor->level->name);
+
+                if (editor->currentSelectedOption == 2){
+                    int currentIndex = strLength(editor->level->name);
+                    if (IsKeyPressed(KEY_BACKSPACE) && currentIndex != 0){
+                        editor->level->name[currentIndex - 1] = 0;
+                    }else if (currentIndex < LEVEL_NAME_LENGTH){
+                        for (int i = 0; i <= 25; i++){
+                            if (IsKeyPressed(KEY_A + i)){
+                                editor->level->name[currentIndex] = i + 'a';
+                            }
+                        }
+                    }
+
+                    
+                }
+            }
+
+            textF("exit menu", 500, 296);
+            if (editor->currentSelectedOption == 3 && (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_ENTER))){
+                editor->currentOperation = OPERATION_EDIT;
+            }
+
+            // switch current index 
+            if (IsKeyPressed(KEY_DOWN)){
+                editor->currentSelectedOption = (editor->currentSelectedOption + 1) % MENU_ITEMS;
+            }
+
+            if (IsKeyPressed(KEY_UP)){
+                editor->currentOperation--;
+                if (editor->currentOperation < 0){
+                    editor->currentOperation = MENU_ITEMS - 1;
+                }
+            }
+
+            // draw cursor
+            drawS(7, 450, 200 + editor->currentSelectedOption * 32, 2.0f, LAYER_STATIC_UI);
+
+        }
+    }
 }
+
+void drawUiIntSelector(char* value, int maxValue, int x, int y, const char* textName, bool isSelected){
+    textF("%s %d", x, y, textName, *value);
+    
+    if (!isSelected){
+        return;
+    }
+    // update value
+    if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)){
+        (*value)--;
+        if (*value < 0){
+            *value = maxValue - 1;
+        }
+    }
+    else if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)){
+        *value = (*value + 1) % maxValue;
+    }
+}
+
 
 void tileSelector(LevelEditor* editor, int operationType){
     int key;

@@ -33,6 +33,9 @@ struct LevelEditor{
     int currentPlaceTool;
 
     int viewMode;
+
+    // menu
+    int currentSelectedOption;
     
 };
 typedef struct LevelEditor LevelEditor;
