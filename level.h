@@ -33,6 +33,7 @@ typedef struct Level Level;
 
 Level* loadLevel(const char* levePath);                         // loads level into memory returns pointer to level
 void saveLevel(Level* lvl);                                     // saves level to file specified when loading level
+void resetLevel(Level* lvl);                                    // create an empty level
 void unloadLevel(Level* level);                                 // unloads level and frees asociated pointers
 void resizeLevel(Level* level, int newWidth, int newHeight);    // resizes level
 void drawLevel(Level* lvl, int drawLevel);                      // draws level and background

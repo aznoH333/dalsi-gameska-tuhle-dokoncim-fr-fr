@@ -39,10 +39,8 @@ int main(void)
 
     // TODO
     // 1. get some decent tunes
-    // 2. level name? setter
-    // 3. level editor menu
-    // 4. sometimes camera flashes when changing markers
-    // 5. scripting
+    // 2. sometimes camera flashes when changing markers
+    // 3. scripting
 
     // Main game loop
     while (!WindowShouldClose())

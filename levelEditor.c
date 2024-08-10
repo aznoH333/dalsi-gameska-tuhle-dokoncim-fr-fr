@@ -1,4 +1,5 @@
 #include "levelEditor.h"
+#include "level.h"
 
 
 
@@ -7,7 +8,7 @@
 #define OPERATION_SELECT_TILE 2
 #define OPERATION_SELECT_ENTITY 3
 #define OPERATION_MENU 4
-#define MENU_ITEMS 4
+#define MENU_ITEMS 6
 #define PLACE_MODE_TILES 0
 #define PLACE_MODE_ENTITES 1
 #define PLACE_MODE_BACKGROUND 2
@@ -121,6 +122,10 @@ void useEditTool(LevelEditor* editor){
 
 void tileSelector(LevelEditor* editor, int operationType);
 void drawUiIntSelector(char* value, int maxValue, int x, int y, const char* textName, bool isSelected);
+void exitMenuButton(LevelEditor* editor);
+void saveLevelButton(LevelEditor* editor);
+void resetLevelButton(LevelEditor* editor);
+void editorMenuButton(LevelEditor* editor, const char* text, int index, int x, int y, void (*useFunc)(LevelEditor* editor));
 void updateLevelEditor(LevelEditor* editor){
     drawLevel(editor->level, editor->viewMode);
     
@@ -420,10 +425,9 @@ void updateLevelEditor(LevelEditor* editor){
                 }
             }
 
-            textF("exit menu", 500, 296);
-            if (editor->currentSelectedOption == 3 && (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_ENTER))){
-                editor->currentOperation = OPERATION_EDIT;
-            }
+            editorMenuButton(editor, "save level", 3, 500, 296, &saveLevelButton);
+            editorMenuButton(editor, "reset level", 4, 500, 328, &resetLevelButton);
+            editorMenuButton(editor, "exit menu", 5, 500, 360, &exitMenuButton);
 
             // switch current index 
             if (IsKeyPressed(KEY_DOWN)){
@@ -431,9 +435,9 @@ void updateLevelEditor(LevelEditor* editor){
             }
 
             if (IsKeyPressed(KEY_UP)){
-                editor->currentOperation--;
-                if (editor->currentOperation < 0){
-                    editor->currentOperation = MENU_ITEMS - 1;
+                editor->currentSelectedOption--;
+                if (editor->currentSelectedOption < 0){
+                    editor->currentSelectedOption = MENU_ITEMS - 1;
                 }
             }
 
@@ -443,6 +447,26 @@ void updateLevelEditor(LevelEditor* editor){
         }
     }
 }
+
+void exitMenuButton(LevelEditor* editor){
+    editor->currentOperation = OPERATION_EDIT;
+}
+
+void saveLevelButton(LevelEditor* editor){
+    saveLevel(editor->level);
+    exitMenuButton(editor);
+}
+
+void resetLevelButton(LevelEditor* editor){
+    resetLevel(editor->level);
+}
+void editorMenuButton(LevelEditor* editor, const char* text, int index, int x, int y, void (*useFunc)(LevelEditor* editor)){
+    textF(text, x, y);
+    if (editor->currentSelectedOption == index && IsKeyPressed(KEY_ENTER)){
+        useFunc(editor);
+    }
+}
+
 
 void drawUiIntSelector(char* value, int maxValue, int x, int y, const char* textName, bool isSelected){
     textF("%s %d", x, y, textName, *value);

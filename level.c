@@ -22,9 +22,9 @@ Level* loadLevel(const char* levePath){
     out->levelFile = f;
     // read level header
     {
-        char w[4] = {f->contents[0], f->contents[1]};
+        char w[2] = {f->contents[0], f->contents[1]};
         out->width = parseStrToInt(w, 2);
-        char h[4] = {f->contents[2], f->contents[3]};
+        char h[2] = {f->contents[2], f->contents[3]};
         out->height = parseStrToInt(h, 2);
 
         // read water
@@ -62,8 +62,6 @@ Level* loadLevel(const char* levePath){
         }
     }
 
-    out->waterType = 2;
-    out->songId = 0;
 
     return out;
 }
@@ -148,6 +146,24 @@ void unloadLevel(Level* level){
     free(level->tiles);
     free(level->background);
     free(level);
+}
+
+void resetLevel(Level* lvl){
+    resizeLevel(lvl, 10, 10);
+    for (int x = 0; x < lvl->width; x++){
+        for (int y = 0; y < lvl->height; y++){
+            lvl->background[x][y] = 0;
+            lvl->tiles[x][y] = 0;
+        }
+    }
+    vectorClear(lvl->entityeMarkers);
+
+    lvl->songId = 0;
+    lvl->waterType = 0;
+    
+    for (int i = 0; i < LEVEL_NAME_LENGTH; i++){
+        lvl->name[i] = 0;
+    }
 }
 
 
