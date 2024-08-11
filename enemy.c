@@ -1,5 +1,6 @@
 #include "enemy.h"
 #include "entities.h"
+#include "extraEntityData.h"
 #include "gameplay.h"
 #include "gframework.h"
 #include "bullet.h"
@@ -9,6 +10,7 @@
 #include "spritedata.h"
 #include "extraGraphics.h"
 #include "gameprogress.h"
+#include <stdlib.h>
 
 
 
@@ -47,6 +49,18 @@ void initFlyData(Entity* this){
     this->updateFunction = &flyUpdate;
     this->extraIndex = allocateExtraEntityData(getEntityManager(), f);
 }
+
+void largeFlyUpdate(Entity* this);
+void initLargeFly(Entity* this){
+    this->h = 20;
+    ((Enemy*)this->data)->bodyType = BODY_LARGE;
+    ExtraLargeFlyData* e = malloc(sizeof(ExtraLargeFlyData));
+    this->updateFunction = &largeFlyUpdate;
+    this->extraIndex = allocateExtraEntityData(getEntityManager(), e);
+    ((Enemy*)this->data)->animationFrameDuration = 3;
+
+}
+
 
 void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     
@@ -147,6 +161,19 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             enemy->animationFrameDuration = 2;
             break;
 
+        case ENEMY_LARGE_GREY_FLY:
+            initLargeFly(entity);
+            enemy->health = 54;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 35;
+            break;
+
+        case ENEMY_LARGE_RED_FLY:
+            initLargeFly(entity);
+            enemy->health = 73;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 38;
+            break;
+        
+
 
         default:
             gLog(LOG_ERR,"Unknown enemy type %d", enemyType);
@@ -209,6 +236,24 @@ void gunnerUpdate(Entity* this){
     enemyUpdate(this);
 }
 
+void drawEnemySpriteWithOffset(int enemySprite, int spriteOffsetX, int spriteOffsetY, Entity* this){
+    Enemy* data = this->data;
+    
+    // color and scale
+    float hurtPercentage = (float) data->hurtTimer / HURT_TIMER_MAX;
+    float scaleMultiplier = (hurtPercentage * 0.3f) + 1.0f;
+    float healthColor =  (1 - (hurtPercentage * 0.4));
+    Color c = {255, 255 * healthColor, 255 * healthColor, 255};
+
+    float sizingOffsetX = (1.0f - scaleMultiplier) * ((spriteOffsetX - 8) / -16.0f) * this->w;
+    float sizingOffsetY = (1.0f - scaleMultiplier) * (spriteOffsetY / -16.0f) * this->h;
+
+
+    // draw
+    drawFSC(enemySprite, this->x + sizingOffsetX + spriteOffsetX, this->y + sizingOffsetY + spriteOffsetY, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
+
+}
+
 void genericEnemyUpdate(Entity* this){
     Enemy* data = this->data;
     {// update values
@@ -229,18 +274,7 @@ void genericEnemyUpdate(Entity* this){
         // hurt timer
         data->hurtTimer -= data->hurtTimer > 0;
         
-        // color and scale
-        float hurtPercentage = (float) data->hurtTimer / HURT_TIMER_MAX;
-        float scaleMultiplier = (hurtPercentage * 0.3f) + 1.0f;
-        float healthColor =  (1 - (hurtPercentage * 0.4));
-        Color c = {255, 255 * healthColor, 255 * healthColor, 255};
-
-        float sizingOffsetX = (1.0f - scaleMultiplier) * 0.5f * this->w;
-        float sizingOffsetY = (1.0f - scaleMultiplier) * this->h;
-
-
-        // draw
-        drawFSC(data->baseSprite + data->animationFrame, this->x + sizingOffsetX, this->y + sizingOffsetY, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
+        drawEnemySpriteWithOffset(data->baseSprite + data->animationFrame, 0, 0, this);
     }
 }
 
@@ -312,6 +346,14 @@ void flyUpdate(Entity* this){
     genericEnemyUpdate(this);
 }
 
+void largeFlyUpdate(Entity* this){
+    Enemy* data = this->data;
+    ExtraLargeFlyData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
+    drawEnemySpriteWithOffset(data->baseSprite + 2, 0, 16, this);
+    genericEnemyUpdate(this);
+}
+
+
 void takeDamage(Entity* this, int damage){
     Enemy* data = this->data;
 
@@ -380,6 +422,9 @@ int scoreBasedOnEnemyType(int enemyType){
         case ENEMY_GREY_ROBOT:
         case ENEMY_GREEN_ROBOT:
             return 500;
+        case ENEMY_LARGE_GREY_FLY:
+        case ENEMY_LARGE_RED_FLY:
+            return 1000;    
         
         default:
             return 500;

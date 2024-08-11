@@ -56,6 +56,8 @@ int getEnemyTypeFromMarker(int markerId){
         case 32:    return ENEMY_GREY_SOLDIER;
         case 33:    return ENEMY_BLUE_SOLDIER;
         case 34:    return ENEMY_RED_SOLDIER;
+        case 35:    return ENEMY_LARGE_GREY_FLY;
+        case 36:    return ENEMY_LARGE_RED_FLY;
     }
 }
 

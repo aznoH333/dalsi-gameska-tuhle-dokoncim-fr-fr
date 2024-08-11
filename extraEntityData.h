@@ -14,5 +14,9 @@ struct ExtraFlyData{
 typedef struct ExtraFlyData ExtraFlyData;
 
 
+struct ExtraLargeFlyData{
+    
+};
+typedef struct ExtraLargeFlyData ExtraLargeFlyData;
 
 #endif
