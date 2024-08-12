@@ -55,6 +55,8 @@ void initLargeFly(Entity* this){
     this->h = 20;
     ((Enemy*)this->data)->bodyType = BODY_LARGE;
     ExtraLargeFlyData* e = malloc(sizeof(ExtraLargeFlyData));
+    e->movementTimer = 0;
+    e->attackTimer = 50;
     this->updateFunction = &largeFlyUpdate;
     this->extraIndex = allocateExtraEntityData(getEntityManager(), e);
     ((Enemy*)this->data)->animationFrameDuration = 3;
@@ -163,13 +165,13 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
 
         case ENEMY_LARGE_GREY_FLY:
             initLargeFly(entity);
-            enemy->health = 54;
+            enemy->health = 96;
             enemy->baseSprite = SPRITE_START_ENTITIES + 35;
             break;
 
         case ENEMY_LARGE_RED_FLY:
             initLargeFly(entity);
-            enemy->health = 73;
+            enemy->health = 124;
             enemy->baseSprite = SPRITE_START_ENTITIES + 38;
             break;
         
@@ -228,7 +230,7 @@ void gunnerUpdate(Entity* this){
             
             // fire
             gunnerData->cooldown = gunnerData->fireRate;
-            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, ENTITY_ENEMY));
+            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 23, ENTITY_ENEMY));
             
         }
     }
@@ -345,12 +347,38 @@ void flyUpdate(Entity* this){
 
     genericEnemyUpdate(this);
 }
-
+#define LARGE_FLY_PROJ_SPEED 2.3f
 void largeFlyUpdate(Entity* this){
     Enemy* data = this->data;
     ExtraLargeFlyData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
     drawEnemySpriteWithOffset(data->baseSprite + 2, 0, 16, this);
     genericEnemyUpdate(this);
+
+    float playerX = getGameplay()->playerX;
+    float playerY = getGameplay()->playerY;
+
+    // move
+    this->x += sin(extraData->movementTimer * 0.03f) * 0.3f;
+    this->y += cos(extraData->movementTimer * 0.05f) * 0.6f;
+
+
+    // attack
+    if (extraData->attackTimer < 15 && extraData->attackTimer % 5 == 0){
+        // calc direction
+        float dir = dirTowards(playerX, playerY, this->x, this->y);
+        
+        addEntity(getEntityManager(), initBullet(this->x, this->y, sin(dir) * LARGE_FLY_PROJ_SPEED, cos(dir) * LARGE_FLY_PROJ_SPEED, SPRITE_START_EFFECTS + 6 - (extraData->attackTimer == 0), ENTITY_ENEMY_PROJECTILE));
+    }
+
+    if (extraData->attackTimer == 0){
+        extraData->attackTimer = 200;
+    }
+
+
+    // update values
+    extraData->movementTimer++;
+    extraData->attackTimer -= extraData->attackTimer > 0;
+    data->flipDirection = playerX > this->x;
 }
 
 

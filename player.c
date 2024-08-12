@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "bullet.h"
 #include "gameCamera.h"
+#include "spritedata.h"
 
 Entity* initPlayer(int x, int y){
     Player* p = malloc(sizeof(Player));
@@ -98,7 +99,7 @@ void playerUpdate(Entity* this){
     {
         if (IsKeyDown(KEY_SPACE) && data->fireCooldown == 0){
             playSound("shoot.wav");
-            addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, ENTITY_PLAYER_PROJECTILE));
+            addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, 0, SPRITE_START_EFFECTS + 23, ENTITY_PLAYER_PROJECTILE));
             data->fireCooldown = FIRE_COOLDWON;
         }
     }

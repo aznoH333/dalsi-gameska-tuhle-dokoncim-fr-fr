@@ -4,13 +4,15 @@
 #include "entities.h"
 
 struct Bullet{
-    float velocity;
+    float xVelocity;
+    float yVelocity;
+    int sprite;
     int lifeTime;
     int damage;
 };
 typedef struct Bullet Bullet;
 
-Entity* initBullet(int x, int y, float velocity, int team);
+Entity* initBullet(int x, int y, float xVelocity, float yVelocity, int sprite, int team);
 void bulletUpdate(Entity* this);
 void bulletOnCollide(Entity* this, Entity* other);
 void bulletOnDestroy(Entity* this);

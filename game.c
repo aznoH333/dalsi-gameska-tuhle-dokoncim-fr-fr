@@ -43,13 +43,14 @@ int main(void)
     // 3. scripting
     // 4. boss enemy
     // 5. squid enemy
-    // 6. large fly enemy
     // 7. better ui
     // 8. actually functional main menu
     // 9. hide cursor
     // 10. clean up console
     // 11. change default zoom
     // 12. enemy scaling broke again
+    // 13. player to world collisions are still fucked
+    // 14. enemies dont despawn properly?
 
     // Main game loop
     while (!WindowShouldClose())

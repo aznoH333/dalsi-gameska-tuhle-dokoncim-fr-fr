@@ -4,10 +4,13 @@
 #include "spritedata.h"
 #include "particleEffect.h"
 
-Entity* initBullet(int x, int y, float velocity, int team){
+Entity* initBullet(int x, int y, float xVelocity, float yVelocity, int sprite, int team){
+
     Bullet* b = malloc(sizeof(Bullet));
 
-    b->velocity = velocity;
+    b->xVelocity = xVelocity;
+    b->yVelocity = yVelocity;
+    b->sprite = sprite;
     b->lifeTime = 160;
     b->damage = 5;
 
@@ -30,7 +33,8 @@ void bulletUpdate(Entity* this){
 
     // update
     {
-        this->x += data->velocity;
+        this->x += data->xVelocity;
+        this->y += data->yVelocity;
         data->lifeTime--;
         if (data->lifeTime <= 0){
             this->shouldDestroy = true;
@@ -39,7 +43,7 @@ void bulletUpdate(Entity* this){
 
     // draw
     {
-        drawF(SPRITE_START_EFFECTS + 23, this->x, this->y, data->velocity < 0, LAYER_OBJECTS);
+        drawF(data->sprite, this->x, this->y, data->xVelocity < 0, LAYER_OBJECTS);
     }
 }
 
