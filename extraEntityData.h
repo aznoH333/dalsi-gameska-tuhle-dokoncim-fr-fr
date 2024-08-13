@@ -20,4 +20,11 @@ struct ExtraLargeFlyData{
 };
 typedef struct ExtraLargeFlyData ExtraLargeFlyData;
 
+
+struct ExtraSquidData{
+    int jumpCounter;
+    int attackTimer;
+};
+typedef struct ExtraSquidData ExtraSquidData;
+
 #endif

@@ -63,6 +63,19 @@ void initLargeFly(Entity* this){
 
 }
 
+#define SQUID_FIRE_RATE 90
+void squidUpdate(Entity* this);
+void initSquid(Entity* this){
+    ((Enemy*)this->data)->bodyType = BODY_LARGE;
+    ExtraSquidData* e = malloc(sizeof(ExtraSquidData));
+    e->jumpCounter = 0;
+    e->attackTimer = SQUID_FIRE_RATE;
+    this->updateFunction = &squidUpdate;
+    this->extraIndex = allocateExtraEntityData(getEntityManager(), e);
+    ((Enemy*)this->data)->animationFrameDuration = 7;
+}
+
+
 
 void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     
@@ -175,6 +188,17 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             enemy->baseSprite = SPRITE_START_ENTITIES + 38;
             break;
         
+        case ENEMY_SQUID_PINK:
+            initSquid(entity);
+            enemy->health = 75;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 22;
+            break;
+
+        case ENEMY_SQUID_BLUE:
+            initSquid(entity);
+            enemy->health = 110;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 25;
+            break;
 
 
         default:
@@ -221,7 +245,6 @@ void gunnerUpdate(Entity* this){
     ExtraGunnerData* gunnerData = getExtraEntityData(m, this->extraIndex);
     Enemy* data = this->data;
     Gameplay* gameplay = getGameplay();
-    //gLog(LOG_INF,"got here \n eIndex [%d] prt [%p]", this->extraIndex, this);
 
     {// shooting
         if (gunnerData->cooldown > 0){
@@ -230,7 +253,7 @@ void gunnerUpdate(Entity* this){
             
             // fire
             gunnerData->cooldown = gunnerData->fireRate;
-            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 23, ENTITY_ENEMY));
+            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 4, ENTITY_ENEMY));
             
         }
     }
@@ -382,6 +405,34 @@ void largeFlyUpdate(Entity* this){
 }
 
 
+void squidUpdate(Entity* this){
+    Enemy* data = this->data;
+    ExtraSquidData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
+    drawEnemySpriteWithOffset(data->baseSprite - 1, 0, -16, this);
+    genericEnemyUpdate(this);
+    bool isOnGround = collidesWithLevel(getGameplay()->level, this->x, this->y + 16, 16, 1);
+
+    if (isOnGround){
+        data->yVelocity = -1.0f - (1.5f * (extraData->jumpCounter % 8 == 0));
+        extraData->jumpCounter++;
+        data->xVelocity = getRandomFloatRange(-1.0f, 1.0f);
+
+        data->flipDirection = this->x < getGameplay()->playerX;
+    }
+
+
+    // shooting
+    extraData->attackTimer--;
+    if (extraData->attackTimer == 0){
+        addEntity(getEntityManager(), initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 1, ENTITY_ENEMY));
+
+        extraData->attackTimer = SQUID_FIRE_RATE;
+    }
+
+    data->yVelocity += 0.1f;
+}
+
+
 void takeDamage(Entity* this, int damage){
     Enemy* data = this->data;
 
@@ -453,6 +504,9 @@ int scoreBasedOnEnemyType(int enemyType){
         case ENEMY_LARGE_GREY_FLY:
         case ENEMY_LARGE_RED_FLY:
             return 1000;    
+        case ENEMY_SQUID_PINK:
+        case ENEMY_SQUID_BLUE:
+            return 2000;
         
         default:
             return 500;

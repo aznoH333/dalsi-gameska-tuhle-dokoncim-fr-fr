@@ -51,6 +51,9 @@ int main(void)
     // 12. enemy scaling broke again
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
+    // 15. animated projectiles
+    // 16. canon turret
+    // 17. goomba stomping
 
     // Main game loop
     while (!WindowShouldClose())
