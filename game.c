@@ -42,7 +42,6 @@ int main(void)
     // 2. sometimes camera flashes when changing markers
     // 3. scripting
     // 4. boss enemy
-    // 5. squid enemy
     // 7. better ui
     // 8. actually functional main menu
     // 9. hide cursor
@@ -51,9 +50,15 @@ int main(void)
     // 12. enemy scaling broke again
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
-    // 15. animated projectiles
-    // 16. canon turret
-    // 17. goomba stomping
+    // 15. projectile flags
+    // 16. phasing projectile
+    // 17. animated projectile
+    // 18. decalles projectile
+    // 19. canon turret
+    // 20. goomba stomping ????
+    // 21. add more sounds for enemies
+    // 22. death scream
+    // 23. projectile shoot sounds
 
     // Main game loop
     while (!WindowShouldClose())
