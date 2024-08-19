@@ -253,7 +253,7 @@ void gunnerUpdate(Entity* this){
             
             // fire
             gunnerData->cooldown = gunnerData->fireRate;
-            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 4, ENTITY_ENEMY));
+            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 4, ENTITY_ENEMY, BULLET_FLAG_SPAWN_DECAL));
             
         }
     }
@@ -390,7 +390,7 @@ void largeFlyUpdate(Entity* this){
         // calc direction
         float dir = dirTowards(playerX, playerY, this->x, this->y);
         
-        addEntity(getEntityManager(), initBullet(this->x, this->y, sin(dir) * LARGE_FLY_PROJ_SPEED, cos(dir) * LARGE_FLY_PROJ_SPEED, SPRITE_START_EFFECTS + 6 - (extraData->attackTimer == 0), ENTITY_ENEMY_PROJECTILE));
+        addEntity(getEntityManager(), initBullet(this->x, this->y, sin(dir) * LARGE_FLY_PROJ_SPEED, cos(dir) * LARGE_FLY_PROJ_SPEED, SPRITE_START_EFFECTS + 6 - (extraData->attackTimer == 0), ENTITY_ENEMY_PROJECTILE, 0));
     }
 
     if (extraData->attackTimer == 0){
@@ -424,7 +424,7 @@ void squidUpdate(Entity* this){
     // shooting
     extraData->attackTimer--;
     if (extraData->attackTimer == 0){
-        addEntity(getEntityManager(), initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 1, ENTITY_ENEMY));
+        addEntity(getEntityManager(), initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 1, ENTITY_ENEMY, BULLET_FLAG_ANIMATED | BULLET_FLAG_PHASING));
 
         extraData->attackTimer = SQUID_FIRE_RATE;
     }

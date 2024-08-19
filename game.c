@@ -50,10 +50,6 @@ int main(void)
     // 12. enemy scaling broke again
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
-    // 15. projectile flags
-    // 16. phasing projectile
-    // 17. animated projectile
-    // 18. decalles projectile
     // 19. canon turret
     // 20. goomba stomping ????
     // 21. add more sounds for enemies
