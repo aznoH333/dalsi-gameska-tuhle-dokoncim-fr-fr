@@ -50,7 +50,6 @@ int main(void)
     // 12. enemy scaling broke again
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
-    // 19. canon turret
     // 20. goomba stomping ????
     // 21. add more sounds for enemies
     // 22. death scream

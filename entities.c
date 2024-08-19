@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "enemy.h"
 #include "enemySpawner.h"
-
+#include "cannonTurret.h"
 
 // Entity marker
 EntityMarker* initEntityMarker(char* levelData, int markerIndex){
@@ -102,10 +102,23 @@ void activateEntityMarker(EntityMarker* marker){
         return;
     }
 
-    // water
-    if (marker->id == 39){
-        setWaterHeight(marker->y * 16);
+    // misc entities
+
+    switch (marker->id) {
+        case 39: // water
+            setWaterHeight(marker->y * 16);
+            break;
+
+        case 19:
+        case 20:
+        case 21:
+        case 22: // cannon turret
+            addEntity(getEntityManager(), initCannon(marker->x * 16, marker->y * 16, marker->id - 19));
+            break;
     }
+    
+
+    
 }
 
 
