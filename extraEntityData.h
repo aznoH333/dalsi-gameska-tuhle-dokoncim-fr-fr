@@ -27,4 +27,10 @@ struct ExtraSquidData{
 };
 typedef struct ExtraSquidData ExtraSquidData;
 
+
+struct ExtraBossData{
+
+};
+typedef struct ExtraBossData ExtraBossData;
+
 #endif

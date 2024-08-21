@@ -76,6 +76,24 @@ void initSquid(Entity* this){
 }
 
 
+void lizardBossUpdate(Entity* this);
+void initLizardBoss(Entity* this){
+    ((Enemy*)this->data)->bodyType = BODY_LARGE;
+    ExtraBossData* b = malloc(sizeof(ExtraBossData));
+    ((Enemy*)this->data)->animationFrameDuration = 5;
+    ((Enemy*)this->data)->animationFrame = 0;
+    ((Enemy*)this->data)->animationTimer = 5;
+
+
+    this->updateFunction = &lizardBossUpdate;
+    this->extraIndex = allocateExtraEntityData(getEntityManager(), b);
+    ((Enemy*)this->data)->baseSprite = 0;
+    this->w = 16;
+    this->h = 32;
+
+}
+
+
 
 void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     
@@ -200,6 +218,16 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             enemy->baseSprite = SPRITE_START_ENTITIES + 25;
             break;
 
+        case ENEMY_LIZARD_BOSS_GREEN:
+            initLizardBoss(entity);
+            enemy->health = 1000;
+            break;
+        
+        case ENEMY_LIZARD_BOSS_RED:
+            initLizardBoss(entity);
+            enemy->health = 1500;
+            break;
+
 
         default:
             gLog(LOG_ERR,"Unknown enemy type %d", enemyType);
@@ -270,10 +298,14 @@ void drawEnemySpriteWithOffset(int enemySprite, int spriteOffsetX, int spriteOff
     float healthColor =  (1 - (hurtPercentage * 0.4));
     Color c = {255, 255 * healthColor, 255 * healthColor, 255};
 
+    if (data->flipDirection){
+        spriteOffsetX *= -1; 
+    }
+    
     float sizingOffsetX = (1.0f - scaleMultiplier) * ((spriteOffsetX - 8) / -16.0f) * this->w;
-    float sizingOffsetY = (1.0f - scaleMultiplier) * (spriteOffsetY / -16.0f) * this->h;
+    float sizingOffsetY = (1.0f - scaleMultiplier) * ((spriteOffsetY - 8) / -16.0f) * this->h;
 
-
+    
     // draw
     drawFSC(enemySprite, this->x + sizingOffsetX + spriteOffsetX, this->y + sizingOffsetY + spriteOffsetY, data->flipDirection, scaleMultiplier, c, LAYER_OBJECTS);
 
@@ -408,8 +440,9 @@ void largeFlyUpdate(Entity* this){
 void squidUpdate(Entity* this){
     Enemy* data = this->data;
     ExtraSquidData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
-    drawEnemySpriteWithOffset(data->baseSprite - 1, 0, -16, this);
     genericEnemyUpdate(this);
+    drawEnemySpriteWithOffset(data->baseSprite - 1, 0, -16, this);
+
     bool isOnGround = collidesWithLevel(getGameplay()->level, this->x, this->y + 16, 16, 1);
 
     if (isOnGround){
@@ -431,6 +464,42 @@ void squidUpdate(Entity* this){
 
     data->yVelocity += 0.1f;
 }
+
+void lizardBossUpdate(Entity* this){
+    Enemy* data = this->data;
+    ExtraBossData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
+
+    // simplified generic update
+    data->hurtTimer -= data->hurtTimer > 0;
+    this->x += data->xVelocity;
+    this->y += data->yVelocity;
+
+    bool isOnGround = collidesWithLevel(getGameplay()->level, this->x, this->y + 16, 16, 1);
+
+
+    // legs
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 43 + (data->animationFrame * 2), -8, 0, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 44 + (data->animationFrame * 2), 8, 0, this);
+
+    // head
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 41 + data->animationFrame, -1, -11, this);
+    
+    // on ground update
+    if (isOnGround){
+        data->flipDirection = this->x < getGameplay()->playerX;
+        data->animationTimer--;
+
+        if (data->animationTimer == 0){
+            data->animationTimer = data->animationFrameDuration;
+            data->animationFrame = (data->animationFrame + 1) % 2;
+        }
+
+    }
+    
+
+
+}
+
 
 
 void takeDamage(Entity* this, int damage){
@@ -481,7 +550,6 @@ void spawnRobotHusk(Entity* this, EntityManager* e){
     Entity* p = initStaticParticle(this->x, this->y, SPRITE_START_EFFECTS + 15, 420);
     makeParticleChangeTransparency(p, 255, 0);
     addEntity(e, p);
-
 }
 
 int scoreBasedOnEnemyType(int enemyType){
@@ -507,6 +575,9 @@ int scoreBasedOnEnemyType(int enemyType){
         case ENEMY_SQUID_PINK:
         case ENEMY_SQUID_BLUE:
             return 2000;
+        case ENEMY_LIZARD_BOSS_GREEN:
+        case ENEMY_LIZARD_BOSS_RED:
+            return 5000;
         
         default:
             return 500;
@@ -554,9 +625,6 @@ void enemyOnDestroy(Entity* this){
     addScore(this->x, this->y, score);
     Entity* deathEffect = initExtraGraphic(this->x, this->y, deathEffectId);
     addEntity(e, deathEffect);
-
-    
-    
 }
 void enemyClean(Entity* this){
     if (this->extraIndex != -1){

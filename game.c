@@ -41,19 +41,22 @@ int main(void)
     // 1. get some decent tunes
     // 2. sometimes camera flashes when changing markers
     // 3. scripting
-    // 4. boss enemy
+    //  4. boss enemy
     // 7. better ui
     // 8. actually functional main menu
     // 9. hide cursor
     // 10. clean up console
     // 11. change default zoom
-    // 12. enemy scaling broke again
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
     // 20. goomba stomping ????
     // 21. add more sounds for enemies
     // 22. death scream
     // 23. projectile shoot sounds
+    // 24. level exit
+    // 25. flame particles
+    // 26. fix squid projectile sprites
+    // 27.
 
     // Main game loop
     while (!WindowShouldClose())

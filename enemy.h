@@ -46,6 +46,8 @@ typedef struct Enemy Enemy;
 #define ENEMY_LARGE_RED_FLY 13
 #define ENEMY_SQUID_PINK 14
 #define ENEMY_SQUID_BLUE 15
+#define ENEMY_LIZARD_BOSS_GREEN 16
+#define ENEMY_LIZARD_BOSS_RED 17
 
 // ai
 #define AI_BASIC 0
