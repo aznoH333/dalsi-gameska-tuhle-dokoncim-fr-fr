@@ -27,9 +27,17 @@ struct ExtraSquidData{
 };
 typedef struct ExtraSquidData ExtraSquidData;
 
-
+#define LIZARD_PATTERN_IDLE 0
+#define LIZARD_PATTERN_SHOOT 1
+#define LIZARD_PATTERN_RUN 2
+#define LIZARD_PATTERN_JUMP 3
 struct ExtraBossData{
-
+    int targetX;
+    int anchorXR;
+    int anchorXL;
+    int currentPattern;
+    int currentPatternTimer;
+    int attackTimer;
 };
 typedef struct ExtraBossData ExtraBossData;
 

@@ -84,6 +84,13 @@ void initLizardBoss(Entity* this){
     ((Enemy*)this->data)->animationFrame = 0;
     ((Enemy*)this->data)->animationTimer = 5;
 
+    b->currentPattern = LIZARD_PATTERN_IDLE;
+    b->targetX = this->x;
+    b->currentPatternTimer = 50;
+    b->attackTimer = 0;
+    b->anchorXR = this->x;
+    b->anchorXL = this->x - 400;
+
 
     this->updateFunction = &lizardBossUpdate;
     this->extraIndex = allocateExtraEntityData(getEntityManager(), b);
@@ -465,6 +472,50 @@ void squidUpdate(Entity* this){
     data->yVelocity += 0.1f;
 }
 
+void lizardBossPickNextState(Entity* this, Enemy* data, ExtraBossData* extraData){
+    switch (extraData->currentPattern) {
+        case LIZARD_PATTERN_IDLE:
+            extraData->currentPattern = LIZARD_PATTERN_SHOOT;
+            extraData->currentPatternTimer = 140;
+            break;
+        case LIZARD_PATTERN_SHOOT:
+            if (randomChance(0.5f)){
+                extraData->currentPattern = LIZARD_PATTERN_JUMP;
+            }else {
+                extraData->currentPattern = LIZARD_PATTERN_RUN;
+            }
+            break;
+        case LIZARD_PATTERN_RUN:
+        case LIZARD_PATTERN_JUMP:
+            extraData->currentPattern = LIZARD_PATTERN_IDLE;
+            extraData->currentPatternTimer = 50;
+            break;
+    }
+}
+
+void lizardBossIdle(Entity* this, Enemy* data, ExtraBossData* extraData){
+    data->animationFrameDuration = 4;
+    data->flipDirection = this->x < getGameplay()->playerX;
+    if (extraData->currentPatternTimer <= 0){
+        lizardBossPickNextState(this, data, extraData);
+    }
+}
+
+void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData){
+    data->animationFrameDuration = 12;
+    extraData->attackTimer--;
+    data->flipDirection = this->x < getGameplay()->playerX;
+
+
+    if (extraData->attackTimer <= 0){
+        data->animationFrame = (data->animationFrame + 1) % 2;
+        extraData->attackTimer = 40 + (10 * (data->enemyType == ENEMY_LIZARD_BOSS_GREEN));
+        float bulletSpeed = boolToSign(data->flipDirection) * (2.0f + (1.2f * ( data->enemyType == ENEMY_LIZARD_BOSS_RED )));
+        addEntity(getEntityManager(), initBullet(this->x, this->y, bulletSpeed, 0.0f, SPRITE_START_EFFECTS + 2, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_ANIMATED | BULLET_FLAG_SPAWN_DECAL));
+
+    }
+}
+
 void lizardBossUpdate(Entity* this){
     Enemy* data = this->data;
     ExtraBossData* extraData = getExtraEntityData(getEntityManager(), this->extraIndex);
@@ -476,17 +527,17 @@ void lizardBossUpdate(Entity* this){
 
     bool isOnGround = collidesWithLevel(getGameplay()->level, this->x, this->y + 16, 16, 1);
 
-
+    int variantSpriteOffset = (data->enemyType == ENEMY_LIZARD_BOSS_RED) * 7;
     // legs
-    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 43 + (data->animationFrame * 2), -8, 0, this);
-    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 44 + (data->animationFrame * 2), 8, 0, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 43 + (data->animationFrame * 2) + variantSpriteOffset, -8, 0, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 44 + (data->animationFrame * 2) + variantSpriteOffset, 8, 0, this);
 
     // head
-    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 41 + data->animationFrame, -1, -11, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 41 + data->animationFrame + variantSpriteOffset, -1, -11, this);
     
     // on ground update
     if (isOnGround){
-        data->flipDirection = this->x < getGameplay()->playerX;
+        extraData->currentPatternTimer--;
         data->animationTimer--;
 
         if (data->animationTimer == 0){
@@ -496,7 +547,19 @@ void lizardBossUpdate(Entity* this){
 
     }
     
-
+    // pattern update
+    switch(extraData->currentPattern){
+        case LIZARD_PATTERN_IDLE:
+            lizardBossIdle(this, data, extraData);
+            break;
+        case LIZARD_PATTERN_SHOOT:
+            lizardBossShoot(this, data, extraData);
+            break;
+        case LIZARD_PATTERN_RUN:
+            break;
+        case LIZARD_PATTERN_JUMP:
+            break;
+    }
 
 }
 
