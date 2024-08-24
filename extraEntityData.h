@@ -38,6 +38,8 @@ struct ExtraBossData{
     int currentPattern;
     int currentPatternTimer;
     int attackTimer;
+    char wanderTimer;
+    char wanderDirection;
 };
 typedef struct ExtraBossData ExtraBossData;
 

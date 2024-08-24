@@ -89,7 +89,9 @@ void initLizardBoss(Entity* this){
     b->currentPatternTimer = 50;
     b->attackTimer = 0;
     b->anchorXR = this->x;
-    b->anchorXL = this->x - 400;
+    b->anchorXL = this->x - 256;
+    b->wanderTimer = 0;
+    b->wanderDirection = 0;
 
 
     this->updateFunction = &lizardBossUpdate;
@@ -464,7 +466,7 @@ void squidUpdate(Entity* this){
     // shooting
     extraData->attackTimer--;
     if (extraData->attackTimer == 0){
-        addEntity(getEntityManager(), initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 1, ENTITY_ENEMY, BULLET_FLAG_ANIMATED | BULLET_FLAG_PHASING));
+        addEntity(getEntityManager(), initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS, ENTITY_ENEMY, BULLET_FLAG_ANIMATED | BULLET_FLAG_PHASING));
 
         extraData->attackTimer = SQUID_FIRE_RATE;
     }
@@ -476,13 +478,18 @@ void lizardBossPickNextState(Entity* this, Enemy* data, ExtraBossData* extraData
     switch (extraData->currentPattern) {
         case LIZARD_PATTERN_IDLE:
             extraData->currentPattern = LIZARD_PATTERN_SHOOT;
-            extraData->currentPatternTimer = 140;
+            extraData->currentPatternTimer = 300;
             break;
         case LIZARD_PATTERN_SHOOT:
             if (randomChance(0.5f)){
                 extraData->currentPattern = LIZARD_PATTERN_JUMP;
             }else {
                 extraData->currentPattern = LIZARD_PATTERN_RUN;
+            }
+            if (extraData->targetX != extraData->anchorXR){
+                extraData->targetX = extraData->anchorXR;
+            }else {
+                extraData->targetX = extraData->anchorXL;
             }
             break;
         case LIZARD_PATTERN_RUN:
@@ -501,18 +508,66 @@ void lizardBossIdle(Entity* this, Enemy* data, ExtraBossData* extraData){
     }
 }
 
-void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData){
+void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData, bool isOnGround){
     data->animationFrameDuration = 12;
     extraData->attackTimer--;
     data->flipDirection = this->x < getGameplay()->playerX;
 
+    // move around anchor point
+    if (extraData->wanderTimer <= 0){
+        bool tooLeft = (this->x - extraData->targetX) < -50;
+        bool tooRight = (this->x - extraData->targetX) > 50;
+        
+        if (!tooLeft && !tooRight){
+            extraData->wanderDirection = boolToSign(randomChance(0.5f));
+        }else if (tooLeft){
+            extraData->wanderDirection = 1;
+        }else {
+            extraData->wanderDirection = -1;
+        }
+        extraData->wanderTimer = 20;
+
+        // jump
+        if (randomChance(0.3f) && isOnGround){
+            data->yVelocity = -2.5f - (randomChance(0.5f) * 1.5f);
+        }
+    }
+    extraData->wanderTimer--;
+    this->x += 0.7f * extraData->wanderDirection;
 
     if (extraData->attackTimer <= 0){
         data->animationFrame = (data->animationFrame + 1) % 2;
         extraData->attackTimer = 40 + (10 * (data->enemyType == ENEMY_LIZARD_BOSS_GREEN));
         float bulletSpeed = boolToSign(data->flipDirection) * (2.0f + (1.2f * ( data->enemyType == ENEMY_LIZARD_BOSS_RED )));
-        addEntity(getEntityManager(), initBullet(this->x, this->y, bulletSpeed, 0.0f, SPRITE_START_EFFECTS + 2, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_ANIMATED | BULLET_FLAG_SPAWN_DECAL));
+        addEntity(getEntityManager(), initBullet(this->x, this->y - 6, bulletSpeed, 0.0f, SPRITE_START_EFFECTS + 2, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_ANIMATED | BULLET_FLAG_SPAWN_DECAL));
+    }
 
+    if (extraData->currentPatternTimer <= 0){
+        lizardBossPickNextState(this, data, extraData);
+    }
+}
+
+void lizardBossWalk(Entity* this, Enemy* data, ExtraBossData* extraData){
+    data->flipDirection = this->x < extraData->targetX;
+    data->animationFrameDuration = 2;
+    this->x += boolToSign(data->flipDirection) * 2.2f;
+
+    if (fabs(this->x - extraData->targetX) < 4.0f){
+        lizardBossPickNextState(this, data, extraData);
+    }
+}
+
+void lizardBossJump(Entity* this, Enemy* data, ExtraBossData* extraData, bool isOnGround){
+    data->flipDirection = this->x < extraData->targetX;
+    data->animationFrameDuration = 2;
+    this->x += boolToSign(data->flipDirection) * 1.6f;
+
+    if (fabs(this->x - extraData->targetX) < 4.0f){
+        lizardBossPickNextState(this, data, extraData);
+    }
+
+    if (isOnGround){
+        data->yVelocity = -2.5f - (randomChance(0.5f) * 1.5f);
     }
 }
 
@@ -535,6 +590,12 @@ void lizardBossUpdate(Entity* this){
     // head
     drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 41 + data->animationFrame + variantSpriteOffset, -1, -11, this);
     
+
+    if (isOnGround){
+        data->yVelocity = 0.0f;
+    }else {
+        data->yVelocity += 0.1f;
+    }
     // on ground update
     if (isOnGround){
         extraData->currentPatternTimer--;
@@ -553,11 +614,13 @@ void lizardBossUpdate(Entity* this){
             lizardBossIdle(this, data, extraData);
             break;
         case LIZARD_PATTERN_SHOOT:
-            lizardBossShoot(this, data, extraData);
+            lizardBossShoot(this, data, extraData, isOnGround);
             break;
         case LIZARD_PATTERN_RUN:
+            lizardBossWalk(this, data, extraData);
             break;
         case LIZARD_PATTERN_JUMP:
+            lizardBossJump(this, data, extraData, isOnGround);
             break;
     }
 
