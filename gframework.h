@@ -13,7 +13,8 @@
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
-#define DEFAULT_CAMERA_ZOOM 2.8f
+//#define DEFAULT_CAMERA_ZOOM 2.8f
+#define DEFAULT_CAMERA_ZOOM 3.6f
 #define DEFAULT_GAME_WIDTH SCREEN_WIDTH / DEFAULT_CAMERA_ZOOM
 #define DEFAULT_GAME_HEIGHT SCREEN_HEIGHT / DEFAULT_CAMERA_ZOOM
 
@@ -70,6 +71,7 @@ void playMusic(int songId);
 void fUpdate();
 void initFramework();
 void disposeFramework();
+void gfullscreen();
 
 
 // fonts

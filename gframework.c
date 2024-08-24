@@ -4,11 +4,14 @@
 // Conf
 //------------------------------------------------------
 
-const char* WINDOW_NAME = "template window";
+const char* WINDOW_NAME = "gameska";
 const int DEFAULT_SPRITE_SIZE = 16;
 
 const int SPRITE_ORIGIN_OFFSET = DEFAULT_SPRITE_SIZE >> 1;
 const Color BACKGROUND_COLOR = {22, 7, 18, 255};
+
+int currentScreenWidth = SCREEN_WIDTH;
+int currentScreenHeight = SCREEN_HEIGHT;
 
 
 //------------------------------------------------------
@@ -330,7 +333,7 @@ void fUpdate(){
     BeginDrawing();
     ClearBackground(BLACK);
     Rectangle r = { 0, 0, (float)(renderTexture.texture.width), (float)(-renderTexture.texture.height) };
-    Rectangle r2 = { renderTextureOffset, 0, (float)(GetScreenWidth()) * scalingFactor, (float)(GetScreenHeight()) };
+    Rectangle r2 = { renderTextureOffset, 0, (float)(currentScreenWidth) * scalingFactor, (float)(currentScreenHeight) };
     Vector2 v = {0, 0};
     DrawTexturePro(renderTexture.texture,r,r2,v,0,WHITE);
 
@@ -341,6 +344,27 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color){
 	int shadowOffset = fmax(scale / 10.0f, 1);
 	DrawText(text, x + shadowOffset, y, scale, GRAY);
 	DrawText(text, x, y, scale, color);
+
+}
+
+void gfullscreen(){
+	int monitor = GetCurrentMonitor();
+
+	if (IsWindowFullscreen())
+    {
+        SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+		currentScreenWidth = SCREEN_WIDTH;
+		currentScreenHeight = SCREEN_HEIGHT;
+    }
+	else
+    {
+        SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+		currentScreenWidth = GetMonitorWidth(monitor);
+		currentScreenHeight = GetMonitorHeight(monitor);
+    }
+	// update scaling factor
+	scalingFactor = currentScreenWidth /(float)(GetScreenWidth());
+	ToggleFullscreen();
 
 }
 
@@ -452,9 +476,8 @@ void initFramework(){
 	SetTargetFPS(60);
 	renderTexture = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
 	loadedSheet = initSpriteSheet("resources/spritesheet.png", DEFAULT_SPRITE_SIZE);
-	scalingFactor = SCREEN_WIDTH /(float)(GetScreenWidth());
+	scalingFactor = currentScreenWidth /(float)(GetScreenWidth());
 	renderTextureOffset = ((GetScreenWidth()) / 2) - (SCREEN_WIDTH / 2);
-	//ToggleFullscreen();
 	cam.zoom = DEFAULT_CAMERA_ZOOM;
 	loadSounds();
 	loadMusic();
