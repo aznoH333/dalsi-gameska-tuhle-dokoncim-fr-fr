@@ -43,9 +43,7 @@ int main(void)
     // 3. scripting
     // 7. better ui
     // 8. actually functional main menu
-    //      9. hide cursor
     // 10. clean up console
-    //      11. change default zoom
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
     // 20. goomba stomping ????
@@ -54,10 +52,11 @@ int main(void)
     // 23. projectile shoot sounds
     // 24. level exit
     // 25. flame particles
-    //      27. fix fullscreen
-    // 28. 
+    // 27. fix fullscreen // shits fucked on wayland
+    // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
+    // 29.
 
-    gfullscreen();
+    //gfullscreen();
 
     // Main game loop
     while (!WindowShouldClose())
@@ -65,6 +64,10 @@ int main(void)
         updateGameState(game);
         textF("fps %d", 10, 10, GetFPS());
         fUpdate();
+
+        if (IsKeyPressed(KEY_F11)){
+            gfullscreen();
+        }
     }
 
     

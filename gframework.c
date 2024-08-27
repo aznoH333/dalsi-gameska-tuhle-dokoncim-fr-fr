@@ -175,6 +175,7 @@ Vector2 getInWorldMousePosition(){
 	out.x /= cam.zoom;
 	out.y /= cam.zoom;
 
+
 	out.x += cam.target.x;
 	out.y += cam.target.y;
 
@@ -348,22 +349,33 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color){
 }
 
 void gfullscreen(){
+	
+	int tWidth = currentScreenWidth;
+	int tHeight = currentScreenHeight;
+	
 	int monitor = GetCurrentMonitor();
 
 	if (IsWindowFullscreen())
     {
         SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 		currentScreenWidth = SCREEN_WIDTH;
 		currentScreenHeight = SCREEN_HEIGHT;
     }
 	else
     {
         SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+        SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+
 		currentScreenWidth = GetMonitorWidth(monitor);
 		currentScreenHeight = GetMonitorHeight(monitor);
     }
 	// update scaling factor
-	scalingFactor = currentScreenWidth /(float)(GetScreenWidth());
+	//scalingFactor = currentScreenWidth /(float)(GetScreenWidth());
+	gLog(LOG_INF, "Changing screen resolution from w[%d] h[%d] to w[%d] h[%d]", tWidth, tHeight, currentScreenWidth, currentScreenHeight);
+
+	scalingFactor = 1.0f;// scaling factor should be 1 or the fullscreen bugs out??
 	ToggleFullscreen();
 
 }

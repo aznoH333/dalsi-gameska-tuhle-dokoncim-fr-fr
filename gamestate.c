@@ -11,6 +11,7 @@ void unloadCurrentState(GameState* gamestate){
             unloadLevelEditor(gamestate->editor);
             break;
         case GAME_STATE_GAME:
+            ShowCursor();
             unloadGameplay(gamestate->gameplay);
             break;
     }
@@ -25,6 +26,7 @@ void loadCurrentState(GameState* gamestate){
             loadLevelEditorLevel(gamestate->editor, "./gamedata/1.lvl");
             break;
         case GAME_STATE_GAME:
+            HideCursor();
             startLevel(gamestate->gameplay, "./gamedata/1.lvl");
             break;
     }
