@@ -25,7 +25,7 @@ struct Level {
     char songId;
     File* levelFile;
     Vector* entityeMarkers;
-    char name[LEVEL_NAME_LENGTH];
+    unsigned char name[LEVEL_NAME_LENGTH];
     
 };
 typedef struct Level Level;

@@ -87,7 +87,7 @@ void fillTiles(char** targetArray, int sizeX, int sizeY, int targetX, int target
 
 void useEditTool(LevelEditor* editor){
     char** targetArray = (editor->placeMode == PLACE_MODE_TILES ? editor->level->tiles : editor->level->background);
-                
+    
     int placingTile;
 
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){

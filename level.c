@@ -260,7 +260,7 @@ void drawLevel(Level* lvl, int drawType){
             
             // fore ground
             {
-                char tile = lvl->tiles[x][y];
+                unsigned char tile = lvl->tiles[x][y];
                 
                 if (tile != 0){
                     if (drawForeGround){
