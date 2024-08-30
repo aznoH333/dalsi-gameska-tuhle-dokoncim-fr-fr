@@ -8,8 +8,8 @@
 #define MIN_LEVEL_FILE_SIZE 4
 #define LEVEL_DATA_START 6 + LEVEL_NAME_LENGTH
 
-char** readTileData(Level* lvl, char* fileData, int index);
-void writeTileData(Level* lvl, char* fileData, int index, char** tileData);
+unsigned char** readTileData(Level* lvl, char* fileData, int index);
+void writeTileData(Level* lvl, char* fileData, int index, unsigned char** tileData);
 
 Level* loadLevel(const char* levePath){
     File* f = initFile(levePath);
@@ -167,9 +167,9 @@ void resetLevel(Level* lvl){
 }
 
 
-void resizeLevelTileData(Level* level, int newWidth, int newHeight, char*** tileData){
+void resizeLevelTileData(Level* level, int newWidth, int newHeight, unsigned char*** tileData){
     // init new contents    
-    char** newLevelContent = malloc(sizeof(char*) * newWidth);
+    unsigned char** newLevelContent = malloc(sizeof(char*) * newWidth);
     for (int i = 0; i < newWidth; i++){
         newLevelContent[i] = malloc(sizeof(char*) * newHeight);
     }
@@ -217,8 +217,8 @@ void resizeLevel(Level* level, int newWidth, int newHeight){
     level->height = newHeight;
 }
 
-char** readTileData(Level* lvl ,char* fileData, int index){
-    char** tiles;
+unsigned char** readTileData(Level* lvl ,char* fileData, int index){
+    unsigned char** tiles;
     tiles = malloc(sizeof(char*) * lvl->width);
 
     for (int x = 0; x < lvl->width; x++){
@@ -231,7 +231,7 @@ char** readTileData(Level* lvl ,char* fileData, int index){
     return tiles;
 }
 
-void writeTileData(Level* lvl, char* fileData, int index, char** tileData){
+void writeTileData(Level* lvl, char* fileData, int index, unsigned char** tileData){
     for (int x = 0; x < lvl->width; x++){
         for (int y = 0; y < lvl->height; y++){
             fileData[index + y + (x * lvl->height)] = tileData[x][y];
@@ -277,7 +277,7 @@ void drawLevel(Level* lvl, int drawType){
             
             // background
             {
-                char tile = lvl->background[x][y];
+                unsigned char tile = lvl->background[x][y];
                 if (tile != 0){
                     if (drawBackGround){
                         if (tile != 1 || !highlightBlacks){

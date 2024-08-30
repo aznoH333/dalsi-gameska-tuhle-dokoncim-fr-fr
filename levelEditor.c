@@ -68,7 +68,7 @@ void disposeLevelEditor(LevelEditor* editor){
 #define TILE_PICKER_Y 0
 #define TILE_PICKER_WIDTH 8
 
-void fillTiles(char** targetArray, int sizeX, int sizeY, int targetX, int targetY, int targetTileId, int placingTile){
+void fillTiles(unsigned char** targetArray, int sizeX, int sizeY, int targetX, int targetY, int targetTileId, int placingTile){
     if (targetTileId == placingTile) return;
     
     if (checkBoxCollisions(0, 0, sizeX, sizeY, targetX, targetY, 1, 1) && targetArray[targetX][targetY] == targetTileId){
@@ -86,8 +86,9 @@ void fillTiles(char** targetArray, int sizeX, int sizeY, int targetX, int target
 
 
 void useEditTool(LevelEditor* editor){
-    char** targetArray = (editor->placeMode == PLACE_MODE_TILES ? editor->level->tiles : editor->level->background);
-    
+    unsigned char** targetArray = (editor->placeMode == PLACE_MODE_TILES ? editor->level->tiles : editor->level->background);
+
+
     int placingTile;
 
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
@@ -418,6 +419,10 @@ void updateLevelEditor(LevelEditor* editor){
                             if (IsKeyPressed(KEY_A + i)){
                                 editor->level->name[currentIndex] = i + 'a';
                             }
+                        }
+
+                        if (IsKeyPressed(KEY_SPACE)){
+                                editor->level->name[currentIndex] = ' ';
                         }
                     }
 

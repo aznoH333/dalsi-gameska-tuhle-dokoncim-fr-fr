@@ -14,11 +14,11 @@
 #define LEVEL_DRAW_CAMERA_VIEW 4
 #define LEVEL_DRAW_COUNT 5
 
-#define LEVEL_NAME_LENGTH 10
+#define LEVEL_NAME_LENGTH 20
 
 struct Level {
-    char** tiles;
-    char** background;
+    unsigned char** tiles;
+    unsigned char** background;
     int width;
     int height;
     char waterType;
