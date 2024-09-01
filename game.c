@@ -50,7 +50,6 @@ int main(void)
     // 21. add more sounds for enemies
     // 22. death scream
     // 23. projectile shoot sounds
-    //      24. level exit
     // 25. flame particles
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354

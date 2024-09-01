@@ -38,7 +38,7 @@ typedef struct Entity Entity;
 #define ENTITY_OTHER 2
 #define ENTITY_PLAYER_PROJECTILE 3
 #define ENTITY_ENEMY_PROJECTILE 4
-
+#define ENTITY_OTHER_INTERACTABLE 5
 
 
 // entity markers

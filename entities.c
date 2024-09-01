@@ -7,6 +7,7 @@
 #include "enemy.h"
 #include "enemySpawner.h"
 #include "cannonTurret.h"
+#include "levelExit.h"
 
 // Entity marker
 EntityMarker* initEntityMarker(char* levelData, int markerIndex){
@@ -105,6 +106,9 @@ void activateEntityMarker(EntityMarker* marker){
     // misc entities
 
     switch (marker->id) {
+        case 1: // level exit
+            addEntity(getEntityManager(), initExit(marker->x * 16, marker->y * 16));
+            break;
         case 36: // water
             setWaterHeight(marker->y * 16);
             break;
