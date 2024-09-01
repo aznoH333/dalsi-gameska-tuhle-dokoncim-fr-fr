@@ -53,11 +53,12 @@ int main(void)
     // 25. flame particles
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
-    // 32. level progression
+    //      32. level progression
     // 33. fix cpt unfortunate facial hair lol
     // 34. jump height buffering
     // 35. fix gunners
-    // 36. 
+    // 36. taking damage/ dying
+    // 37.
 
 
 

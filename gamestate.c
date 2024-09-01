@@ -23,11 +23,11 @@ void loadCurrentState(GameState* gamestate){
         case GAME_STATE_MAIN_MENU:
             break;
         case GAME_STATE_EDITOR:
-            loadLevelEditorLevel(gamestate->editor, "./gamedata/1.lvl");
+            loadLevelEditorLevel(gamestate->editor, "./gamedata/editor/1.lvl");
             break;
         case GAME_STATE_GAME:
             HideCursor();
-            startLevel(gamestate->gameplay, "./gamedata/1.lvl");
+            startLevel(gamestate->gameplay, "./gamedata/editor/1.lvl");
             break;
     }
 }
@@ -54,14 +54,21 @@ GameState* getGameState(){
 }
 
 
-
+int pendingGameState = -1;
 void changeGameState(GameState* gamestate, int newState){
-    unloadCurrentState(gamestate);
-    gamestate->currentState = newState;
-    setCameraZoom(DEFAULT_CAMERA_ZOOM);
-    loadCurrentState(gamestate);
+    pendingGameState = newState;
+    
 }
 
+void updateGameStateChange(GameState* this){
+
+    unloadCurrentState(this);
+    this->currentState = pendingGameState;
+    setCameraZoom(DEFAULT_CAMERA_ZOOM);
+    loadCurrentState(this);
+
+    pendingGameState = -1;
+}
 
 
 void disposeGameState(GameState* gamestate){
@@ -73,6 +80,7 @@ void disposeGameState(GameState* gamestate){
 }
 
 void updateGameState(GameState* gamestate){
+
     if (IsKeyPressed(KEY_ONE)){
         changeGameState(gamestate, 0);
     }
@@ -93,5 +101,10 @@ void updateGameState(GameState* gamestate){
         case GAME_STATE_GAME:
             updateGameplay(gamestate->gameplay);
             break;
+    }
+
+
+    if (pendingGameState != -1){
+        updateGameStateChange(gamestate);
     }
 }

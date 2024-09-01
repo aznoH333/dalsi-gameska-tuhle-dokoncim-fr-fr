@@ -27,7 +27,9 @@ void exitOnCollide(Entity* this, Entity* other){
     
     if (other->identifier == ENTITY_PLAYER){
         // exit level
-        gLog(LOG_ERR, "TODO not implemented");
+        touchedLevelExit(getGameplay());
+        
+        //gLog(LOG_ERR, "TODO not implemented");
     }
 }
 

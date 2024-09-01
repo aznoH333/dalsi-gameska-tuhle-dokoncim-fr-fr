@@ -8,6 +8,7 @@
 #include "gameprogress.h"
 #include "enemy.h"
 #include "spritedata.h"
+#include "gamestate.h"
 
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -117,6 +118,18 @@ void startLevel(Gameplay* g, const char* levelPath){
         g->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
     }
 }
+
+void touchedLevelExit(Gameplay* this){
+    
+    if (strEquals(this->level->levelFile->filePath, "./gamedata/editor/1.lvl")){
+        gLog(LOG_INF, "something is happening");
+        changeGameState(getGameState(), GAME_STATE_EDITOR);
+    }else {
+
+    }
+}
+
+
 
 void resetWater(){
     Gameplay* g = getGameplay();
