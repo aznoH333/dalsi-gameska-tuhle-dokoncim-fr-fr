@@ -15,11 +15,10 @@ struct EnemySpawner{
 
 typedef struct EnemySpawner EnemySpawner;
 
-#define SPAWNER_GREY_LIZARD 0
-#define SPAWNER_GREEN_LIZARD 1
-#define SPAWNER_PINK_LIZARD 2
-#define SPAWNER_GREY_ROBOT 3
-#define SPAWNER_GREEN_ROBOT 4
+#define SPAWNER_LIZARD_RED 0
+#define SPAWNER_LIZARD_BLUE 1
+#define SPAWNER_ROBOT_RED 2
+#define SPAWNER_ROBOT_BLUE 3
 
 
 Entity* initSpawner(int x, int y, int type);

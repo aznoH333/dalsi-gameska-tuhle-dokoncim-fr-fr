@@ -8,28 +8,23 @@ void initBasedOnType(EnemySpawner* data, int type){
     switch (type) {
         default: gLog(LOG_ERR, "Invalid spawner id [%d]", type); break;
         
-        case SPAWNER_GREY_LIZARD: 
-            data->enemyId = ENEMY_GREY_LIZARD;
+        case SPAWNER_LIZARD_RED: 
+            data->enemyId = ENEMY_LIZARD_RED;
             data->spawnSprite = SPRITE_START_ENTITIES;
             break;
         
-        case SPAWNER_GREEN_LIZARD:
-            data->enemyId = ENEMY_GREEN_LIZARD;
+        case SPAWNER_LIZARD_BLUE:
+            data->enemyId = ENEMY_LIZARD_BLUE;
             data->spawnSprite = SPRITE_START_ENTITIES + 2;
             break;
         
-        case SPAWNER_PINK_LIZARD:
-            data->enemyId = ENEMY_PINK_LIZARD;
+        case SPAWNER_ROBOT_RED:
+            data->enemyId = ENEMY_ROBOT_RED;
             data->spawnSprite = SPRITE_START_ENTITIES + 4;
             break;
-
-        case SPAWNER_GREY_ROBOT:
-            data->enemyId = ENEMY_GREY_ROBOT;
-            data->spawnSprite = SPRITE_START_ENTITIES + 6;
-            break;
         
-        case SPAWNER_GREEN_ROBOT:
-            data->enemyId = ENEMY_GREEN_ROBOT;
+        case SPAWNER_ROBOT_BLUE:
+            data->enemyId = ENEMY_ROBOT_BLUE;
             data->spawnSprite = SPRITE_START_ENTITIES + 8;
             break;
     }

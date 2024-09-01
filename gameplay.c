@@ -32,7 +32,7 @@ Gameplay* getGameplay(){
 }
 
 bool isCameraMarker(int cameraMarkerId){
-    return isInRange(cameraMarkerId, 2, 3) || isInRange(cameraMarkerId, 23, 28);
+    return isInRange(cameraMarkerId, 2, 3) || isInRange(cameraMarkerId, 21, 24);
 }
 
 int getMarkerType(int markerId){
@@ -46,11 +46,10 @@ int getMarkerEffect(int markerId){
     switch (markerId) {
         case 2:
         case 3: return MARKER_EFFECT_NONE;
-        case 23: return MARKER_EFFECT_STOP;
-        case 24: return MARKER_EFFECT_FLY_GREY;
-        case 25: return MARKER_EFFECT_FLY_RED;
-        case 26: return MARKER_EFFECT_FLY_BLUE;
-        case 27: return MARKER_EFFECT_CUSTOM_SCRIPT;
+        case 21: return MARKER_EFFECT_STOP;
+        case 22: return MARKER_EFFECT_FLY_RED;
+        case 23: return MARKER_EFFECT_FLY_BLUE;
+        case 24: return MARKER_EFFECT_CUSTOM_SCRIPT;
         default: gLog(LOG_ERR, "Unrecognized script id [%d]", markerId); return 0;
     }
 }
@@ -191,7 +190,7 @@ void doFlyEffect(Gameplay* this, int flyType){
             y += DEFAULT_GAME_HEIGHT;
         }
 
-        addEntity(getEntityManager(), initEnemy(x, y, ENEMY_GREY_FLY + flyType));
+        addEntity(getEntityManager(), initEnemy(x, y, ENEMY_FLY_RED + flyType));
     }
 }
 
@@ -199,7 +198,6 @@ void updateScripts(Gameplay* this){
     switch (this->currentPassiveMarkerEffect) {
         default:
         case MARKER_EFFECT_NONE: return;
-        case MARKER_EFFECT_FLY_GREY:
         case MARKER_EFFECT_FLY_RED:
         case MARKER_EFFECT_FLY_BLUE:
             doFlyEffect(this, this->currentPassiveMarkerEffect - 1);

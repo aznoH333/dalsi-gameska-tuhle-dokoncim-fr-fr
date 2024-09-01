@@ -45,35 +45,33 @@ int getEnemyTypeFromMarker(int markerId){
     switch (markerId) {
         default: return -1;
         // enemies
-        case 9:     return ENEMY_GREY_LIZARD;
-        case 11:    return ENEMY_GREEN_LIZARD;
-        case 13:    return ENEMY_PINK_LIZARD;
+        case 9:     return ENEMY_LIZARD_RED;
+        case 11:    return ENEMY_LIZARD_BLUE;
 
-        case 15:    return ENEMY_GREY_ROBOT;
-        case 17:    return ENEMY_GREEN_ROBOT;
+        case 13:    return ENEMY_ROBOT_RED;
+        case 15:    return ENEMY_ROBOT_BLUE;
 
-        case 31:    return ENEMY_GREEN_SOLDIER;
-        case 32:    return ENEMY_GREY_SOLDIER;
-        case 33:    return ENEMY_BLUE_SOLDIER;
-        case 34:    return ENEMY_RED_SOLDIER;
-        case 35:    return ENEMY_LARGE_GREY_FLY;
-        case 36:    return ENEMY_LARGE_RED_FLY;
-        case 29:    return ENEMY_SQUID_PINK;
-        case 30:    return ENEMY_SQUID_BLUE;
-        case 37:    return ENEMY_LIZARD_BOSS_GREEN;
-        case 38:    return ENEMY_LIZARD_BOSS_RED;
+        case 28:    return ENEMY_SOLDIER_RED;
+        case 29:    return ENEMY_SOLDIER_BLUE;
+
+        case 30:    return ENEMY_LARGE_FLY_RED;
+        case 31:    return ENEMY_LARGE_FLY_BLUE;
+
+        case 26:    return ENEMY_SQUID_RED;
+        case 27:    return ENEMY_SQUID_BLUE;
+        case 32:    return ENEMY_BOSS_RED;
+        case 33:    return ENEMY_BOSS_BLUE;
     }
 }
 
 int getEnemySpawnerType(int markerId){
     switch (markerId) {
         default: return -1;
-        case 10: return SPAWNER_GREY_LIZARD;
-        case 12: return SPAWNER_GREEN_LIZARD;
-        case 14: return SPAWNER_PINK_LIZARD;
+        case 10: return SPAWNER_LIZARD_RED;
+        case 12: return SPAWNER_LIZARD_BLUE;
 
-        case 16: return SPAWNER_GREY_ROBOT;
-        case 18: return SPAWNER_GREEN_ROBOT;
+        case 14: return SPAWNER_ROBOT_RED;
+        case 16: return SPAWNER_ROBOT_BLUE;
     }
 }
 
@@ -107,14 +105,14 @@ void activateEntityMarker(EntityMarker* marker){
     // misc entities
 
     switch (marker->id) {
-        case 39: // water
+        case 36: // water
             setWaterHeight(marker->y * 16);
             break;
 
+        case 17:
+        case 18:
         case 19:
-        case 20:
-        case 21:
-        case 22: // cannon turret
+        case 20: // cannon turret
             addEntity(getEntityManager(), initCannon(marker->x * 16, marker->y * 16, marker->id - 19));
             break;
     }

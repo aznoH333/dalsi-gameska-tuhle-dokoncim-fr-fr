@@ -119,120 +119,96 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
     enemy->bodyType = BODY_FLESH;
 
     switch (enemyType) {
-        case ENEMY_GREY_LIZARD:
+        case ENEMY_LIZARD_RED:
             initBasicEnemy(enemy);
             enemy->baseSprite = SPRITE_START_ENTITIES;
             break;
 
-        case ENEMY_GREEN_LIZARD:
+        case ENEMY_LIZARD_BLUE:
             initBasicEnemy(enemy);
             enemy->health = 23;
             enemy->moveSpeed = 1.0f;
             enemy->baseSprite = SPRITE_START_ENTITIES + 2;
             break;
 
-        case ENEMY_PINK_LIZARD:
-            initBasicEnemy(enemy);
-            enemy->health = 26;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 4;
-            break;
 
-        case ENEMY_GREY_ROBOT:
+        case ENEMY_ROBOT_RED:
             initBasicEnemy(enemy);
             enemy->health = 75;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 4;
+            enemy->bodyType = BODY_ROBOT;
+            break;  
+
+        case ENEMY_ROBOT_BLUE:  
+            initBasicEnemy(enemy);
+            enemy->health = 65;
+            enemy->moveSpeed = 1.0f;
             enemy->baseSprite = SPRITE_START_ENTITIES + 6;
             enemy->bodyType = BODY_ROBOT;
             break;  
 
-        case ENEMY_GREEN_ROBOT:  
-            initBasicEnemy(enemy);
-            enemy->health = 65;
-            enemy->moveSpeed = 1.0f;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 8;
-            enemy->bodyType = BODY_ROBOT;
-            break;  
 
-
-        case ENEMY_GREEN_SOLDIER:
+        case ENEMY_SOLDIER_RED:
             initSoldierEnemy(enemy);
-            enemy->baseSprite = SPRITE_START_ENTITIES + 27;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 23;
             initSoldierData(entity, 85);
 
             break;
         
-        case ENEMY_GREY_SOLDIER:
-            initSoldierEnemy(enemy);
-            enemy->moveSpeed = 0.5f;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 29;
-            enemy->health = 50;
-            initSoldierData(entity, 120);
-            break;
 
-        case ENEMY_BLUE_SOLDIER:
+        case ENEMY_SOLDIER_BLUE:
             initSoldierEnemy(enemy);
-            enemy->baseSprite = SPRITE_START_ENTITIES + 31;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 25;
             enemy->health = 30;
             initSoldierData(entity, 85);
 
             break;
 
-        case ENEMY_RED_SOLDIER:
-            initSoldierEnemy(enemy);
-            enemy->health = 33;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 33;
-            initSoldierData(entity, 78);
-
-            break;
         
-        case ENEMY_GREY_FLY:
+        case ENEMY_FLY_RED:
             initFlyData(entity);
             enemy->health = 10;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 13;
+            enemy->animationFrameDuration = 2;
+            break;
+        case ENEMY_FLY_BLUE:
+            initFlyData(entity);
+            enemy->health = 15;
             enemy->baseSprite = SPRITE_START_ENTITIES + 15;
             enemy->animationFrameDuration = 2;
             break;
-        case ENEMY_RED_FLY:
-            initFlyData(entity);
-            enemy->health = 15;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 17;
-            enemy->animationFrameDuration = 2;
-            break;
-        case ENEMY_BLUE_FLY:
-            initFlyData(entity);
-            enemy->health = 17;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 19;
-            enemy->animationFrameDuration = 2;
-            break;
+       
 
-        case ENEMY_LARGE_GREY_FLY:
+        case ENEMY_LARGE_FLY_RED:
             initLargeFly(entity);
             enemy->health = 96;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 35;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 27;
             break;
 
-        case ENEMY_LARGE_RED_FLY:
+        case ENEMY_LARGE_FLY_BLUE:
             initLargeFly(entity);
             enemy->health = 124;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 38;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 30;
             break;
         
-        case ENEMY_SQUID_PINK:
+        case ENEMY_SQUID_RED:
             initSquid(entity);
             enemy->health = 75;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 22;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 18;
             break;
 
         case ENEMY_SQUID_BLUE:
             initSquid(entity);
             enemy->health = 110;
-            enemy->baseSprite = SPRITE_START_ENTITIES + 25;
+            enemy->baseSprite = SPRITE_START_ENTITIES + 21;
             break;
 
-        case ENEMY_LIZARD_BOSS_GREEN:
+        case ENEMY_BOSS_RED:
             initLizardBoss(entity);
             enemy->health = 1000;
             break;
         
-        case ENEMY_LIZARD_BOSS_RED:
+        case ENEMY_BOSS_BLUE:
             initLizardBoss(entity);
             enemy->health = 1500;
             break;
@@ -537,8 +513,8 @@ void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData, bool i
 
     if (extraData->attackTimer <= 0){
         data->animationFrame = (data->animationFrame + 1) % 2;
-        extraData->attackTimer = 40 + (10 * (data->enemyType == ENEMY_LIZARD_BOSS_GREEN));
-        float bulletSpeed = boolToSign(data->flipDirection) * (2.0f + (1.2f * ( data->enemyType == ENEMY_LIZARD_BOSS_RED )));
+        extraData->attackTimer = 40 + (10 * (data->enemyType == ENEMY_BOSS_RED));
+        float bulletSpeed = boolToSign(data->flipDirection) * (2.0f + (1.2f * ( data->enemyType == ENEMY_BOSS_RED )));
         addEntity(getEntityManager(), initBullet(this->x, this->y - 6, bulletSpeed, 0.0f, SPRITE_START_EFFECTS + 2, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_ANIMATED | BULLET_FLAG_SPAWN_DECAL));
     }
 
@@ -582,13 +558,13 @@ void lizardBossUpdate(Entity* this){
 
     bool isOnGround = collidesWithLevel(getGameplay()->level, this->x, this->y + 16, 16, 1);
 
-    int variantSpriteOffset = (data->enemyType == ENEMY_LIZARD_BOSS_RED) * 7;
+    int variantSpriteOffset = (data->enemyType == ENEMY_BOSS_BLUE) * 7;
     // legs
-    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 43 + (data->animationFrame * 2) + variantSpriteOffset, -8, 0, this);
-    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 44 + (data->animationFrame * 2) + variantSpriteOffset, 8, 0, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 35 + (data->animationFrame * 2) + variantSpriteOffset, -8, 0, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 36 + (data->animationFrame * 2) + variantSpriteOffset, 8, 0, this);
 
     // head
-    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 41 + data->animationFrame + variantSpriteOffset, -1, -11, this);
+    drawEnemySpriteWithOffset(SPRITE_START_ENTITIES + 33 + data->animationFrame + variantSpriteOffset, -1, -11, this);
     
 
     if (isOnGround){
@@ -680,29 +656,25 @@ void spawnRobotHusk(Entity* this, EntityManager* e){
 
 int scoreBasedOnEnemyType(int enemyType){
     switch (enemyType) {
-        case ENEMY_GREEN_LIZARD:
-        case ENEMY_GREY_LIZARD:
-        case ENEMY_PINK_LIZARD:
-        case ENEMY_GREY_FLY:
-        case ENEMY_RED_FLY:
-        case ENEMY_BLUE_FLY:
+        case ENEMY_LIZARD_BLUE:
+        case ENEMY_LIZARD_RED:
+        case ENEMY_FLY_BLUE:
+        case ENEMY_FLY_RED:
             return 100;
-        case ENEMY_GREEN_SOLDIER:
-        case ENEMY_BLUE_SOLDIER:
-        case ENEMY_RED_SOLDIER:
+        case ENEMY_SOLDIER_BLUE:
+        case ENEMY_SOLDIER_RED:
             return 200;
-        case ENEMY_GREY_SOLDIER:
-        case ENEMY_GREY_ROBOT:
-        case ENEMY_GREEN_ROBOT:
+        case ENEMY_ROBOT_BLUE:
+        case ENEMY_ROBOT_RED:
             return 500;
-        case ENEMY_LARGE_GREY_FLY:
-        case ENEMY_LARGE_RED_FLY:
+        case ENEMY_LARGE_FLY_BLUE:
+        case ENEMY_LARGE_FLY_RED:
             return 1000;    
-        case ENEMY_SQUID_PINK:
+        case ENEMY_SQUID_RED:
         case ENEMY_SQUID_BLUE:
             return 2000;
-        case ENEMY_LIZARD_BOSS_GREEN:
-        case ENEMY_LIZARD_BOSS_RED:
+        case ENEMY_BOSS_RED:
+        case ENEMY_BOSS_BLUE:
             return 5000;
         
         default:
