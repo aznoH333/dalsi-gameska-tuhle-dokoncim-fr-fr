@@ -42,7 +42,7 @@ int main(void)
     // 2. sometimes camera flashes when changing markers
     // 3. scripting
     // 7. better ui
-    // 8. actually functional main menu
+    //      8. actually functional main menu
     // 10. clean up console
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
@@ -58,7 +58,8 @@ int main(void)
     // 34. jump height buffering
     // 35. fix gunners
     // 36. taking damage/ dying
-    // 37.
+    // 37. music is leaking memmory??
+    // 38.
 
 
 
@@ -67,7 +68,7 @@ int main(void)
     //gfullscreen();
 
     // Main game loop
-    while (!WindowShouldClose())
+    while (isGameRunning())
     {
         updateGameState(game);
         textF("fps %d", 10, 10, GetFPS());
@@ -81,7 +82,6 @@ int main(void)
     
     disposeGameState(game);
 	disposeFramework();
-    
 
     return 0;
 }

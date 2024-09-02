@@ -290,6 +290,11 @@ void drawFC(int spriteIndex, int x, int y, bool flip, Color c, int layer){
 	drawRFSC(spriteIndex, x, y, 0.0f, flip, 1.0f, c, layer);
 }
 
+void drawFS(int spriteIndex, int x, int y, bool flip, float scale, int layer){
+	drawRFSC(spriteIndex, x, y, 0.0f, flip, scale, WHITE, layer);
+}
+
+
 void drawR(int spriteIndex, int x, int y, float rotation, int layer){
 	drawRSC(spriteIndex, x, y, rotation, 1.0f, WHITE, layer);
 }
@@ -378,6 +383,14 @@ void gfullscreen(){
 	scalingFactor = 1.0f;// scaling factor should be 1 or the fullscreen bugs out??
 	ToggleFullscreen();
 
+}
+
+bool shouldRun = true;
+void closeGame(){
+	shouldRun = false;
+}
+bool isGameRunning(){
+	return !WindowShouldClose() && shouldRun;
 }
 
 //------------------------------------------------------

@@ -1,7 +1,7 @@
 #include "gamestate.h"
 #include "gameCamera.h"
 #include "gameprogress.h"
-
+#include "mainMenu.h"
 
 void unloadCurrentState(GameState* gamestate){
     switch (gamestate->currentState) {
@@ -13,6 +13,8 @@ void unloadCurrentState(GameState* gamestate){
         case GAME_STATE_GAME:
             ShowCursor();
             unloadGameplay(gamestate->gameplay);
+            break;
+        case GAME_STATE_LEVEL_SCREEN:
             break;
     }
 }
@@ -29,6 +31,8 @@ void loadCurrentState(GameState* gamestate){
             HideCursor();
             startLevel(gamestate->gameplay, "./gamedata/editor/1.lvl");
             break;
+        case GAME_STATE_LEVEL_SCREEN:
+            break;
     }
 }
 
@@ -41,6 +45,7 @@ GameState* initGameState(){
     out->gameplay = getGameplay();
     out->editor = getLevelEditor();
     loadCurrentState(out);
+    out->nextLevel = 0;
 
     return out;
 }
@@ -57,7 +62,6 @@ GameState* getGameState(){
 int pendingGameState = -1;
 void changeGameState(GameState* gamestate, int newState){
     pendingGameState = newState;
-    
 }
 
 void updateGameStateChange(GameState* this){
@@ -79,6 +83,10 @@ void disposeGameState(GameState* gamestate){
     unloadCameraManager(getCameraManager());
 }
 
+void goToNextLevel(GameState* gamestate){
+
+}
+
 void updateGameState(GameState* gamestate){
 
     if (IsKeyPressed(KEY_ONE)){
@@ -94,6 +102,7 @@ void updateGameState(GameState* gamestate){
     
     switch (gamestate->currentState) {
         case GAME_STATE_MAIN_MENU:
+            updateMainMenu();
             break;
         case GAME_STATE_EDITOR:
             updateLevelEditor(gamestate->editor);

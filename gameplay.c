@@ -122,9 +122,14 @@ void startLevel(Gameplay* g, const char* levelPath){
 void touchedLevelExit(Gameplay* this){
     
     if (strEquals(this->level->levelFile->filePath, "./gamedata/editor/1.lvl")){
-        gLog(LOG_INF, "something is happening");
+        
+        // return to editor
         changeGameState(getGameState(), GAME_STATE_EDITOR);
+    
     }else {
+
+        // load next level
+        goToNextLevel(getGameState());
 
     }
 }
