@@ -42,7 +42,6 @@ int main(void)
     // 2. sometimes camera flashes when changing markers
     // 3. scripting
     // 7. better ui
-    //      8. actually functional main menu
     // 10. clean up console
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
@@ -53,13 +52,13 @@ int main(void)
     // 25. flame particles
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
-    //      32. level progression
     // 33. fix cpt unfortunate facial hair lol
     // 34. jump height buffering
     // 35. fix gunners
     // 36. taking damage/ dying
     // 37. music is leaking memmory??
-    // 38.
+    // 38. implement continue button
+    // 39.
 
 
 

@@ -20,11 +20,15 @@ struct GameState{
 typedef struct GameState GameState;
 
 
+// game state functions
 GameState* getGameState();
 void changeGameState(GameState* gamestate, int newState);
 void disposeGameState(GameState* gamestate);
 void updateGameState(GameState* gamestate);
-void goToNextLevel(GameState* gamestate);
 
+// level functions
+void goToNextLevel(GameState* gamestate);
+void startCurrentLevel(GameState* gamestate);
+void setNextLevelIndex(GameState* gamestate, int index);
 
 #endif

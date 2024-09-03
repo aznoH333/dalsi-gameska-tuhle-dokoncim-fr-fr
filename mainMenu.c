@@ -1,6 +1,7 @@
 #include "mainMenu.h"
 #include "gframework.h"
 #include "spritedata.h"
+#include "gamestate.h"
 
 int selectedOtion = 0;
 #define MAX_OPTIONS 4
@@ -20,6 +21,8 @@ const char* OPTION_TEXTS[MAX_OPTIONS] = {
 void handleButtonFunctions(int buttonIndex){
     switch (buttonIndex) {
         case 0: // new game
+            setNextLevelIndex(getGameState(), 0);
+            startCurrentLevel(getGameState());
             break;
         case 1: // continue
             gLog(LOG_ERR, "not implemented");
