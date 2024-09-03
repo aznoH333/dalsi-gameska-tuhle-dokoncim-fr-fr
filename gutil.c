@@ -13,8 +13,12 @@
 // logging
 //------------------------------------------------------------------------------------
 
-
+#define CURRENT_LOG_LEVEL LOG_INF
 void gLog(int level, const char* str, ...){
+    if (level > CURRENT_LOG_LEVEL){
+        return;
+    }
+    
     const char* header;
 
     va_list args;
@@ -24,6 +28,7 @@ void gLog(int level, const char* str, ...){
         case LOG_INF: header = "[INFO]"; break;
         case LOG_ERR: header = "[ERROR]"; break;
         case LOG_WAR: header = "[WARNING]"; break;
+        case LOG_DBG: header = "[DEBUG]"; break;
     }
     
     

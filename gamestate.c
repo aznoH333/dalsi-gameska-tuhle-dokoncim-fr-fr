@@ -149,13 +149,13 @@ void goToNextLevel(GameState* this){
 }
 
 void startCurrentLevel(GameState* this){
-    gLog(LOG_INF, "starting level %s", convertLevelIndexToFilePath(this->nextLevel));
+    gLog(LOG_DBG, "starting level %s", convertLevelIndexToFilePath(this->nextLevel));
     changeGameState(this, GAME_STATE_GAME);
 
 }
 
 void setNextLevelIndex(GameState* this, int index){
-    gLog(LOG_INF, "changed level index [%d]", index);
+    gLog(LOG_DBG, "changed level index [%d]", index);
     
     this->nextLevel = index;
 }

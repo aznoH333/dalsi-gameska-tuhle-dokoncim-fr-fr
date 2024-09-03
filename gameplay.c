@@ -142,7 +142,6 @@ void resetWater(){
     g->targetWaterHeight = -1;
     g->startWaterHeight = -1;
     g->waterProgress = 0;
-    gLog(LOG_INF, "?? [%d] [%d] [%f]", g->targetWaterHeight, g->startWaterHeight, g->waterProgress);
 }
 
 void setPlayerCoordinates(Gameplay* gameplay, float x, float y){
@@ -228,7 +227,6 @@ void updateScripts(Gameplay* this){
 
 void setWaterHeight(int height){
     Gameplay* g = getGameplay();
-    gLog(LOG_INF, "!! [%d] [%d] [%f]", g->targetWaterHeight, g->startWaterHeight, g->waterProgress);
     
     if (g->targetWaterHeight == -1){// first set
         g->targetWaterHeight = height;

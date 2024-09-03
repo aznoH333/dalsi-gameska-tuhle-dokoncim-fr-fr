@@ -9,6 +9,7 @@
 #define LOG_ERR 1
 #define LOG_WAR 2
 #define LOG_INF 3
+#define LOG_DBG 4
 void gLog(int level, const char* str, ...);
 
 // rest

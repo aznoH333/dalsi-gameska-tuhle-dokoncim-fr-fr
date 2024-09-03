@@ -37,7 +37,7 @@ Level* loadLevel(const char* levePath){
         }
     }
 
-    gLog(LOG_INF, "level info x[%d] y[%d]", out->width, out->height);
+    gLog(LOG_DBG, "level info x[%d] y[%d]", out->width, out->height);
     
     if (f->contentsLength < MIN_LEVEL_FILE_SIZE + out->width + out->height){
         gLog(LOG_ERR, "Level data corrupted %s", levePath);
@@ -100,8 +100,8 @@ void saveLevel(Level* lvl){
         writeTileData(lvl, newContents, LEVEL_DATA_START, lvl->tiles);
         writeTileData(lvl, newContents, LEVEL_DATA_START + (lvl->width * lvl->height), lvl->background);
         contentsIndex = LEVEL_DATA_START + (lvl->width * lvl->height * 2);
-        gLog(LOG_INF, "level info | tiles start [%d] | background start [%d] | entities start [%d]", LEVEL_DATA_START, LEVEL_DATA_START + (lvl->width * lvl->height), LEVEL_DATA_START + (lvl->width * lvl->height * 2));
-        gLog(LOG_INF, "misc info width [%d] height [%d]", lvl->width, lvl->height);
+        gLog(LOG_DBG, "level info | tiles start [%d] | background start [%d] | entities start [%d]", LEVEL_DATA_START, LEVEL_DATA_START + (lvl->width * lvl->height), LEVEL_DATA_START + (lvl->width * lvl->height * 2));
+        gLog(LOG_DBG, "misc info width [%d] height [%d]", lvl->width, lvl->height);
     }
 
     {

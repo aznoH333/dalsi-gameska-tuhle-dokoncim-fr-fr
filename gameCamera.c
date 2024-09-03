@@ -43,7 +43,7 @@ void addCameraMarker(CameraManager* manager, int x, int y, int type, int extraEf
     point->cameraPointType = type;
     point->extraIndex = extraEffect;
 
-    gLog(LOG_INF, "Added camera marker x: %d y: %d type: %d", x, y, type);
+    gLog(LOG_DBG, "Added camera marker x: %d y: %d type: %d", x, y, type);
 
     if (manager->cameraPoints->elementCount == 0){
         manager->currentPoint = point;
@@ -83,7 +83,7 @@ void activateCameraMarkerEffect(CameraManager* this){
 
 
 
-    gLog(LOG_INF, "camera progress %d current x %d current y %d", this->currentPointIndex, this->currentPoint->x, this->currentPoint->y);
+    gLog(LOG_DBG, "camera progress %d current x %d current y %d", this->currentPointIndex, this->currentPoint->x, this->currentPoint->y);
 }
 
 void updateCameraManager(CameraManager* manager){
@@ -122,7 +122,7 @@ void updateCameraManager(CameraManager* manager){
                 manager->currentPoint = manager->nextPoint;
                 manager->currentProgress = 0;
                 
-                gLog(LOG_INF, "camera reached end");
+                gLog(LOG_DBG, "camera reached end");
             }
 
             activateCameraMarkerEffect(manager);

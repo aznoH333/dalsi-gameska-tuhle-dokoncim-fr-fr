@@ -42,7 +42,6 @@ int main(void)
     // 2. sometimes camera flashes when changing markers
     // 3. scripting
     // 7. better ui
-    // 10. clean up console
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
     // 20. goomba stomping ????
