@@ -52,14 +52,17 @@ int main(void)
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
     // 33. fix cpt unfortunate facial hair lol
-    // 36.      taking damage/ dying
     // 37. music is leaking memmory??
     // 38. implement continue button
     // 39. most blue monster variants have wrong stats
-    // 40. kayote time
+    // 40. kayote jump time
     // 41. jump input buffering
     // 42. make flies not able to spawn near the player
-    // 43.
+    // 43. make dying / respawning more dramatic 
+    // 44. add invincibility time after respawning
+    // 45. game over screen
+    // 46. level intro screen
+    // 47. screen transitions
 
 
 
@@ -71,7 +74,7 @@ int main(void)
     while (isGameRunning())
     {
         updateGameState(game);
-        textF("fps %d", 10, 10, GetFPS());
+        textF("fps %d", 10, 32, GetFPS());
         fUpdate();
 
         if (IsKeyPressed(KEY_F11)){

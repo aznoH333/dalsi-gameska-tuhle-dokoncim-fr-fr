@@ -20,6 +20,7 @@ Gameplay* initGameplay(){
     output->startWaterHeight = -1;
     output->targetWaterHeight = -1;
     output->waterProgress = 0.0f;
+    output->respawnCount = DEFAULT_PLAYER_HP;
     return output;    
 }
 
@@ -57,7 +58,10 @@ int getMarkerEffect(int markerId){
 
 void startLevel(Gameplay* g, const char* levelPath){
     resetWater();
-    
+    // reset hp
+    g->respawnCount = DEFAULT_PLAYER_HP;
+
+
     // level load
     {
         if (g->hasLoadedLevel){
@@ -275,4 +279,18 @@ void updateGameplay(Gameplay* g){
     updateEntityManager(getEntityManager());
     updateCameraManager(getCameraManager());
     updateWater(g);
+}
+
+
+
+void playerJustDied(Gameplay* this){
+    if (this->respawnCount > 0){
+        this->respawnCount--;
+        // respawn player
+        
+        CameraManager* cameraMan = getCameraManager();
+        addEntity(getEntityManager(), initPlayer(cameraMan->cameraX + 32, cameraMan->cameraY + 32));
+    }else {
+        gLog(LOG_ERR, "game over. not implemented");
+    }
 }

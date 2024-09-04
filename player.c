@@ -163,7 +163,10 @@ void playerUpdate(Entity* this){
 }
 
 void playerOnCollide(Entity* this, Entity* other){
-
+    if (other->identifier == ENTITY_ENEMY || other->identifier == ENTITY_ENEMY_PROJECTILE){
+        this->shouldDestroy = true;
+        playerJustDied(getGameplay());
+    }
 }
 
 void playerOnDestroy(Entity* this){

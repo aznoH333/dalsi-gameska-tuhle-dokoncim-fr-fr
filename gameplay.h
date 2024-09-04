@@ -14,6 +14,7 @@ struct Gameplay{
     int startWaterHeight;
     float waterProgress;
     int currentPassiveMarkerEffect;
+    int respawnCount;
 };
 
 typedef struct Gameplay Gameplay;
@@ -23,6 +24,7 @@ typedef struct Gameplay Gameplay;
 #define MARKER_EFFECT_FLY_BLUE 2
 #define MARKER_EFFECT_STOP 3
 #define MARKER_EFFECT_CUSTOM_SCRIPT 4
+#define DEFAULT_PLAYER_HP 2
 
 Gameplay* getGameplay();
 void unloadGameplay(Gameplay* g);
@@ -35,4 +37,6 @@ void setPlayerCoordinates(Gameplay* gameplay, float x, float y);
 void setWaterHeight(int height);
 void touchedLevelExit(Gameplay* this);
 void resetWater();
+
+void playerJustDied(Gameplay* this);
 #endif

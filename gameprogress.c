@@ -4,6 +4,8 @@
 #include "gutil.h"
 #include "particleEffect.h"
 #include "gframework.h"
+#include "gameplay.h"
+#include "spritedata.h"
 
 GameProgress* gameProgressInstance;
 
@@ -65,6 +67,10 @@ void addScore(int x, int y, int ammount){
     
 }
 
+#define HEALTH_DISPLAY_X 10
+#define HEALTH_DISPLAY_Y 10
+#define HEALTH_DISPLAY_GAP 16
+
 void displayPlayerUi(){
     GameProgress* g = getGameProgress();
     g->scoreSizeMultiplier -= g->scoreSizeMultiplier > 0;
@@ -74,5 +80,12 @@ void displayPlayerUi(){
     float multiplierPercentage = ((float)g->scoreSizeMultiplier / MAX_SCORE_SIZE_MULTIPLIER);
     // i have no clue why but an offset of 20 produces the correct results
     drawTextF("score %010d", 1000 - (20 * multiplierPercentage), 8, 2.0f + (0.3f * multiplierPercentage), WHITE, LAYER_STATIC_UI, g->score);
+
+
+    // health display
+    int hp = getGameplay()->respawnCount;
+    for (int i = 0; i < hp; i++){
+        drawS(SPRITE_START_EFFECTS + 27, HEALTH_DISPLAY_X + (i * HEALTH_DISPLAY_GAP), HEALTH_DISPLAY_Y, 2.0f, LAYER_STATIC_UI);
+    }
 }
 
