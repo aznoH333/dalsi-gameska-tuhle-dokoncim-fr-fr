@@ -52,11 +52,12 @@ int main(void)
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
     // 33. fix cpt unfortunate facial hair lol
-    // 34. jump height buffering
     // 36. taking damage/ dying
     // 37. music is leaking memmory??
     // 38. implement continue button
-    // 39.
+    // 39. most blue monster variants have wrong stats
+    // 40. kayote time
+    // 41.
 
 
 

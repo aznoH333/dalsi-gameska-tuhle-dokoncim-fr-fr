@@ -15,6 +15,7 @@ Entity* initPlayer(int x, int y){
     p->yVelocity = 0;
     p->flip = 0;
     p->fireCooldown = 0;
+    p->jumpHeightBuffer = 0;
 
     Entity* out = initEntity(x, y - 6, 16, 22, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 
@@ -22,7 +23,7 @@ Entity* initPlayer(int x, int y){
 }
 
 
-const float GRAVITY = 0.1f;
+const float GRAVITY = 0.2f;
 const float JUMP_STRENGTH = 3.4f;
 const int UPPER_BODY_OFFSET = -6;
 const float WALK_ACCELERATION = 0.2f;
@@ -30,6 +31,7 @@ const float MAX_WALK_SPEED = 2.0f;
 const int BULLET_SPAWN_OFFSET_Y = 10;
 const int BULLET_SPAWN_OFFSET_X = 8;
 const int FIRE_COOLDWON = 6;
+const int JUMP_BUFFER_LENGTH = 10;
 void playerUpdate(Entity* this){
     Player* data = this->data;
     Gameplay* gameplay = getGameplay();
@@ -71,7 +73,9 @@ void playerUpdate(Entity* this){
     // vertical movement
     {
         if (!isTouchingGround){
-            data->yVelocity += GRAVITY;
+            if (data->jumpHeightBuffer == 0){
+                data->yVelocity += GRAVITY;
+            }
         }else {
             // fix y
             
@@ -91,7 +95,14 @@ void playerUpdate(Entity* this){
         // jumping
         if (IsKeyDown(KEY_W) && isTouchingGround){
             data->yVelocity -= JUMP_STRENGTH;
+            data->jumpHeightBuffer = JUMP_BUFFER_LENGTH;
             playSound("walk.wav");
+        }
+
+        if (IsKeyDown(KEY_W) && data->jumpHeightBuffer > 0){
+            data->jumpHeightBuffer--;
+        }else {
+            data->jumpHeightBuffer = 0;
         }
     }
     

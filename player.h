@@ -8,6 +8,7 @@ struct Player{
     float yVelocity;
     bool flip;
     int fireCooldown;
+    int jumpHeightBuffer;
 };
 typedef struct Player Player;
 
