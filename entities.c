@@ -109,7 +109,7 @@ void activateEntityMarker(EntityMarker* marker){
         case 1: // level exit
             addEntity(getEntityManager(), initExit(marker->x * 16, marker->y * 16));
             break;
-        case 36: // water
+        case 34: // water
             setWaterHeight(marker->y * 16);
             break;
 
