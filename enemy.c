@@ -262,12 +262,10 @@ void gunnerUpdate(Entity* this){
     {// shooting
         if (gunnerData->cooldown > 0){
             gunnerData->cooldown -= 1; 
-        }else if (gameplay->playerX < this->x != data->flipDirection){
-            
+        }else{
             // fire
             gunnerData->cooldown = gunnerData->fireRate;
-            addEntity(m, initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 4, ENTITY_ENEMY, BULLET_FLAG_SPAWN_DECAL));
-            
+            addEntity(m, initBullet(this->x, this->y + 6, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS + 4, ENTITY_ENEMY, BULLET_FLAG_SPAWN_DECAL));
         }
     }
 
