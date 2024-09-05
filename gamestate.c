@@ -6,6 +6,68 @@
 #include <stdio.h>
 
 
+//--------------------------------------------------
+// screen transitions
+//--------------------------------------------------
+
+#define SCREEN_TRANSITION_PIXEL_SIZE DEFAULT_CAMERA_ZOOM
+#define SCREEN_TRANSITION_WIDTH DEFAULT_GAME_WIDTH / 16 + 1
+#define SCREEN_TRANSITION_HEIGHT DEFAULT_GAME_HEIGHT /16 + 1
+
+void updateScreenTransition(GameState* this){
+    if (this->screenTransition == 0){
+        return;
+    }
+
+    this->screenTransition--;
+
+
+    float transitionPercentage = ((float)this->screenTransition / (float)SCREEN_TRANSITION_LENGTH) * 2.6f - 1.3f;
+    // draw
+    for (int x = 0; x < SCREEN_TRANSITION_WIDTH; x++){
+        
+        // calculate sprite
+        int spriteIndex = 0;
+        float xPrecentage = ((float)x / (float)(SCREEN_TRANSITION_WIDTH));
+        float distToNearestEgde = xPrecentage - transitionPercentage;
+
+
+        if (xPrecentage < transitionPercentage - 0.15f || xPrecentage > transitionPercentage + 1.15f){
+            continue;
+        // hardcoded garbage
+        }else if (distToNearestEgde < -0.15f || distToNearestEgde > 1.15f){
+            spriteIndex = 3;
+        }
+        else if (distToNearestEgde < -0.10f || distToNearestEgde > 1.10f){
+            spriteIndex = 2;
+        }else if (distToNearestEgde < -0.05f || distToNearestEgde > 1.05f){
+            spriteIndex = 1;
+        }
+
+
+        // draw collumn
+        for (int y = 0; y < SCREEN_TRANSITION_HEIGHT; y++){
+            drawS(SPRITE_START_EFFECTS + 35 + spriteIndex, x * 16 * SCREEN_TRANSITION_PIXEL_SIZE, y * 16 * SCREEN_TRANSITION_PIXEL_SIZE, SCREEN_TRANSITION_PIXEL_SIZE, LAYER_STATIC_UI);
+        }
+    }
+
+    // do transition
+    if (this->screenTransition == SCREEN_TRANSITION_LENGTH >> 1){
+        changeGameState(this, this->screenTransitionTarget);
+        this->screenTransitionTarget = -1;
+
+    }
+}
+
+
+void activateScreenTransition(GameState* this, int newState){
+    if (this->screenTransition == 0){
+        this->screenTransition = SCREEN_TRANSITION_LENGTH;
+        this->screenTransitionTarget = newState;
+    }
+
+}
+
 
 //--------------------------------------------------
 // gamestate functions
@@ -66,6 +128,8 @@ GameState* initGameState(){
     out->currentState = GAME_STATE_EDITOR;
     out->gameplay = getGameplay();
     out->editor = getLevelEditor();
+    out->screenTransition = 0;
+    out->screenTransitionTarget = -1;
     loadCurrentState(out);
     out->nextLevel = 0;
 
@@ -120,6 +184,10 @@ void updateGameState(GameState* gamestate){
     if (IsKeyPressed(KEY_THREE)){
         changeGameState(gamestate, 2);
     }
+
+    if (IsKeyPressed(KEY_FOUR)){
+        gamestate->screenTransition = 100;
+    }
     
     
     switch (gamestate->currentState) {
@@ -137,10 +205,15 @@ void updateGameState(GameState* gamestate){
             break;
     }
 
+    updateScreenTransition(gamestate);
+
+
 
     if (pendingGameState != -1){
         updateGameStateChange(gamestate);
     }
+
+    
 }
 
 
@@ -160,7 +233,8 @@ void startCurrentLevel(GameState* this){
     Level* temp = loadLevel(a);
     setLevelScreen(this->nextLevel + 1, temp->name);
     unloadLevel(temp);
-    changeGameState(this, GAME_STATE_LEVEL_SCREEN);
+    activateScreenTransition(this, GAME_STATE_LEVEL_SCREEN);
+    //changeGameState(this, GAME_STATE_LEVEL_SCREEN);
 }
 
 void setNextLevelIndex(GameState* this, int index){

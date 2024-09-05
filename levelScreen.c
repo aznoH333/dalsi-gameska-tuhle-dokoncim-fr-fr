@@ -27,6 +27,7 @@ void updateLevelScreen(){
     if (sTransitionTimer > 0){
         sTransitionTimer--;
     }else {
-        changeGameState(getGameState(), GAME_STATE_GAME);
+        activateScreenTransition(getGameState(), GAME_STATE_GAME);
+        //changeGameState(getGameState(), GAME_STATE_GAME);
     }
 }

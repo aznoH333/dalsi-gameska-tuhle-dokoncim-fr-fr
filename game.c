@@ -61,7 +61,6 @@ int main(void)
     // 43. make dying / respawning more dramatic 
     // 44. add invincibility time after respawning
     // 45. game over screen
-    //      47. screen transitions
     // 48. make liquids affect gameplay
     // 49.
 
