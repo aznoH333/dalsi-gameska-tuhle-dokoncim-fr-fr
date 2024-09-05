@@ -2,6 +2,7 @@
 #include "gameCamera.h"
 #include "gameprogress.h"
 #include "mainMenu.h"
+#include "levelScreen.h"
 #include <stdio.h>
 
 
@@ -131,6 +132,9 @@ void updateGameState(GameState* gamestate){
         case GAME_STATE_GAME:
             updateGameplay(gamestate->gameplay);
             break;
+        case GAME_STATE_LEVEL_SCREEN:
+            updateLevelScreen();
+            break;
     }
 
 
@@ -149,9 +153,14 @@ void goToNextLevel(GameState* this){
 }
 
 void startCurrentLevel(GameState* this){
-    gLog(LOG_DBG, "starting level %s", convertLevelIndexToFilePath(this->nextLevel));
-    changeGameState(this, GAME_STATE_GAME);
-
+    
+    char* a = convertLevelIndexToFilePath(this->nextLevel);
+    gLog(LOG_DBG, "starting level %s", a);
+    //changeGameState(this, GAME_STATE_GAME);
+    Level* temp = loadLevel(a);
+    setLevelScreen(this->nextLevel + 1, temp->name);
+    unloadLevel(temp);
+    changeGameState(this, GAME_STATE_LEVEL_SCREEN);
 }
 
 void setNextLevelIndex(GameState* this, int index){
