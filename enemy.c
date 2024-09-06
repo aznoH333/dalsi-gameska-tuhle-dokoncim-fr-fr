@@ -11,6 +11,7 @@
 #include "extraGraphics.h"
 #include "gameprogress.h"
 #include <stdlib.h>
+#include "gameCamera.h"
 
 
 
@@ -309,6 +310,11 @@ void genericEnemyUpdate(Entity* this){
         }
     }
     
+    {// check on screen position
+        if (!isOnScreen(getCameraManager(), this->x, this->y, this->w, this->h)){
+            this->shouldDestroy = true;
+        }
+    }
     
     {// draw
         // hurt timer
@@ -371,6 +377,10 @@ void enemyUpdate(Entity* this){
             }
         }
     }
+
+
+    
+
     genericEnemyUpdate(this);
 }
 

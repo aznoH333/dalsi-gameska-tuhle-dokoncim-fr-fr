@@ -28,6 +28,8 @@ struct CameraManager{
     bool reachedEnd;
     float cameraSpeed;
     int markerCameraType;
+    char startTimer;
+
 };
 typedef struct CameraManager CameraManager;
 
@@ -39,6 +41,8 @@ void updateGameCameraPosition(CameraManager* manager, float x, float y);
 void addCameraMarker(CameraManager* manager, int x, int y, int type, int extraEffect);
 void clearCameraMarkers(CameraManager* manager);
 void unloadCameraManager(CameraManager* manager);
+bool isOnScreen(CameraManager* manager, int x, int y, int w, int h);
+void resetCameraManager(CameraManager* manager);
 
 
 

@@ -43,7 +43,6 @@ int main(void)
     // 03. scripting
     // 07. better ui
     // 13. player to world collisions are still fucked
-    // 14. enemies dont despawn properly?
     // 20. goomba stomping ????
     // 21. add more sounds for enemies
     // 22. death scream
@@ -62,7 +61,6 @@ int main(void)
     // 44. add invincibility time after respawning
     // 48. make liquids affect gameplay
     // 49. bug? sometime level name doesnt display?
-    // 50. make going out of bounds kill the player
     // 51.
 
 

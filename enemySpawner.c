@@ -3,6 +3,7 @@
 #include "spritedata.h"
 #include "particleEffect.h"
 #include "gameplay.h"
+#include "gameCamera.h"
 
 void initBasedOnType(EnemySpawner* data, int type){
     switch (type) {
@@ -69,6 +70,10 @@ void spawnerUpdate(Entity* this){
         if (data->enemySpawnCount == 0){
             this->shouldDestroy = true;
         }
+    }
+
+    if (!isOnScreen(getCameraManager(), this->x, this->y, this->w, this->h)){
+        this->shouldDestroy = true;
     }
 
 }

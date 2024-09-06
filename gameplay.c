@@ -170,7 +170,7 @@ EntityMarker* getCollidingMarker(Gameplay* g, Entity* entity){
 
 void unloadGameplay(Gameplay* g){
     if (g->hasLoadedLevel){
-        clearCameraMarkers(getCameraManager());
+        resetCameraManager(getCameraManager());
         removeAllEntities(getEntityManager());
         g->hasLoadedLevel = false;
         unloadLevel(g->level);

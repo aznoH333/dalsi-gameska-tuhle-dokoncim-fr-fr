@@ -19,6 +19,7 @@ CameraManager* initCameraManager(){
     out->reachedEnd = false;
     out->cameraSpeed = 0;
     out->markerCameraType = 0;
+    out->startTimer = 10;
 
     return out;
 }
@@ -134,7 +135,7 @@ void updateCameraManager(CameraManager* manager){
             manager->currentProgress += manager->cameraSpeed;
         }
     }
-
+    manager->startTimer -= manager->startTimer > 0;
 
     setCameraPos((Vector2){manager->cameraX, manager->cameraY});
 }
@@ -155,5 +156,15 @@ void updateGameCameraPosition(CameraManager* manager, float x, float y){
     if (xProgress > manager->currentProgress){
         manager->currentProgress = xProgress;
     }
+}
+
+bool isOnScreen(CameraManager* manager, int x, int y, int w, int h){
+    return checkBoxCollisions(manager->cameraX, manager->cameraY, DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT, x, y, w, h) || manager->startTimer != 0;
+}
+
+
+void resetCameraManager(CameraManager* this){
+    clearCameraMarkers(this);
+    this->startTimer = 10;
 
 }

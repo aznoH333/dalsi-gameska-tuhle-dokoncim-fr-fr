@@ -122,10 +122,20 @@ void playerUpdate(Entity* this){
         
         data->fireCooldown -= data->fireCooldown > 0;
 
-        updateGameCameraPosition(getCameraManager(), this->x, this->y);
+        CameraManager* cameraMan = getCameraManager();
+
+        updateGameCameraPosition(cameraMan, this->x, this->y);
 
         // update gameplay
         setPlayerCoordinates(gameplay, this->x, this->y);
+
+
+        // check if should die
+        if (!isOnScreen(cameraMan, this->x, this->y, this->w, this->h)){
+            playerJustDied(getGameplay());
+            
+            this->shouldDestroy = true;
+        }
     }
 
 
@@ -164,8 +174,9 @@ void playerUpdate(Entity* this){
 
 void playerOnCollide(Entity* this, Entity* other){
     if (other->identifier == ENTITY_ENEMY || other->identifier == ENTITY_ENEMY_PROJECTILE){
-        this->shouldDestroy = true;
         playerJustDied(getGameplay());
+        
+        this->shouldDestroy = true;
     }
 }
 
