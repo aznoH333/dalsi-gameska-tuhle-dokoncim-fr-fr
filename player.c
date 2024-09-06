@@ -8,7 +8,7 @@
 #include "gameCamera.h"
 #include "spritedata.h"
 
-Entity* initPlayer(int x, int y){
+Entity* initPlayer(int x, int y, unsigned char invincibilityTimer){
     Player* p = malloc(sizeof(Player));
 
     p->xVelocity = 0;
@@ -16,6 +16,7 @@ Entity* initPlayer(int x, int y){
     p->flip = 0;
     p->fireCooldown = 0;
     p->jumpHeightBuffer = 0;
+    p->invincibilityTimer = invincibilityTimer;
 
     Entity* out = initEntity(x, y - 6, 16, 22, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 
@@ -119,6 +120,8 @@ void playerUpdate(Entity* this){
     {
         this->x += data->xVelocity;
         this->y += data->yVelocity;
+
+        data->invincibilityTimer -= data->invincibilityTimer > 0;
         
         data->fireCooldown -= data->fireCooldown > 0;
 
@@ -127,7 +130,7 @@ void playerUpdate(Entity* this){
         updateGameCameraPosition(cameraMan, this->x, this->y);
 
         // update gameplay
-        setPlayerCoordinates(gameplay, this->x, this->y);
+        setPlayerCoordinates(gameplay, this->x, this->y, isTouchingGround);
 
 
         // check if should die
@@ -140,7 +143,7 @@ void playerUpdate(Entity* this){
 
 
     // draw
-    {
+    if (data->invincibilityTimer % 6 < 3){
         // choose animation sprites
         int upperSprite = 5;
         int lowerSprite = 0;
@@ -173,7 +176,7 @@ void playerUpdate(Entity* this){
 }
 
 void playerOnCollide(Entity* this, Entity* other){
-    if (other->identifier == ENTITY_ENEMY || other->identifier == ENTITY_ENEMY_PROJECTILE){
+    if (((Player*)this->data)->invincibilityTimer == 0 && (other->identifier == ENTITY_ENEMY || other->identifier == ENTITY_ENEMY_PROJECTILE)){
         playerJustDied(getGameplay());
         
         this->destroyFlag = DESTROY_NORMAL;

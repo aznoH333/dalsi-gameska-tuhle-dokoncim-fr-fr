@@ -56,8 +56,6 @@ int main(void)
     // 40. kayote jump time
     // 41. jump input buffering
     // 42. make flies not able to spawn near the player
-    // 43. make dying / respawning more dramatic 
-    // 44. add invincibility time after respawning
     // 48. make liquids affect gameplay
     // 49. bug? sometime level name doesnt display?
     // 52. 

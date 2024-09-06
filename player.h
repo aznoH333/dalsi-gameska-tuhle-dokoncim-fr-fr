@@ -9,13 +9,14 @@ struct Player{
     bool flip;
     int fireCooldown;
     int jumpHeightBuffer;
+    unsigned char invincibilityTimer;
 };
 typedef struct Player Player;
 
 
 
 
-Entity* initPlayer(int x, int y);
+Entity* initPlayer(int x, int y, unsigned char invincibilityTimer);
 void playerUpdate(Entity* this);
 void playerOnCollide(Entity* this, Entity* other);
 void playerOnDestroy(Entity* this);

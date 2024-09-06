@@ -15,12 +15,15 @@ Gameplay* initGameplay(){
     output->level = 0;
     output->playerX = 0.0f;
     output->playerY = 0.0f;
+    output->playerRespawnX = 0.0f;
+    output->playerRespawnY = 0.0f;
     output->hasLoadedLevel = false;
     output->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
     output->startWaterHeight = -1;
     output->targetWaterHeight = -1;
     output->waterProgress = 0.0f;
     output->respawnCount = DEFAULT_PLAYER_HP;
+    output->respawnTimer = 0;
     return output;    
 }
 
@@ -60,6 +63,8 @@ void startLevel(Gameplay* g, const char* levelPath){
     resetWater();
     // reset hp
     g->respawnCount = DEFAULT_PLAYER_HP;
+    g->playerRespawnX = -99999;
+    g->playerRespawnY = 0;
 
 
     // level load
@@ -108,7 +113,7 @@ void startLevel(Gameplay* g, const char* levelPath){
             }
         }
         updateGameCameraPosition(getCameraManager(), playerMarker->x * 16, playerMarker->y * 16);
-        addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16));
+        addEntity(getEntityManager(), initPlayer(playerMarker->x * 16, playerMarker->y * 16, 0));
     }
 
 
@@ -148,9 +153,13 @@ void resetWater(){
     g->waterProgress = 0;
 }
 
-void setPlayerCoordinates(Gameplay* gameplay, float x, float y){
+void setPlayerCoordinates(Gameplay* gameplay, float x, float y, bool isGrounded){
     gameplay->playerX = x;
     gameplay->playerY = y;
+    if (isGrounded && x - gameplay->playerRespawnX > 128){
+        gameplay->playerRespawnX = x;
+        gameplay->playerRespawnY = y;
+    }
 }
 
 
@@ -271,6 +280,8 @@ void updateWater(Gameplay* this){
         }
     }
 }
+#define PLAYER_RESPAWN_INVINCIBILITY 140
+#define PLAYER_RESPAWN_TIMER 30
 
 void updateGameplay(Gameplay* g){
     drawLevel(g->level, LEVEL_DRAW_GAME);
@@ -279,17 +290,22 @@ void updateGameplay(Gameplay* g){
     updateEntityManager(getEntityManager());
     updateCameraManager(getCameraManager());
     updateWater(g);
-}
 
+
+    g->respawnTimer -= g->respawnTimer >= 0;
+    if (g->respawnTimer == 0){
+        addEntity(getEntityManager(), initPlayer(g->playerRespawnX, g->playerRespawnY, PLAYER_RESPAWN_INVINCIBILITY));
+    }
+    
+}
 
 
 void playerJustDied(Gameplay* this){
     if (this->respawnCount > 0){
         this->respawnCount--;
         // respawn player
-        
-        CameraManager* cameraMan = getCameraManager();
-        addEntity(getEntityManager(), initPlayer(cameraMan->cameraX + 32, cameraMan->cameraY + 32));
+        this->respawnTimer = PLAYER_RESPAWN_TIMER;
+        //addEntity(getEntityManager(), initPlayer(this->playerRespawnX, this->playerRespawnY, PLAYER_RESPAWN_INVINCIBILITY));
     }else {
         activateScreenTransition(getGameState(), GAME_STATE_GAME_OVER);
     }
