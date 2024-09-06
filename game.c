@@ -58,7 +58,8 @@ int main(void)
     // 42. make flies not able to spawn near the player
     // 48. make liquids affect gameplay
     // 49. bug? sometime level name doesnt display?
-    // 52. 
+    // 52. something wacky is going on with level loading (sometimes reads names wrong or searches for later levels)
+    // 53.
 
 
 
