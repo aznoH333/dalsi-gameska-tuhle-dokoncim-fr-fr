@@ -90,7 +90,7 @@ void particleUpdate(Entity* this){
     {
         data->lifeTime--;
         if (data->lifeTime == 0){
-            this->shouldDestroy = true;
+            this->destroyFlag = DESTROY_NORMAL;
         }
     }
     

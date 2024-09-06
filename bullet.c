@@ -31,7 +31,7 @@ void bulletUpdate(Entity* this){
     // collisions
     {
         if (!doesFlagApply(BULLET_FLAG_PHASING, data) && collidesWithLevel(gameplay->level, this->x, this->y, this->w, this->h)){
-            this->shouldDestroy = true;
+            this->destroyFlag = DESTROY_NORMAL;
         }
     }
 
@@ -42,7 +42,7 @@ void bulletUpdate(Entity* this){
         this->y += data->yVelocity;
         data->lifeTime--;
         if (data->lifeTime <= 0){
-            this->shouldDestroy = true;
+            this->destroyFlag = DESTROY_NORMAL;
         }
     }
 

@@ -68,12 +68,12 @@ void spawnerUpdate(Entity* this){
         addEntity(getEntityManager(), enemy);
         data->enemySpawnCount--;
         if (data->enemySpawnCount == 0){
-            this->shouldDestroy = true;
+            this->destroyFlag = DESTROY_NORMAL;
         }
     }
 
     if (!isOnScreen(getCameraManager(), this->x, this->y, this->w, this->h)){
-        this->shouldDestroy = true;
+        this->destroyFlag = DESTROY_NORMAL;
     }
 
 }

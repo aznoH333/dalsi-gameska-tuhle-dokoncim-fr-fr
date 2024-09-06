@@ -312,7 +312,7 @@ void genericEnemyUpdate(Entity* this){
     
     {// check on screen position
         if (!isOnScreen(getCameraManager(), this->x, this->y, this->w, this->h)){
-            this->shouldDestroy = true;
+            this->destroyFlag = DESTROY_SILENT;
         }
     }
     
@@ -619,7 +619,7 @@ void takeDamage(Entity* this, int damage){
     data->hurtTimer = HURT_TIMER_MAX;
 
     if (data->health <= 0){
-        this->shouldDestroy = true;
+        this->destroyFlag = DESTROY_NORMAL;
     }
 }
 
@@ -629,7 +629,7 @@ void enemyOnCollide(Entity* this, Entity* other){
         
         Bullet* otherData = other->data;
         takeDamage(this, otherData->damage);
-        other->shouldDestroy = true;
+        other->destroyFlag = DESTROY_NORMAL;
         
         const char* soundName;
         Enemy* data = this->data;

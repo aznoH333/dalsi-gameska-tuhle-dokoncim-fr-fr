@@ -134,7 +134,7 @@ void playerUpdate(Entity* this){
         if (!isOnScreen(cameraMan, this->x, this->y, this->w, this->h)){
             playerJustDied(getGameplay());
             
-            this->shouldDestroy = true;
+            this->destroyFlag = DESTROY_NORMAL;
         }
     }
 
@@ -176,7 +176,7 @@ void playerOnCollide(Entity* this, Entity* other){
     if (other->identifier == ENTITY_ENEMY || other->identifier == ENTITY_ENEMY_PROJECTILE){
         playerJustDied(getGameplay());
         
-        this->shouldDestroy = true;
+        this->destroyFlag = DESTROY_NORMAL;
     }
 }
 

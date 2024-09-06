@@ -15,7 +15,9 @@ struct EntityMarker{
 
 typedef struct EntityMarker EntityMarker;
 
-
+#define DESTROY_NO 0
+#define DESTROY_NORMAL 1
+#define DESTROY_SILENT 2
 
 struct Entity{
     float x;
@@ -23,7 +25,7 @@ struct Entity{
     int w;
     int h;
     int identifier;
-    bool shouldDestroy;
+    char destroyFlag;
     void* data;
     int extraIndex;
     void (*updateFunction)(struct Entity*);

@@ -142,7 +142,7 @@ Entity* initEntity(int x, int y, int w, int h, int identifier, void* data, void 
     out->h = h;
     out->extraIndex = -1;
     out->identifier = identifier;
-    out->shouldDestroy = false;
+    out->destroyFlag = DESTROY_NO;
     out->data = data;
     out->updateFunction = updateFunction;
     out->onCollide = onCollide;
@@ -213,8 +213,10 @@ void updateEntityManager(EntityManager* manager){
         
 
         // destroy
-        if (ent->shouldDestroy){
-            ent->onDestroy(ent);
+        if (ent->destroyFlag > 0){
+            if (ent->destroyFlag == DESTROY_NORMAL){
+                ent->onDestroy(ent);
+            }
             ent->clean(ent);
             free(ent->data);
             free(ent);
