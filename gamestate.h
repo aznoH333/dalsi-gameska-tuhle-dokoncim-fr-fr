@@ -35,6 +35,7 @@ void activateScreenTransition(GameState* this, int newState);
 void goToNextLevel(GameState* gamestate);
 void startCurrentLevel(GameState* gamestate);
 void setNextLevelIndex(GameState* gamestate, int index);
+void continueLevel(GameState* gamestate);
 
 
 

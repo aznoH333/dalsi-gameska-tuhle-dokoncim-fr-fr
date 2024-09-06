@@ -25,7 +25,7 @@ void handleButtonFunctions(int buttonIndex){
             startCurrentLevel(getGameState());
             break;
         case 1: // continue
-            gLog(LOG_ERR, "not implemented");
+            continueLevel(getGameState());
             break;
         case 2: // fullscreen
             gfullscreen();

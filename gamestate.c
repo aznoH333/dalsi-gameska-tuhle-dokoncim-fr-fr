@@ -249,3 +249,8 @@ void setNextLevelIndex(GameState* this, int index){
     
     this->nextLevel = index;
 }
+
+void continueLevel(GameState* this){
+    setNextLevelIndex(this, getGameProgress()->lastPlayedLevel);
+    startCurrentLevel(this);
+}

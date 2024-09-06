@@ -40,7 +40,7 @@ void updateGameOverScreen(){
     // activation
     if (IsKeyPressed(KEY_ENTER)){
         if (selectedOption == 0){
-            gLog(LOG_ERR, "not implemented");
+            continueLevel(getGameState());
         }else {
             activateScreenTransition(getGameState(), GAME_STATE_MAIN_MENU);
         }
