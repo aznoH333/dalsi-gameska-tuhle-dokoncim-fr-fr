@@ -52,7 +52,7 @@ int main(void)
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
     // 33. fix cpt unfortunate facial hair lol
     // 37. music is leaking memmory??
-    // 38. implement continue button
+    //      38. implement continue button
     // 39. most blue monster variants have wrong stats
     // 40. kayote jump time
     // 41. jump input buffering

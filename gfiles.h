@@ -8,10 +8,15 @@
 
 #define MAX_FILE_SIZE 1000000
 
+
+#define FILE_STATUS_OK 0
+#define FILE_STATUS_NOT_FOUND 1
+
 struct File{
     char* contents;
     int contentsLength;
     const char* filePath;
+    char loadStatus;
 };
 typedef struct File File;
 

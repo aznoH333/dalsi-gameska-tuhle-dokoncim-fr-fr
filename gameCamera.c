@@ -157,9 +157,9 @@ void updateGameCameraPosition(CameraManager* manager, float x, float y){
         manager->currentProgress = xProgress;
     }
 }
-
+#define SAFETY_MARGIN 200
 bool isOnScreen(CameraManager* manager, int x, int y, int w, int h){
-    return checkBoxCollisions(manager->cameraX, manager->cameraY, DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT, x, y, w, h) || manager->startTimer != 0;
+    return checkBoxCollisions(manager->cameraX, manager->cameraY - SAFETY_MARGIN, DEFAULT_GAME_WIDTH, DEFAULT_GAME_HEIGHT + SAFETY_MARGIN, x, y, w, h) || manager->startTimer != 0;
 }
 
 

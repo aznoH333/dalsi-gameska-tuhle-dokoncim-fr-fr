@@ -10,6 +10,8 @@ File* initFile(const char* filePath){
     if (file == NULL){
         // create empty file
         out->contentsLength = 0;
+        out->loadStatus = FILE_STATUS_NOT_FOUND;
+        out->contents = NULL;
         gLog(LOG_WAR, "%s file not found. Creating new empty file", filePath);
 
     }else {
@@ -38,6 +40,7 @@ File* initFile(const char* filePath){
             out->contents[i] = temp[i];
         }
         out->contentsLength = index;
+        out->loadStatus = FILE_STATUS_OK;
 
         fclose(file);
     }

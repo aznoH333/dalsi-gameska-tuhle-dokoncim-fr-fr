@@ -6,6 +6,7 @@
 #include "gframework.h"
 #include "gameplay.h"
 #include "spritedata.h"
+#include "gfiles.h"
 
 GameProgress* gameProgressInstance;
 
@@ -13,6 +14,11 @@ GameProgress* initGameProgress(){
     GameProgress* output = malloc(sizeof(GameProgress));
     output->score = 0;
     output->scoreSizeMultiplier = 0;
+    output->lastClearedLevel = 0;
+    output->lastPlayedLevel = 0;
+
+    loadGameProgress(output);
+
     return output;
 }
 
@@ -24,6 +30,7 @@ GameProgress* getGameProgress(){
 
 
 void unloadGameProgress(){
+    saveGameProgress(getGameProgress());
     free(gameProgressInstance);
 }
 
@@ -89,3 +96,37 @@ void displayPlayerUi(){
     }
 }
 
+#define FILE_CONTENTS_SIZE 6
+void saveGameProgress(GameProgress* this){
+    File* file = initFile("./gamedata/game.prg");
+    char* fileContents = malloc(sizeof(char) * FILE_CONTENTS_SIZE);
+    writeIntAsChar(fileContents, this->score, 4, 0);
+
+    fileContents[4] = this->lastPlayedLevel;
+    fileContents[5] = this->lastClearedLevel;
+
+    setFileContents(file, fileContents, FILE_CONTENTS_SIZE);
+
+    saveFile(file);
+    unloadFile(file);
+
+}
+void loadGameProgress(GameProgress* this){
+
+    File* file = initFile("./gamedata/game.prg");
+
+    if (file->loadStatus == FILE_STATUS_OK){
+    
+
+        char s[4] = {file->contents[0], file->contents[1], file->contents[2], file->contents[3]};
+        this->score = parseStrToInt(s, 4);
+        this->lastPlayedLevel = file->contents[4];
+        this->lastClearedLevel = file->contents[5];
+        unloadFile(file);
+
+    }else {
+        free(file);
+    }
+
+
+}
