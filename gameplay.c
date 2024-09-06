@@ -291,6 +291,6 @@ void playerJustDied(Gameplay* this){
         CameraManager* cameraMan = getCameraManager();
         addEntity(getEntityManager(), initPlayer(cameraMan->cameraX + 32, cameraMan->cameraY + 32));
     }else {
-        gLog(LOG_ERR, "game over. not implemented");
+        activateScreenTransition(getGameState(), GAME_STATE_GAME_OVER);
     }
 }

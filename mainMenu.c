@@ -46,8 +46,8 @@ void updateMainMenu(){
 
         // draw selector
         if (selectedOtion == i){
-            drawFS(CURSOR_SPRITE, OPTION_START_X - offset - CURSOR_GAP, (OPTION_START_Y + i * OPTION_GAP), false, 2.0f, LAYER_STATIC_UI);
-            drawFS(CURSOR_SPRITE, OPTION_START_X + (offset) + CURSOR_GAP - 32, (OPTION_START_Y + i * OPTION_GAP), true, 2.0f, LAYER_STATIC_UI);
+            drawFS(CURSOR_SPRITE, OPTION_START_X - offset - CURSOR_GAP, (OPTION_START_Y + i * OPTION_GAP) - 8, false, 2.0f, LAYER_STATIC_UI);
+            drawFS(CURSOR_SPRITE, OPTION_START_X + (offset) + CURSOR_GAP - 32, (OPTION_START_Y + i * OPTION_GAP) - 8, true, 2.0f, LAYER_STATIC_UI);
 
         }
     }

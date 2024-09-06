@@ -38,10 +38,10 @@ int main(void)
     GameState* game = getGameState();
 
     // TODO
-    // 1. get some decent tunes
-    // 2. sometimes camera flashes when changing markers
-    // 3. scripting
-    // 7. better ui
+    // 01. get some decent tunes
+    // 02. sometimes camera flashes when changing markers
+    // 03. scripting
+    // 07. better ui
     // 13. player to world collisions are still fucked
     // 14. enemies dont despawn properly?
     // 20. goomba stomping ????
@@ -60,9 +60,10 @@ int main(void)
     // 42. make flies not able to spawn near the player
     // 43. make dying / respawning more dramatic 
     // 44. add invincibility time after respawning
-    // 45. game over screen
     // 48. make liquids affect gameplay
-    // 49.
+    // 49. bug? sometime level name doesnt display?
+    // 50. make going out of bounds kill the player
+    // 51.
 
 
 

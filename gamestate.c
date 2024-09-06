@@ -4,6 +4,7 @@
 #include "mainMenu.h"
 #include "levelScreen.h"
 #include <stdio.h>
+#include "gameover.h"
 
 
 //--------------------------------------------------
@@ -117,6 +118,9 @@ void loadCurrentState(GameState* gamestate){
             break;
         case GAME_STATE_LEVEL_SCREEN:
             break;
+        case GAME_STATE_GAME_OVER:
+            resetGameOverScreen();
+            break;
     }
 }
 
@@ -202,6 +206,9 @@ void updateGameState(GameState* gamestate){
             break;
         case GAME_STATE_LEVEL_SCREEN:
             updateLevelScreen();
+            break;
+        case GAME_STATE_GAME_OVER:
+            updateGameOverScreen();
             break;
     }
 
