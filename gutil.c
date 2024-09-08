@@ -269,6 +269,22 @@ void writeIntAsChar(char* targetStr, int input, int size, int index){
     }
 }
 
+void writeObjectToCharArray(void* object, int size, char* target, int index){
+    char* content = (char*)object;
+
+    for (int i = 0; i < size; i++){
+        target[i + index] = content[i];
+    }
+}
+void readObjectFromCharArray(void* object, int size, char* target, int index){
+    char* content = (char*) object;
+
+    for (int i = 0; i < size; i++){
+        content[i] = target[i + index];
+    }
+}
+
+
 //------------------------------------------------------------------------------------
 // random
 //------------------------------------------------------------------------------------

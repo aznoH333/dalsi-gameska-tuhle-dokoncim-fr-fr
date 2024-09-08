@@ -98,9 +98,13 @@ void displayPlayerUi(){
 
 #define FILE_CONTENTS_SIZE 6
 void saveGameProgress(GameProgress* this){
+    
+    gLog(LOG_INF, "saving progress score[%d] lastplayed[%d] lastcleared[%d]", this->score, this->lastPlayedLevel, this->lastClearedLevel);
+    
     File* file = initFile("./gamedata/game.prg");
     char* fileContents = malloc(sizeof(char) * FILE_CONTENTS_SIZE);
-    writeIntAsChar(fileContents, this->score, 4, 0);
+    
+    writeObjectToCharArray(&this->score, sizeof(int), fileContents, 0);
 
     fileContents[4] = this->lastPlayedLevel;
     fileContents[5] = this->lastClearedLevel;
@@ -117,12 +121,14 @@ void loadGameProgress(GameProgress* this){
 
     if (file->loadStatus == FILE_STATUS_OK){
     
-
-        char s[4] = {file->contents[0], file->contents[1], file->contents[2], file->contents[3]};
-        this->score = parseStrToInt(s, 4);
+        char s[4] = {file->contents[0], file->contents[1]};
+        readObjectFromCharArray(&this->score, sizeof(int), file->contents, 0);
         this->lastPlayedLevel = file->contents[4];
         this->lastClearedLevel = file->contents[5];
         unloadFile(file);
+
+        gLog(LOG_INF, "loading progress score[%d] lastplayed[%d] lastcleared[%d]", this->score, this->lastPlayedLevel, this->lastClearedLevel);
+
 
     }else {
         free(file);

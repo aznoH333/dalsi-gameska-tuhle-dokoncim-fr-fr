@@ -55,8 +55,9 @@ int main(void)
     // 41. jump input buffering
     // 48. make liquids affect gameplay
     // 53. variable spawn rates for spawners
-    // 54. progress loading is broken?
-    // 55.
+    // 56. continue level not beaing saved
+    // 57. last player level not being saved
+    // 58.
 
 
 
