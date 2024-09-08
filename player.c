@@ -62,7 +62,7 @@ void playerUpdate(Entity* this){
         
         // wall collisions
         if (collidesWithLevel(gameplay->level,
-            this->x + ((data->xVelocity > 0) * this->w) + (2 * boolToSign(data->xVelocity > 0.0f)) + data->xVelocity,
+            this->x + ((data->xVelocity > 0) * (this->w + 1)) + (2 * boolToSign(data->xVelocity > 0.0f)) + data->xVelocity,
             this->y,
             1, 
             this->h - 1)){
