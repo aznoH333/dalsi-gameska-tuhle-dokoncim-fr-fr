@@ -205,20 +205,30 @@ void setMarkerEffect(int markerEffect){
     
 }
 
+bool isFlySpawnValid(Gameplay* this, int x, int y){
+    float distance = pythagoras(this->playerX, this->playerY, x, y);
+
+    return distance > 128;
+}
+
 
 void doFlyEffect(Gameplay* this, int flyType){
-    if (getGlobalTimer() % 80 == 0){
+    if (getGlobalTimer() % 110 == 0){
         // get camera position
         CameraManager* camera = getCameraManager();
 
         int x = camera->cameraX;
         int y = camera->cameraY;
 
-        // pick x
-        x += getRandomInt(DEFAULT_GAME_WIDTH);
-        if (randomChance(0.5f)){
-            y += DEFAULT_GAME_HEIGHT;
-        }
+        int attemtps = 5;
+        do {
+            // pick x
+            x += getRandomInt(DEFAULT_GAME_WIDTH);
+            if (randomChance(0.5f)){
+                y += DEFAULT_GAME_HEIGHT;
+            }
+        } while (!isFlySpawnValid(this, x, y) && attemtps-- > 0);
+
 
         addEntity(getEntityManager(), initEnemy(x, y, ENEMY_FLY_RED + flyType));
     }
