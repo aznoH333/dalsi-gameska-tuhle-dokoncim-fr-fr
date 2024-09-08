@@ -1,14 +1,16 @@
 #include "levelScreen.h"
 #include "gframework.h"
 #include "gamestate.h"
+#include "gutil.h"
 
 int sLevelNumber = 0;
-char* sLevelName = 0;
+char sLevelName[20];
 int sTransitionTimer = 0;
 #define DEFAULT_TRANSITION_LENGTH 120
 
 void setLevelScreen(int levelNumber, char* levelName){
-    sLevelName = levelName;
+    gLog(LOG_INF,"Level screen updated [%d] [%s]", levelNumber, levelName);
+    copyCharArray(levelName, sLevelName, 20);
     sLevelNumber = levelNumber;
     sTransitionTimer = DEFAULT_TRANSITION_LENGTH;
 }

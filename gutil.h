@@ -38,6 +38,8 @@ int strLength(const char* str);
 const char* boolToStr(bool value);
 char* strConcat(const char* str1, const char* str2);
 char* intToStr(int value);
+void copyCharArray(char* original, char* target, int size);
+char* createCharArrayCopy(char* original, int size);
 
 
 // file stuff

@@ -147,6 +147,20 @@ char* intToStr(int value){
 }
 
 
+
+void copyCharArray(char* original, char* target, int size){
+    for (int i = 0; i < size; i++){
+        target[i] = original[i];
+    }
+}
+char* createCharArrayCopy(char* original, int size){
+    char* output = malloc(sizeof(char) * size);
+
+    copyCharArray(original, output, size);
+
+    return output;
+}
+
 //------------------------------------------------------------------------------------
 // misc
 //------------------------------------------------------------------------------------
@@ -158,6 +172,7 @@ bool checkBoxCollisions(int x1, int y1, int w1, int h1, int x2, int y2, int w2, 
            y1 + h1 > y2 &&
            y1 < y2 + h2;
 }
+
 
 
 
@@ -285,3 +300,4 @@ bool randomChance(float chance){
 int getAnimationSprite(int startFrame, int endFrame, int frameDuration, int timer){
     return  (timer / frameDuration) % (endFrame - startFrame + 1) + startFrame;
 }
+

@@ -54,10 +54,9 @@ int main(void)
     // 40. kayote jump time
     // 41. jump input buffering
     // 48. make liquids affect gameplay
-    // 49. bug? sometime level name doesnt display?
-    // 52. something wacky is going on with level loading (sometimes reads names wrong or searches for later levels)
     // 53. variable spawn rates for spawners
-    // 54. 
+    // 54. progress loading is broken?
+    // 55.
 
 
 
