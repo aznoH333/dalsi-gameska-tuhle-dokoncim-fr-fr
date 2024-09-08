@@ -42,8 +42,6 @@ int main(void)
     // 02. sometimes camera flashes when changing markers
     // 03. scripting
     // 07. better ui
-    // 13. player to world collisions are still fucked
-    // 20. goomba stomping ????
     // 21. add more sounds for enemies
     // 22. death scream
     // 23. projectile shoot sounds
@@ -59,7 +57,8 @@ int main(void)
     // 48. make liquids affect gameplay
     // 49. bug? sometime level name doesnt display?
     // 52. something wacky is going on with level loading (sometimes reads names wrong or searches for later levels)
-    // 53.
+    // 53. variable spawn rates for spawners
+    // 54. 
 
 
 

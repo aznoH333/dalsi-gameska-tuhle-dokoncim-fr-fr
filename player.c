@@ -80,9 +80,12 @@ void playerUpdate(Entity* this){
         }else {
             // fix y
             
-            if (data->yVelocity != 0.0f){
+            if (data->yVelocity > 1.0f){
                 this->y = (int) this->y - ((int) this->y % 16) + (this->h - 16) + 3; // proč +3 já nevím, ale funguje to perfektně
             }
+            /*
+            if (data->yVelocity != 0.0f){
+            }*/
             
 
             data->yVelocity = 0.0f;
