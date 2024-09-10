@@ -54,10 +54,11 @@ int main(void)
     // 40. kayote jump time
     // 41. jump input buffering
     // 48. make liquids affect gameplay
-    // 53. variable spawn rates for spawners
     // 56. continue level not beaing saved
     // 57. last player level not being saved
-    // 58.
+    //      58. screen edges are too agresive when deleting enemies
+    // 59. player collisions are still fucked when near ledges
+    // 60.
 
 
 

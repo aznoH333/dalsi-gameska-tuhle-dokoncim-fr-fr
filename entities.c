@@ -8,6 +8,7 @@
 #include "enemySpawner.h"
 #include "cannonTurret.h"
 #include "levelExit.h"
+#include "gameCamera.h"
 
 // Entity marker
 EntityMarker* initEntityMarker(char* levelData, int markerIndex){
@@ -99,7 +100,9 @@ void activateEntityMarker(EntityMarker* marker){
     int spawnerType = getEnemySpawnerType(marker->id);
 
     if (spawnerType != -1){
-        addEntity(getEntityManager(), initSpawner(marker->x * 16, marker->y * 16, spawnerType));
+        
+
+        addEntity(getEntityManager(), initSpawner(marker->x * 16, marker->y * 16, spawnerType, getCameraManager()->currentPoint->cameraPointType == CAMERA_POINT_AUTO));
         return;
     }
 

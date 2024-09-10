@@ -33,11 +33,27 @@ void initBasedOnType(EnemySpawner* data, int type){
 
 const int DEFAULT_COOLDOWN = 90;
 const int SPAWN_ANIMATION_SPEED = 20;
-Entity* initSpawner(int x, int y, int type){
+void initBasedOnSpawnerType(EnemySpawner* data, int spawnerType){
+    switch (spawnerType) {
+        case SPAWNER_TYPE_SLOW:
+            data->cooldown = DEFAULT_COOLDOWN;
+            data->defaultCooldown = DEFAULT_COOLDOWN;
+            data->enemySpawnCount = 15;
+            break;
+        case SPAWNER_TYPE_FAST:
+            data->cooldown = 25;
+            data->defaultCooldown = 25;
+            data->enemySpawnCount = 5;
+            break;
+    }
+}
+
+
+Entity* initSpawner(int x, int y, int type, int spawnerType){
     EnemySpawner* data = malloc(sizeof(EnemySpawner));
     initBasedOnType(data, type);
-    data->cooldown = DEFAULT_COOLDOWN;
-    data->enemySpawnCount = 25;
+    initBasedOnSpawnerType(data, spawnerType);
+
     data->direction = false;
     Entity* out = initEntity(x, y, 16, 16, ENTITY_OTHER, data, &spawnerUpdate, &spawnerOnCollide, &spawnerOnDestroy, &spawnerClean);
     return out;
@@ -62,7 +78,7 @@ void spawnerUpdate(Entity* this){
     }
 
     else if (data->cooldown == 0){
-        data->cooldown = DEFAULT_COOLDOWN;
+        data->cooldown = data->defaultCooldown;
         // spawn enemy
         Entity* enemy = initEnemyDirectional(this->x, this->y, data->enemyId, data->direction);
         addEntity(getEntityManager(), enemy);
