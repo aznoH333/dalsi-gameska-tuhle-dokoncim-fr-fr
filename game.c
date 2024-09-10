@@ -56,9 +56,11 @@ int main(void)
     // 48. make liquids affect gameplay
     // 56. continue level not beaing saved
     // 57. last player level not being saved
-    //      58. screen edges are too agresive when deleting enemies
     // 59. player collisions are still fucked when near ledges
-    // 60.
+    // 60. player respawning is janky
+    // 61. fix schizo guy in lvl 1
+    // 62. fix invis wall in lvl 1
+    // 63.
 
 
 
