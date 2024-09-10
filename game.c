@@ -53,8 +53,6 @@ int main(void)
     // 40. kayote jump time
     // 41. jump input buffering
     // 48. make liquids affect gameplay
-    // 56. continue level not beaing saved
-    // 57. last player level not being saved
     // 59. player collisions are still fucked when near ledges
     // 61. fix schizo guy in lvl 1
     // 62. fix invis wall in lvl 1

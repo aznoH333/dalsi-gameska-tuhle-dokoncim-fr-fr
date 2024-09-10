@@ -234,14 +234,20 @@ void goToNextLevel(GameState* this){
 
 void startCurrentLevel(GameState* this){
     
+    // update last played and last cleared
+    GameProgress* g = getGameProgress();
+    g->lastPlayedLevel = this->nextLevel;
+    if (this->nextLevel - 1 > g->lastClearedLevel){
+        g->lastClearedLevel = this->nextLevel - 1;
+    }
+
+    // start level
     char* a = convertLevelIndexToFilePath(this->nextLevel);
     gLog(LOG_DBG, "starting level %s", a);
-    //changeGameState(this, GAME_STATE_GAME);
     Level* temp = loadLevel(a);
     setLevelScreen(this->nextLevel + 1, temp->name);
     unloadLevel(temp);
     activateScreenTransition(this, GAME_STATE_LEVEL_SCREEN);
-    //changeGameState(this, GAME_STATE_LEVEL_SCREEN);
 }
 
 void setNextLevelIndex(GameState* this, int index){
