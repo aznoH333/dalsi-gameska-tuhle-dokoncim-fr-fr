@@ -156,7 +156,7 @@ void resetWater(){
 void setPlayerCoordinates(Gameplay* gameplay, float x, float y, bool isGrounded){
     gameplay->playerX = x;
     gameplay->playerY = y;
-    if (isGrounded && x - gameplay->playerRespawnX > 128){
+    if (isGrounded && pythagoras(gameplay->playerRespawnX, gameplay->playerRespawnY, x, y) > 100.0f){
         gameplay->playerRespawnX = x;
         gameplay->playerRespawnY = y;
     }
@@ -301,10 +301,20 @@ void updateGameplay(Gameplay* g){
     updateCameraManager(getCameraManager());
     updateWater(g);
 
-
+    // respawn
     g->respawnTimer -= g->respawnTimer >= 0;
     if (g->respawnTimer == 0){
-        addEntity(getEntityManager(), initPlayer(g->playerRespawnX, g->playerRespawnY, PLAYER_RESPAWN_INVINCIBILITY));
+        int rX = g->playerRespawnX;
+        int rY = g->playerRespawnY;
+
+        CameraManager* cam = getCameraManager();
+        // set fallback coordinates if respawn is too far
+        if (!isOnScreen(cam, rX, rY, 16, 16)){
+            rX = cam->cameraX + 64;
+            rY = cam->cameraY + 64;
+        }
+        
+        addEntity(getEntityManager(), initPlayer(rX, rY, PLAYER_RESPAWN_INVINCIBILITY));
     }
     
 }

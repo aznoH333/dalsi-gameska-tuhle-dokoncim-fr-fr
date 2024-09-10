@@ -49,7 +49,6 @@ int main(void)
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
     // 33. fix cpt unfortunate facial hair lol
-    // 37. music is leaking memmory??
     // 39. most blue monster variants have wrong stats
     // 40. kayote jump time
     // 41. jump input buffering
@@ -57,7 +56,6 @@ int main(void)
     // 56. continue level not beaing saved
     // 57. last player level not being saved
     // 59. player collisions are still fucked when near ledges
-    // 60. player respawning is janky
     // 61. fix schizo guy in lvl 1
     // 62. fix invis wall in lvl 1
     // 63.
