@@ -10,6 +10,7 @@ struct Player{
     int fireCooldown;
     int jumpHeightBuffer;
     unsigned char invincibilityTimer;
+    unsigned char jumpInputBuffer;
 };
 typedef struct Player Player;
 

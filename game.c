@@ -51,7 +51,6 @@ int main(void)
     // 33. fix cpt unfortunate facial hair lol
     // 39. most blue monster variants have wrong stats
     // 40. kayote jump time
-    // 41. jump input buffering
     // 48. make liquids affect gameplay
     // 59. player collisions are still fucked when near ledges
     // 61. fix schizo guy in lvl 1

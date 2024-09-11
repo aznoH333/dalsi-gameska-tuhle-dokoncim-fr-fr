@@ -8,6 +8,16 @@
 #include "gameCamera.h"
 #include "spritedata.h"
 
+
+
+#define JUMP_INPUT_BUFFER 10
+
+
+#define WALK_LEFT_KEY KEY_A
+#define WALK_RIGHT_KEY KEY_D
+#define JUMP_KEY KEY_W 
+#define SHOOT_KEY KEY_SPACE
+
 Entity* initPlayer(int x, int y, unsigned char invincibilityTimer){
     Player* p = malloc(sizeof(Player));
 
@@ -17,12 +27,17 @@ Entity* initPlayer(int x, int y, unsigned char invincibilityTimer){
     p->fireCooldown = 0;
     p->jumpHeightBuffer = 0;
     p->invincibilityTimer = invincibilityTimer;
+    p->jumpInputBuffer = 0;
 
     Entity* out = initEntity(x, y - 6, 16, 22, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 
     return out;
 }
 
+
+bool shouldJump(Player* this){
+    return this->jumpInputBuffer > 0;
+}
 
 const float GRAVITY = 0.2f;
 const float JUMP_STRENGTH = 3.4f;
@@ -43,19 +58,19 @@ void playerUpdate(Entity* this){
     
     // horizontal movement
     {
-        if (IsKeyDown(KEY_D) == IsKeyDown(KEY_A)){
+        if (IsKeyDown(WALK_RIGHT_KEY) == IsKeyDown(WALK_LEFT_KEY)){
             // decelerate
             data->xVelocity -= sign(data->xVelocity) * WALK_ACCELERATION;
             if (fabs(data->xVelocity) < 0.2f){
                 data->xVelocity = 0.0f;
             }
         }
-        else if (IsKeyDown(KEY_D) && data->xVelocity < MAX_WALK_SPEED){
+        else if (IsKeyDown(WALK_RIGHT_KEY) && data->xVelocity < MAX_WALK_SPEED){
             data->xVelocity += WALK_ACCELERATION;
 
             data->flip = 0;
         }
-        else if (IsKeyDown(KEY_A) && data->xVelocity > -MAX_WALK_SPEED){
+        else if (IsKeyDown(WALK_LEFT_KEY) && data->xVelocity > -MAX_WALK_SPEED){
             data->xVelocity -= WALK_ACCELERATION;
             data->flip = 1;
         }
@@ -97,22 +112,28 @@ void playerUpdate(Entity* this){
             data->yVelocity = 0.0f;
         }
         // jumping
-        if (IsKeyDown(KEY_W) && isTouchingGround){
+        if (shouldJump(data) && isTouchingGround){
             data->yVelocity -= JUMP_STRENGTH;
             data->jumpHeightBuffer = JUMP_BUFFER_LENGTH;
             playSound("walk.wav");
         }
 
-        if (IsKeyDown(KEY_W) && data->jumpHeightBuffer > 0){
+        // height buffering should still wait for actual inputs
+        if (IsKeyDown(JUMP_KEY) && data->jumpHeightBuffer > 0){
             data->jumpHeightBuffer--;
         }else {
             data->jumpHeightBuffer = 0;
+        }
+
+        // update input buffer
+        if (IsKeyDown(JUMP_KEY)){
+            data->jumpInputBuffer = JUMP_INPUT_BUFFER;
         }
     }
     
     // shooting
     {
-        if (IsKeyDown(KEY_SPACE) && data->fireCooldown == 0){
+        if (IsKeyDown(SHOOT_KEY) && data->fireCooldown == 0){
             playSound("shoot.wav");
             addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, 0, SPRITE_START_EFFECTS + 23, ENTITY_PLAYER_PROJECTILE, BULLET_FLAG_SPAWN_DECAL));
             data->fireCooldown = FIRE_COOLDWON;
@@ -135,7 +156,7 @@ void playerUpdate(Entity* this){
         // update gameplay
         setPlayerCoordinates(gameplay, this->x, this->y, isTouchingGround);
 
-
+        data->jumpInputBuffer -= data->jumpInputBuffer > 0;
         // check if should die
         if (!isOnScreen(cameraMan, this->x, this->y, this->w, this->h)){
             playerJustDied(getGameplay());
