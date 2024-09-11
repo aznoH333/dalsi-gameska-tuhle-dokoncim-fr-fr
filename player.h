@@ -11,6 +11,7 @@ struct Player{
     int jumpHeightBuffer;
     unsigned char invincibilityTimer;
     unsigned char jumpInputBuffer;
+    unsigned char kayoteTime;
 };
 typedef struct Player Player;
 

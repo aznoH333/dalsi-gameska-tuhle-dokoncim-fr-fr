@@ -11,6 +11,7 @@
 
 
 #define JUMP_INPUT_BUFFER 10
+#define KAYOTE_TIME 10
 
 
 #define WALK_LEFT_KEY KEY_A
@@ -28,6 +29,7 @@ Entity* initPlayer(int x, int y, unsigned char invincibilityTimer){
     p->jumpHeightBuffer = 0;
     p->invincibilityTimer = invincibilityTimer;
     p->jumpInputBuffer = 0;
+    p->kayoteTime = 0;
 
     Entity* out = initEntity(x, y - 6, 16, 22, ENTITY_PLAYER, p, &playerUpdate, &playerOnCollide, &playerOnDestroy, &playerClean);
 
@@ -112,10 +114,12 @@ void playerUpdate(Entity* this){
             data->yVelocity = 0.0f;
         }
         // jumping
-        if (shouldJump(data) && isTouchingGround){
-            data->yVelocity -= JUMP_STRENGTH;
+        if (shouldJump(data) && data->kayoteTime > 0){
+            data->yVelocity = -JUMP_STRENGTH;
             data->jumpHeightBuffer = JUMP_BUFFER_LENGTH;
             playSound("walk.wav");
+            data->kayoteTime = 0;
+            isTouchingGround = false;
         }
 
         // height buffering should still wait for actual inputs
@@ -157,6 +161,8 @@ void playerUpdate(Entity* this){
         setPlayerCoordinates(gameplay, this->x, this->y, isTouchingGround);
 
         data->jumpInputBuffer -= data->jumpInputBuffer > 0;
+        data->kayoteTime -= data->kayoteTime > 0;
+        if (isTouchingGround) data->kayoteTime = KAYOTE_TIME;
         // check if should die
         if (!isOnScreen(cameraMan, this->x, this->y, this->w, this->h)){
             playerJustDied(getGameplay());
@@ -191,7 +197,7 @@ void playerUpdate(Entity* this){
                 upperSprite = 6;
             }
         }
-
+        textF("kayote time %d", 64, 128, data->kayoteTime);
 
         // draw sprites
         drawF(lowerSprite, this->x, this->y - UPPER_BODY_OFFSET, data->flip, LAYER_OBJECTS);
