@@ -83,6 +83,7 @@ void unloadCurrentState(GameState* gamestate){
         case GAME_STATE_GAME:
             ShowCursor();
             unloadGameplay(gamestate->gameplay);
+            stopMusic();
             break;
         case GAME_STATE_LEVEL_SCREEN:
             break;
@@ -117,6 +118,7 @@ void loadCurrentState(GameState* gamestate){
             startLevel(gamestate->gameplay, convertLevelIndexToFilePath(gamestate->nextLevel));
             break;
         case GAME_STATE_LEVEL_SCREEN:
+            playSound("level_start.wav");
             break;
         case GAME_STATE_GAME_OVER:
             resetGameOverScreen();

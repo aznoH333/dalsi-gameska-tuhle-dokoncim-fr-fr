@@ -2,6 +2,7 @@
 #include "gframework.h"
 #include "spritedata.h"
 #include "bullet.h"
+#include "gameCamera.h"
 
 Entity* initCannon(int x, int y, char direction){
     CannonTurret* data = malloc(sizeof(CannonTurret));
@@ -33,12 +34,16 @@ void cannonUpdate(Entity* this){
             yV = boolToSign(data->direction == DIRECTION_DOWN) * CANNON_PROJECTILE_SPEED;
         }
 
-        addEntity(getEntityManager(), initBullet(this->x, this->y, xV, yV, SPRITE_START_ENTITIES + 14, ENTITY_ENEMY, BULLET_FLAG_PHASING));
+        addEntity(getEntityManager(), initBullet(this->x, this->y, xV, yV, SPRITE_START_ENTITIES + 12, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_EXPLODE));
+    }
+
+    if (!isOnScreen(getCameraManager(), this->x, this->y, 16, 16)){
+        this->destroyFlag = DESTROY_SILENT;
     }
 
 
     // draw
-    draw(data->direction + SPRITE_START_ENTITIES + 10, this->x, this->y, LAYER_OBJECTS);
+    draw(data->direction + SPRITE_START_ENTITIES + 8, this->x, this->y, LAYER_OBJECTS);
 }
 
 

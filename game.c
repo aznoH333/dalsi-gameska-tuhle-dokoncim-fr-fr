@@ -45,7 +45,6 @@ int main(void)
     // 21. add more sounds for enemies
     // 22. death scream
     // 23. projectile shoot sounds
-    // 25. flame particles
     // 27. fix fullscreen // shits is fucked on wayland
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
     // 33. fix cpt unfortunate facial hair lol
@@ -54,7 +53,9 @@ int main(void)
     // 59. player collisions are still fucked when near ledges
     // 61. fix schizo guy in lvl 1
     // 62. fix invis wall in lvl 1
-    // 63.
+    // 63. title screen
+    // 64. "logo"
+    // 65. acredituj ballera https://opengameart.org/content/nes-shooter-music-5-tracks-3-jingles
 
 
 

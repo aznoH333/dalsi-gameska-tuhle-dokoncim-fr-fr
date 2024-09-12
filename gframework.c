@@ -486,7 +486,14 @@ void unloadMusic(){
 }
 
 void updateMusic(){
-	//UpdateMusicStream(*currentMusicTrackPtr);
+	if (currentMusicTrack != -1){
+		UpdateMusicStream(*currentMusicTrackPtr);
+	}
+}
+
+
+void stopMusic(){
+	currentMusicTrack = -1;
 }
 
 

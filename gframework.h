@@ -67,6 +67,7 @@ void playSound(const char* soundName);
 
 // music
 void playMusic(int songId);
+void stopMusic();
 
 // controll functions
 void fUpdate();

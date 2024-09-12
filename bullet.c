@@ -3,6 +3,7 @@
 #include "gameplay.h"
 #include "spritedata.h"
 #include "particleEffect.h"
+#include "extraGraphics.h"
 
 Entity* initBullet(int x, int y, float xVelocity, float yVelocity, int sprite, int team, char flags){
 
@@ -64,6 +65,8 @@ void bulletOnCollide(Entity* this, Entity* other){
 void bulletOnDestroy(Entity* this){
     if (doesFlagApply(BULLET_FLAG_SPAWN_DECAL, this->data)){
         addEntity(getEntityManager(), initStaticParticle(this->x + GetRandomValue(-2, 2), this->y - 6 + GetRandomValue(-2, 2), SPRITE_START_EFFECTS + 22, 10));
+    }else if (doesFlagApply(BULLET_FLAG_EXPLODE, this->data)){
+        addEntity(getEntityManager(), initExtraGraphic(this->x, this->y, GRAPHICS_DEATH_SMALL));
     }
 }
 

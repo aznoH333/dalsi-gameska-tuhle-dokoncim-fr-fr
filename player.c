@@ -197,8 +197,6 @@ void playerUpdate(Entity* this){
                 upperSprite = 6;
             }
         }
-        textF("kayote time %d", 64, 128, data->kayoteTime);
-
         // draw sprites
         drawF(lowerSprite, this->x, this->y - UPPER_BODY_OFFSET, data->flip, LAYER_OBJECTS);
         drawF(upperSprite, this->x, this->y, data->flip, LAYER_OBJECTS);

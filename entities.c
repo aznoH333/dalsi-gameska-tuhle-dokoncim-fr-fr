@@ -120,7 +120,7 @@ void activateEntityMarker(EntityMarker* marker){
         case 18:
         case 19:
         case 20: // cannon turret
-            addEntity(getEntityManager(), initCannon(marker->x * 16, marker->y * 16, marker->id - 19));
+            addEntity(getEntityManager(), initCannon(marker->x * 16, marker->y * 16, marker->id - 17));
             break;
     }
     

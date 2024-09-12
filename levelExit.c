@@ -29,6 +29,8 @@ void exitOnCollide(Entity* this, Entity* other){
         // exit level
         touchedLevelExit(getGameplay());
         this->destroyFlag = DESTROY_NORMAL;
+        stopMusic();
+        //playSound("win.wav");
         
         //gLog(LOG_ERR, "TODO not implemented");
     }
