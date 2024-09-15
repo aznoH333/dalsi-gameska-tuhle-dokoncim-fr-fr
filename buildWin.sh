@@ -12,4 +12,4 @@ done
 gcc -o game.exe $target_files -lraylib -lgdi32 -lwinmm
 rm *.o
 ./game.exe
-rm *.exe
+#rm *.exe

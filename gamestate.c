@@ -131,7 +131,7 @@ void loadCurrentState(GameState* gamestate){
 GameState* initGameState(){
     GameState* out = malloc(sizeof(GameState));
 
-    out->currentState = GAME_STATE_EDITOR;
+    out->currentState = GAME_STATE_MAIN_MENU;//GAME_STATE_EDITOR;
     out->gameplay = getGameplay();
     out->editor = getLevelEditor();
     out->screenTransition = 0;
