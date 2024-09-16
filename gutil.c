@@ -13,7 +13,7 @@
 // logging
 //------------------------------------------------------------------------------------
 
-#define CURRENT_LOG_LEVEL LOG_INF
+#define CURRENT_LOG_LEVEL LOG_DBG
 void gLog(int level, const char* str, ...){
     if (level > CURRENT_LOG_LEVEL){
         return;

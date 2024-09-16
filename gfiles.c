@@ -25,7 +25,8 @@ File* initFile(const char* filePath){
                 break;
             }
             
-            temp[index] = fgetc(file);
+            char c = fgetc(file);
+            temp[index] = c;
             index++;
             
             
@@ -33,6 +34,7 @@ File* initFile(const char* filePath){
                 gLog(LOG_ERR, "File read error. Max size exceeded %d", MAX_FILE_SIZE);
             }
         }
+        gLog(LOG_DBG, "read file size [%d]", index);
 
         // copy file contents
         out->contents = malloc(index * sizeof(char));

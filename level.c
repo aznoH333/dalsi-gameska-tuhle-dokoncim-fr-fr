@@ -14,6 +14,7 @@ void writeTileData(Level* lvl, char* fileData, int index, unsigned char** tileDa
 Level* loadLevel(const char* levePath){
     File* f = initFile(levePath);
 
+
     if (f->contentsLength < MIN_LEVEL_FILE_SIZE){
         gLog(LOG_ERR, "Invalid file : %s", levePath);
     }
