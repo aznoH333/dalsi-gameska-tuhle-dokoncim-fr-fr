@@ -42,8 +42,6 @@ int main(void)
     GameState* game = getGameState();
 
     // TODO
-    // 01. get some decent tunes
-    // 03. scripting
     // 07. better ui
     // 21. add more sounds for enemies
     // 22. death scream
@@ -53,15 +51,14 @@ int main(void)
     // 39. most blue monster variants have wrong stats
     // 48. make liquids affect gameplay
     // 59. player collisions are still fucked when near ledges
-    // 61. fix schizo guy in lvl 1
-    // 62. fix invis wall in lvl 1
     // 63. title screen
     // 64. "logo"
     // 65. acredituj ballera https://opengameart.org/content/nes-shooter-music-5-tracks-3-jingles
     // 68. ganeover jingle
     // 69. win jingle
     // 70. sound levels are wrong
-    // 71.
+    // 71. music doesnt loop correctly
+    // 72.
 
 
 

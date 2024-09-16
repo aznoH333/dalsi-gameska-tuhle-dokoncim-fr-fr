@@ -20,6 +20,7 @@ CameraManager* initCameraManager(){
     out->cameraSpeed = 0;
     out->markerCameraType = 0;
     out->startTimer = 10;
+    out->cameraSpeedMultiplier = 1.0f;
 
     return out;
 }
@@ -34,6 +35,7 @@ CameraManager* getCameraManager(){
 
 void calculateSegmentSpeed(CameraManager* manager){
     manager->cameraSpeed = 0.5 / pythagoras(manager->currentPoint->x, manager->currentPoint->y, manager->nextPoint->x, manager->nextPoint->y);
+    manager->cameraSpeed *= manager->cameraSpeedMultiplier;
 }
 
 void addCameraMarker(CameraManager* manager, int x, int y, int type, int extraEffect){
@@ -167,5 +169,11 @@ bool isOnScreen(CameraManager* manager, int x, int y, int w, int h){
 void resetCameraManager(CameraManager* this){
     clearCameraMarkers(this);
     this->startTimer = 10;
+    this->cameraSpeedMultiplier = 1.0f;
 
+}
+
+void setScrollSpeed(CameraManager* manager, float speed){
+    manager->cameraSpeedMultiplier = speed;
+    calculateSegmentSpeed(manager);
 }

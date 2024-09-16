@@ -18,6 +18,7 @@ struct Gameplay{
     int currentPassiveMarkerEffect;
     int respawnCount;
     char respawnTimer;
+    bool canTriggerScript;
 };
 
 typedef struct Gameplay Gameplay;

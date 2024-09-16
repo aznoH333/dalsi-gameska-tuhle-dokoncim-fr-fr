@@ -3,9 +3,8 @@
 #include "gameprogress.h"
 #include "mainMenu.h"
 #include "levelScreen.h"
-#include <stdio.h>
 #include "gameover.h"
-
+#include "levelScripts.h"
 
 //--------------------------------------------------
 // screen transitions
@@ -114,6 +113,7 @@ void loadCurrentState(GameState* gamestate){
             loadLevelEditorLevel(gamestate->editor, "./gamedata/editor/1.lvl");
             break;
         case GAME_STATE_GAME:
+            setScriptData(gamestate->nextLevel);
             HideCursor();
             startLevel(gamestate->gameplay, convertLevelIndexToFilePath(gamestate->nextLevel));
             break;

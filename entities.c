@@ -102,7 +102,7 @@ void activateEntityMarker(EntityMarker* marker){
     if (spawnerType != -1){
         
 
-        addEntity(getEntityManager(), initSpawner(marker->x * 16, marker->y * 16, spawnerType, getCameraManager()->currentPoint->cameraPointType == CAMERA_POINT_AUTO));
+        addEntity(getEntityManager(), initSpawner(marker->x * 16, marker->y * 16, spawnerType, getCameraManager()->markerCameraType == CAMERA_POINT_AUTO));
         return;
     }
 

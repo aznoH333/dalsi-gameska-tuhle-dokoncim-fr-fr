@@ -9,6 +9,8 @@
 #include "enemy.h"
 #include "spritedata.h"
 #include "gamestate.h"
+#include "levelScripts.h"
+
 
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -24,6 +26,7 @@ Gameplay* initGameplay(){
     output->waterProgress = 0.0f;
     output->respawnCount = DEFAULT_PLAYER_HP;
     output->respawnTimer = 0;
+    output->canTriggerScript = true;
     return output;    
 }
 
@@ -60,6 +63,7 @@ int getMarkerEffect(int markerId){
 }
 
 void startLevel(Gameplay* g, const char* levelPath){
+    
     resetWater();
     // reset hp
     g->respawnCount = DEFAULT_PLAYER_HP;
@@ -200,6 +204,7 @@ void setMarkerEffect(int markerEffect){
         getGameplay()->currentPassiveMarkerEffect = MARKER_EFFECT_NONE;
     }else {
         getGameplay()->currentPassiveMarkerEffect = markerEffect;
+        getGameplay()->canTriggerScript = true;
     }
 
     
@@ -235,6 +240,7 @@ void doFlyEffect(Gameplay* this, int flyType){
 }
 
 void updateScripts(Gameplay* this){
+    
     switch (this->currentPassiveMarkerEffect) {
         default:
         case MARKER_EFFECT_NONE: return;
@@ -243,7 +249,11 @@ void updateScripts(Gameplay* this){
             doFlyEffect(this, this->currentPassiveMarkerEffect - 1);
             return;
         case MARKER_EFFECT_CUSTOM_SCRIPT:
-            gLog(LOG_ERR, "Not yet implemented");
+            if (this->canTriggerScript){
+                activateScript();
+                this->canTriggerScript = false;
+            }
+
             return;        
     }
 }

@@ -29,6 +29,7 @@ struct CameraManager{
     float cameraSpeed;
     int markerCameraType;
     char startTimer;
+    float cameraSpeedMultiplier;
 
 };
 typedef struct CameraManager CameraManager;
@@ -43,6 +44,7 @@ void clearCameraMarkers(CameraManager* manager);
 void unloadCameraManager(CameraManager* manager);
 bool isOnScreen(CameraManager* manager, int x, int y, int w, int h);
 void resetCameraManager(CameraManager* manager);
+void setScrollSpeed(CameraManager* manager, float speed);
 
 
 
