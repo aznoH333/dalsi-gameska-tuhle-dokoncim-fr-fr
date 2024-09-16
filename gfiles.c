@@ -24,7 +24,11 @@ File* initFile(const char* filePath){
             
             char c = fgetc(file);
 
+
+
             if (c == EOF){
+                gLog(LOG_DBG, "Found feof ending read [%x] [%c] [%d]", c, c, c);
+                
                 break;
             }
 
