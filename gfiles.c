@@ -20,12 +20,14 @@ File* initFile(const char* filePath){
 
         int index = 0;
         for(;;){
-            if (feof(file)){
-                index--; // skip last char if feof
-                break;
-            }
+            
             
             char c = fgetc(file);
+
+            if (c == EOF){
+                break;
+            }
+
             temp[index] = c;
             index++;
             
