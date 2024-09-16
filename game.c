@@ -32,6 +32,10 @@
 //------------------------------------------------------------------------------------
 int main(void)
 {
+    
+    
+    gLog(LOG_DBG, "type sizes for os char[%d] int[%d]", sizeof(char), sizeof(int));
+    
     initFramework();
 
 
