@@ -440,7 +440,6 @@ void unloadSounds(){
 //------------------------------------------------------
 Vector* musicList;
 
-#define MUSIC_TRACK_COUNT 1
 int currentMusicTrack = -1;
 Music* currentMusicTrackPtr = 0;
 void playMusic(int songId){
@@ -493,6 +492,7 @@ void updateMusic(){
 
 
 void stopMusic(){
+	SeekMusicStream(*currentMusicTrackPtr, 0.0f);
 	currentMusicTrack = -1;
 }
 

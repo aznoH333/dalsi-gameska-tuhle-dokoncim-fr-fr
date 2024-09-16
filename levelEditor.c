@@ -403,7 +403,7 @@ void updateLevelEditor(LevelEditor* editor){
 
         if (editor->currentOperation == OPERATION_MENU){
             
-            drawUiIntSelector(&editor->level->songId, 4, 500, 200, "bg music id", editor->currentSelectedOption == 0);
+            drawUiIntSelector(&editor->level->songId, MUSIC_TRACK_COUNT - 1, 500, 200, "bg music id", editor->currentSelectedOption == 0);
             drawUiIntSelector(&editor->level->waterType, 3, 500, 232, "water type", editor->currentSelectedOption == 1);
 
             // level name
