@@ -5,7 +5,7 @@ File* initFile(const char* filePath){
 
     out->filePath = filePath;
 
-    FILE* file = fopen(filePath, "r");
+    FILE* file = fopen(filePath, "rb");
 
     if (file == NULL){
         // create empty file
