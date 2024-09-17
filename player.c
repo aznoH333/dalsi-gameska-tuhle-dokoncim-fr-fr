@@ -138,7 +138,7 @@ void playerUpdate(Entity* this){
     // shooting
     {
         if (IsKeyDown(SHOOT_KEY) && data->fireCooldown == 0){
-            playSound("shoot.wav");
+            playSoundVolume("shoot.wav", 0.3f);
             addEntity(entities, initBullet(this->x + (boolToSign(data->flip) * -BULLET_SPAWN_OFFSET_X) , this->y + BULLET_SPAWN_OFFSET_Y, boolToSign(data->flip) * -4, 0, SPRITE_START_EFFECTS + 23, ENTITY_PLAYER_PROJECTILE, BULLET_FLAG_SPAWN_DECAL));
             data->fireCooldown = FIRE_COOLDWON;
         }

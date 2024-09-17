@@ -415,7 +415,7 @@ void largeFlyUpdate(Entity* this){
     if (extraData->attackTimer < 15 && extraData->attackTimer % 5 == 0){
         // calc direction
         float dir = dirTowards(playerX, playerY, this->x, this->y);
-        playSound("enemy_beam.wav");
+        playSoundVolume("enemy_beam.wav", 1.0f);
         addEntity(getEntityManager(), initBullet(this->x, this->y, sin(dir) * LARGE_FLY_PROJ_SPEED, cos(dir) * LARGE_FLY_PROJ_SPEED, SPRITE_START_EFFECTS + 6 - (extraData->attackTimer == 0), ENTITY_ENEMY_PROJECTILE, 0));
     }
 
@@ -452,7 +452,7 @@ void squidUpdate(Entity* this){
     extraData->attackTimer--;
     if (extraData->attackTimer == 0){
         addEntity(getEntityManager(), initBullet(this->x, this->y, boolToSign(data->flipDirection) * 2.5f, 0.0f, SPRITE_START_EFFECTS, ENTITY_ENEMY, BULLET_FLAG_ANIMATED | BULLET_FLAG_PHASING));
-        playSound("enemy_beam.wav");
+        playSoundVolume("enemy_beam.wav", 1.0f);
         extraData->attackTimer = SQUID_FIRE_RATE;
     }
 

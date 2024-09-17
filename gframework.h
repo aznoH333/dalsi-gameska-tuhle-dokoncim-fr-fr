@@ -64,6 +64,8 @@ void drawFancyText(const char* text, int x, int y, int scale, Color color);
 
 // sounds
 void playSound(const char* soundName);
+void playSoundVolume(const char* soundName, float value);
+
 
 #define MUSIC_TRACK_COUNT 6
 

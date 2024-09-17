@@ -54,7 +54,6 @@ int main(void)
     // 65. acredituj ballera https://opengameart.org/content/nes-shooter-music-5-tracks-3-jingles
     // 68. gameover jingle
     // 69. win jingle
-    // 70. sound levels are wrong
     // 71. music doesnt loop correctly
     // 72. gameover art
     // 73.

@@ -398,10 +398,13 @@ bool isGameRunning(){
 //------------------------------------------------------
 Map* soundMap;
 void playSound(const char* soundName){
+	playSoundVolume(soundName, 0.4f);
+}
+
+void playSoundVolume(const char* soundName, float volume){
 	Sound* s = mapGet(soundMap, soundName);
-	SetSoundVolume(*s, 0.4f);
+	SetSoundVolume(*s, volume);
 	PlaySound(*s);
-	
 }
 
 void loadSounds(){
