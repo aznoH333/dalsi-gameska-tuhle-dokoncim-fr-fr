@@ -33,7 +33,7 @@ void cannonUpdate(Entity* this){
         }else {
             yV = boolToSign(data->direction == DIRECTION_DOWN) * CANNON_PROJECTILE_SPEED;
         }
-
+        playSound("cannon_turret.wav");
         addEntity(getEntityManager(), initBullet(this->x, this->y, xV, yV, SPRITE_START_ENTITIES + 12, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_EXPLODE));
     }
 

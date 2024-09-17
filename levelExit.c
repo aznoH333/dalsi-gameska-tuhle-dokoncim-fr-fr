@@ -28,6 +28,7 @@ void exitOnCollide(Entity* this, Entity* other){
     if (other->identifier == ENTITY_PLAYER){
         // exit level
         touchedLevelExit(getGameplay());
+        playSound("victory.wav");
         this->destroyFlag = DESTROY_NORMAL;
         stopMusic();
         //playSound("win.wav");

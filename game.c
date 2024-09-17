@@ -34,7 +34,6 @@ int main(void)
 {
     
     
-    gLog(LOG_DBG, "type sizes for os char[%d] int[%d]", sizeof(char), sizeof(int));
     
     initFramework();
 
@@ -45,7 +44,6 @@ int main(void)
     // 07. better ui
     // 21. add more sounds for enemies
     // 22. death scream
-    // 23. projectile shoot sounds
     // 28. try rebuilding raylib with -sdl https://github.com/gen2brain/raylib-go/issues/354
     // 33. fix cpt unfortunate facial hair lol
     // 39. most blue monster variants have wrong stats
@@ -54,11 +52,12 @@ int main(void)
     // 63. title screen
     // 64. "logo"
     // 65. acredituj ballera https://opengameart.org/content/nes-shooter-music-5-tracks-3-jingles
-    // 68. ganeover jingle
+    // 68. gameover jingle
     // 69. win jingle
     // 70. sound levels are wrong
     // 71. music doesnt loop correctly
-    // 72.
+    // 72. gameover art
+    // 73.
 
 
 
