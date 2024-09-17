@@ -58,8 +58,9 @@ void drawC(int spriteIndex, int x, int y, Color c, int layer);
 void drawS(int spriteIndex, int x, int y, float scale, int layer);
 void drawF(int spriteIndex, int x, int y, int flip, int layer);
 void draw(int spriteIndex, int x, int y, int layer);
-
 void drawFancyText(const char* text, int x, int y, int scale, Color color);
+void loadAdditionalImage(const char* path);
+void drawAdditionalImage(int index, int x, int y, float scale, int layer);
 
 
 // sounds

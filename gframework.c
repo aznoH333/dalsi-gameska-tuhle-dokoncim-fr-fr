@@ -31,9 +31,20 @@ FrameworkSpriteSheet mainSpriteSheet;
 FrameworkSpriteSheet initSpriteSheet(const char* spriteSheetPath, int defaultSpriteSize){
 	FrameworkSpriteSheet out;
 	out.spriteSheetTexture = LoadTexture(spriteSheetPath);
-	out.width = out.spriteSheetTexture.width / defaultSpriteSize;
-	out.height = out.spriteSheetTexture.height / defaultSpriteSize;
-	out.defaultSpriteSize = defaultSpriteSize;
+	
+	
+	if (defaultSpriteSize != -1){
+		out.width = out.spriteSheetTexture.width / defaultSpriteSize;
+		out.height = out.spriteSheetTexture.height / defaultSpriteSize;
+		out.defaultSpriteSize = defaultSpriteSize;
+	}else {
+		out.defaultSpriteSize = out.spriteSheetTexture.width;
+		out.width = 1;
+		out.height = 1;
+	}
+	
+	
+	
 	out.originOffset = defaultSpriteSize >> 1;
 	return out;
 }
@@ -316,6 +327,46 @@ void draw(int spriteIndex, int x, int y, int layer){
 }
 
 
+
+//---------------------------------------------------
+// additional images
+//---------------------------------------------------
+
+Vector* additionalSpritesheets;
+void loadAdditionalImage(const char* path){
+	FrameworkSpriteSheet sheet = initSpriteSheet(path, -1);
+	FrameworkSpriteSheet* ptr = malloc(sizeof(sheet));
+	memcpy(ptr, &sheet, sizeof(sheet));
+
+	vectorPush(additionalSpritesheets, ptr);
+}
+
+void drawAdditionalImage(int index, int x, int y, float scale, int layer){
+    
+	FrameworkSpriteSheet* sheet = vectorGet(additionalSpritesheets, index);
+	insertDrawRequest(0, x , y, 0.0f, FLIP_NONE, scale, WHITE, layer, sheet);
+
+}
+
+void unloadAdditionalImages(){
+	/* 
+
+	This probably leaks some memory
+	however if i try to unload the spritesheets i get a sigsev
+
+
+	for (int i = 0; i < additionalSpritesheets->elementCount; i++){
+		FrameworkSpriteSheet* ptr = vectorGet(additionalSpritesheets, i);
+		UnloadTexture(ptr->spriteSheetTexture);
+		unloadSpriteSheet(*ptr);
+	}*/
+	
+	vectorFree(additionalSpritesheets);
+}
+
+//---------------------------------------------------
+// control
+//---------------------------------------------------
 void updateMusic();
 void fUpdate(){
 	BeginTextureMode(renderTexture);
@@ -509,6 +560,7 @@ void initFramework(){
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_NAME);
 	InitAudioDevice();
 	SetTargetFPS(60);
+	additionalSpritesheets = initVector();
 	renderTexture = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
 	loadedSheet = initSpriteSheet("resources/spritesheet.png", DEFAULT_SPRITE_SIZE);
 	scalingFactor = currentScreenWidth /(float)(GetScreenWidth());
@@ -532,5 +584,6 @@ void disposeFramework(){
 	unloadSounds();
 	unloadMusic();
 	CloseWindow();
+	unloadAdditionalImages();
 }
 

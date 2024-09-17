@@ -36,7 +36,7 @@ int main(void)
     
     
     initFramework();
-
+    loadAdditionalImage("./resources/game_over_skull.png");
 
     GameState* game = getGameState();
 
