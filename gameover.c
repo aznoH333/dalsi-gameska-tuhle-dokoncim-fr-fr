@@ -5,11 +5,14 @@
 
 
 #define TEXT_X SCREEN_WIDTH / 2 - 60
-#define TEXT_Y SCREEN_HEIGHT / 2
+#define TEXT_Y SCREEN_HEIGHT / 4
 
 #define BUTTON1_X SCREEN_WIDTH / 2 - 160
 #define BUTTON2_X SCREEN_WIDTH / 2 + 100
-#define BUTTON_Y SCREEN_HEIGHT / 2 + 60
+#define BUTTON_Y SCREEN_HEIGHT / 2 + 140
+
+#define SKULL_X SCREEN_WIDTH / 2 - 110
+#define SKULL_Y SCREEN_HEIGHT / 2 - 130
 
 char selectedOption = 0;
 void updateGameOverScreen(){
@@ -19,6 +22,9 @@ void updateGameOverScreen(){
     // buttons
     textF("exit", BUTTON1_X, BUTTON_Y);
     textF("continue", BUTTON2_X, BUTTON_Y);
+
+    // skull
+    drawAdditionalImage(0, SKULL_X, SKULL_Y, DEFAULT_CAMERA_ZOOM, LAYER_STATIC_UI);
 
 
     // selector

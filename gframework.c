@@ -374,7 +374,7 @@ void fUpdate(){
 	updateCamera();
 	fTimer++;
     ClearBackground(BACKGROUND_COLOR);
-	updateMusic();
+	//updateMusic();
 	
 	for (int i = 0; i < LAYER_STATIC_UI; i++){
 		drawLayer(i);
