@@ -10,7 +10,8 @@
 #include "spritedata.h"
 #include "gamestate.h"
 #include "levelScripts.h"
-
+#include "bossSpawner.h"
+#include "particleEffect.h"
 
 Gameplay* initGameplay(){
     Gameplay* output = malloc(sizeof(Gameplay));
@@ -27,6 +28,7 @@ Gameplay* initGameplay(){
     output->respawnCount = DEFAULT_PLAYER_HP;
     output->respawnTimer = 0;
     output->canTriggerScript = true;
+    output->bossSpawnTimer = 0;
     return output;    
 }
 
@@ -194,6 +196,9 @@ void disposeGameplay(Gameplay* g){
     unloadGameplay(g);
     free(g);
 }
+//-------------------------------------------------------
+// Water
+//-------------------------------------------------------
 
 void setMarkerEffect(int markerEffect){
     if (markerEffect == MARKER_EFFECT_NONE){
@@ -257,7 +262,9 @@ void updateScripts(Gameplay* this){
             return;        
     }
 }
-
+//-------------------------------------------------------
+// Water
+//-------------------------------------------------------
 void setWaterHeight(int height){
     Gameplay* g = getGameplay();
     
@@ -302,7 +309,10 @@ void updateWater(Gameplay* this){
 }
 #define PLAYER_RESPAWN_INVINCIBILITY 140
 #define PLAYER_RESPAWN_TIMER 30
-
+//-------------------------------------------------------
+// Update
+//-------------------------------------------------------
+void updateBossSpawning(Gameplay* this);
 void updateGameplay(Gameplay* g){
     drawLevel(g->level, LEVEL_DRAW_GAME);
     displayPlayerUi();
@@ -310,6 +320,7 @@ void updateGameplay(Gameplay* g){
     updateEntityManager(getEntityManager());
     updateCameraManager(getCameraManager());
     updateWater(g);
+    updateBossSpawning(g);
 
     // respawn
     g->respawnTimer -= g->respawnTimer >= 0;
@@ -329,7 +340,9 @@ void updateGameplay(Gameplay* g){
     
 }
 
-
+//-------------------------------------------------------
+// Respawning
+//-------------------------------------------------------
 void playerJustDied(Gameplay* this){
     if (this->respawnCount > 0){
         this->respawnCount--;
@@ -338,5 +351,48 @@ void playerJustDied(Gameplay* this){
         //addEntity(getEntityManager(), initPlayer(this->playerRespawnX, this->playerRespawnY, PLAYER_RESPAWN_INVINCIBILITY));
     }else {
         activateScreenTransition(getGameState(), GAME_STATE_GAME_OVER);
+    }
+}
+
+//-------------------------------------------------------
+// Boss spawner
+//-------------------------------------------------------
+#define BOSS_SPAWN_TIME 180
+#define BOSS_SHOWUP 60
+void registerBossSpawner(Gameplay* this, Entity* spawner){
+    this->bossSpawnerPtr = spawner;
+}
+void spawnBoss(Gameplay* this){
+    fadeMusicAway();
+    this->bossSpawnTimer = BOSS_SPAWN_TIME;
+}
+
+
+void initBossParticle(Gameplay* this, int sprite, int x, int y){
+    Entity* p = initStaticParticle(this->bossSpawnerPtr->x + x, this->bossSpawnerPtr->y + y, sprite, BOSS_SHOWUP);
+    makeParticleChangeTransparency(p, 0, 255);
+    addEntity(getEntityManager(), p);
+}
+
+void initBossParticles(Gameplay* this){
+    int baseSprite = SPRITE_START_ENTITIES + 33 + ((((BossSpawner*)(this->bossSpawnerPtr->data))->bossType == 1) * 7);
+    initBossParticle(this, baseSprite + 2, -8, 0);
+    initBossParticle(this, baseSprite + 3, 8, 0);
+    // head
+    initBossParticle(this, baseSprite, -1, -11);
+}
+
+void updateBossSpawning(Gameplay* this){
+    this->bossSpawnTimer -= this->bossSpawnTimer > 0;
+
+
+    if (this->bossSpawnTimer == BOSS_SHOWUP){
+        // spawn fade particle
+        initBossParticles(this);
+        playMusic(6);
+    }else if (this->bossSpawnTimer == 1){
+        // spawn boss
+        addEntity(getEntityManager(), initEnemy(this->bossSpawnerPtr->x, this->bossSpawnerPtr->y, ((BossSpawner*)(this->bossSpawnerPtr->data))->bossType + ENEMY_BOSS_RED));
+        this->bossSpawnerPtr->destroyFlag = DESTROY_SILENT;
     }
 }

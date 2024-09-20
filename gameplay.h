@@ -5,6 +5,7 @@
 #include "entities.h"
 #include "gframework.h"
 
+
 struct Gameplay{
     Level* level;
     bool hasLoadedLevel;
@@ -19,6 +20,8 @@ struct Gameplay{
     int respawnCount;
     char respawnTimer;
     bool canTriggerScript;
+    Entity* bossSpawnerPtr;
+    unsigned char bossSpawnTimer;
 };
 
 typedef struct Gameplay Gameplay;
@@ -41,7 +44,11 @@ void setPlayerCoordinates(Gameplay* gameplay, float x, float y, bool isGrounded)
 void setWaterHeight(int height);
 void touchedLevelExit(Gameplay* this);
 void resetWater();
-
-
 void playerJustDied(Gameplay* this);
+
+
+// boss spawner
+void registerBossSpawner(Gameplay* this, Entity* spawner);
+void spawnBoss(Gameplay* this);
+
 #endif

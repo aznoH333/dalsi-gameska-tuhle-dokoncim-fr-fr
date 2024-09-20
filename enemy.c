@@ -12,6 +12,7 @@
 #include "gameprogress.h"
 #include <stdlib.h>
 #include "gameCamera.h"
+#include "levelExit.h"
 
 
 
@@ -78,6 +79,7 @@ void initSquid(Entity* this){
 
 
 void lizardBossUpdate(Entity* this);
+void lizardBossDestroy(Entity* this);
 void initLizardBoss(Entity* this){
     ((Enemy*)this->data)->bodyType = BODY_LARGE;
     ExtraBossData* b = malloc(sizeof(ExtraBossData));
@@ -90,12 +92,13 @@ void initLizardBoss(Entity* this){
     b->currentPatternTimer = 50;
     b->attackTimer = 0;
     b->anchorXR = this->x;
-    b->anchorXL = this->x - 256;
+    b->anchorXL = this->x - 248; // a little bit less than 256 to align nicely with the level grid
     b->wanderTimer = 0;
     b->wanderDirection = 0;
 
 
     this->updateFunction = &lizardBossUpdate;
+    this->onDestroy = &lizardBossDestroy;
     this->extraIndex = allocateExtraEntityData(getEntityManager(), b);
     ((Enemy*)this->data)->baseSprite = 0;
     this->w = 16;
@@ -500,8 +503,8 @@ void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData, bool i
 
     // move around anchor point
     if (extraData->wanderTimer <= 0){
-        bool tooLeft = (this->x - extraData->targetX) < -50;
-        bool tooRight = (this->x - extraData->targetX) > 50;
+        bool tooLeft = (this->x - extraData->targetX) < -16;
+        bool tooRight = (this->x - extraData->targetX) > 16;
         
         if (!tooLeft && !tooRight){
             extraData->wanderDirection = boolToSign(randomChance(0.5f));
@@ -552,7 +555,7 @@ void lizardBossJump(Entity* this, Enemy* data, ExtraBossData* extraData, bool is
     }
 
     if (isOnGround){
-        data->yVelocity = -2.5f - (randomChance(0.5f) * 1.5f);
+        data->yVelocity = -3.5f;
     }
 }
 
@@ -611,6 +614,24 @@ void lizardBossUpdate(Entity* this){
 
 }
 
+
+
+void spawnBossDeathExplosion(Entity* this, int xOffset, int yOffset){
+    addEntity(getEntityManager(), initExtraGraphic(this->x, this->y, GRAPHICS_DEATH_LARGE));
+
+}
+void lizardBossDestroy(Entity* this){
+    addEntity(getEntityManager(), initExit(this->x, this->y));
+    fadeMusicAway();
+
+    enemyOnDestroy(this);
+
+    spawnBossDeathExplosion(this, 16, 0);
+    spawnBossDeathExplosion(this, -16, 0);
+    spawnBossDeathExplosion(this, 0, 16);
+    spawnBossDeathExplosion(this, 0, -16);
+
+}
 
 
 void takeDamage(Entity* this, int damage){

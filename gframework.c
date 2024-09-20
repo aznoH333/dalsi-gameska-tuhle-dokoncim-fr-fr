@@ -374,7 +374,7 @@ void fUpdate(){
 	updateCamera();
 	fTimer++;
     ClearBackground(BACKGROUND_COLOR);
-	//updateMusic();
+	updateMusic();
 	
 	for (int i = 0; i < LAYER_STATIC_UI; i++){
 		drawLayer(i);
@@ -496,14 +496,20 @@ Vector* musicList;
 
 int currentMusicTrack = -1;
 Music* currentMusicTrackPtr = 0;
+bool fadingMusic = false;
+float currentMusicVolume = 1.0f;
 void playMusic(int songId){
 	if (songId > MUSIC_TRACK_COUNT || songId < 0){
 		gLog(LOG_ERR, "Music track [%d] not found", songId);
 	}
+
 	currentMusicTrack = songId;
 	currentMusicTrackPtr = vectorGet(musicList, songId);
 
 	PlayMusicStream(*currentMusicTrackPtr);
+	SetMusicVolume(*currentMusicTrackPtr, 1.0f);
+	fadingMusic = false;
+	currentMusicVolume = 1.0f;
 }
 
 void loadMusic(){
@@ -542,6 +548,15 @@ void updateMusic(){
 	if (currentMusicTrack != -1){
 		UpdateMusicStream(*currentMusicTrackPtr);
 	}
+
+	if (fadingMusic){
+		currentMusicVolume -= 0.02f;
+		SetMusicVolume(*currentMusicTrackPtr, currentMusicVolume);
+
+		if (currentMusicVolume <= 0.0f){
+			stopMusic();
+		}
+	}
 }
 
 
@@ -549,6 +564,12 @@ void stopMusic(){
 	SeekMusicStream(*currentMusicTrackPtr, 0.0f);
 	currentMusicTrack = -1;
 }
+
+void fadeMusicAway(){
+	fadingMusic = true;
+	currentMusicVolume = 1.0f;
+}
+
 
 
 

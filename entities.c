@@ -9,6 +9,7 @@
 #include "cannonTurret.h"
 #include "levelExit.h"
 #include "gameCamera.h"
+#include "bossSpawner.h"
 
 // Entity marker
 EntityMarker* initEntityMarker(char* levelData, int markerIndex){
@@ -61,8 +62,8 @@ int getEnemyTypeFromMarker(int markerId){
 
         case 26:    return ENEMY_SQUID_RED;
         case 27:    return ENEMY_SQUID_BLUE;
-        case 32:    return ENEMY_BOSS_RED;
-        case 33:    return ENEMY_BOSS_BLUE;
+        //case 32:    return ENEMY_BOSS_RED;
+        //case 33:    return ENEMY_BOSS_BLUE;
     }
 }
 
@@ -121,6 +122,10 @@ void activateEntityMarker(EntityMarker* marker){
         case 19:
         case 20: // cannon turret
             addEntity(getEntityManager(), initCannon(marker->x * 16, marker->y * 16, marker->id - 17));
+            break;
+        case 32: // boss spawner
+        case 33:
+            addEntity(getEntityManager(), initBossSpawner(marker->x * 16, marker->y * 16, marker->id - 32));
             break;
     }
     

@@ -68,11 +68,12 @@ void playSound(const char* soundName);
 void playSoundVolume(const char* soundName, float value);
 
 
-#define MUSIC_TRACK_COUNT 6
+#define MUSIC_TRACK_COUNT 7
 
 // music
 void playMusic(int songId);
 void stopMusic();
+void fadeMusicAway();
 
 // controll functions
 void fUpdate();
