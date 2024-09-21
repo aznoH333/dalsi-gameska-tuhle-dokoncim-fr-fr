@@ -557,7 +557,7 @@ void lizardBossJump(Entity* this, Enemy* data, ExtraBossData* extraData, bool is
 
     if (isOnGround){
         data->yVelocity = -3.5f;
-        playSound("lizard_boss_fall.wav");
+        playSoundVolume("lizard_boss_fall.wav", 1.0f);
 
     }
 }

@@ -3,9 +3,8 @@
 
 #include "entities.h"
 
-
 struct LevelExit{
-
+    char animationTimer;
 };
 typedef struct LevelExit LevelExit;
 
