@@ -522,11 +522,12 @@ void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData, bool i
     }
     extraData->wanderTimer--;
     this->x += 0.7f * extraData->wanderDirection;
-
+    // shoot
     if (extraData->attackTimer <= 0){
         data->animationFrame = (data->animationFrame + 1) % 2;
         extraData->attackTimer = 40 + (10 * (data->enemyType == ENEMY_BOSS_RED));
         float bulletSpeed = boolToSign(data->flipDirection) * (2.0f + (1.2f * ( data->enemyType == ENEMY_BOSS_RED )));
+        playSound("lizard_boss_shoot.wav");
         addEntity(getEntityManager(), initBullet(this->x, this->y - 6, bulletSpeed, 0.0f, SPRITE_START_EFFECTS + 2, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_ANIMATED | BULLET_FLAG_SPAWN_DECAL));
     }
 
@@ -556,6 +557,8 @@ void lizardBossJump(Entity* this, Enemy* data, ExtraBossData* extraData, bool is
 
     if (isOnGround){
         data->yVelocity = -3.5f;
+        playSound("lizard_boss_fall.wav");
+
     }
 }
 
@@ -617,19 +620,21 @@ void lizardBossUpdate(Entity* this){
 
 
 void spawnBossDeathExplosion(Entity* this, int xOffset, int yOffset){
-    addEntity(getEntityManager(), initExtraGraphic(this->x, this->y, GRAPHICS_DEATH_LARGE));
+    addEntity(getEntityManager(), initExtraGraphic(this->x, this->y, GRAPHICS_DEATH_SMALL));
 
 }
 void lizardBossDestroy(Entity* this){
     addEntity(getEntityManager(), initExit(this->x, this->y));
     fadeMusicAway();
 
+    spawnBossDeathExplosion(this, 32, 0);
+    spawnBossDeathExplosion(this, -32, 0);
+    spawnBossDeathExplosion(this, 0, 32);
+    spawnBossDeathExplosion(this, 0, -32);
+
     enemyOnDestroy(this);
 
-    spawnBossDeathExplosion(this, 16, 0);
-    spawnBossDeathExplosion(this, -16, 0);
-    spawnBossDeathExplosion(this, 0, 16);
-    spawnBossDeathExplosion(this, 0, -16);
+    
 
 }
 
