@@ -493,7 +493,7 @@ void unloadSounds(){
 // music
 //------------------------------------------------------
 Vector* musicList;
-
+bool shouldMusicPlay = true;
 int currentMusicTrack = -1;
 Music* currentMusicTrackPtr = 0;
 bool fadingMusic = false;
@@ -545,6 +545,10 @@ void unloadMusic(){
 }
 
 void updateMusic(){
+	if (!shouldMusicPlay){
+		return;
+	}
+	
 	if (currentMusicTrack != -1){
 		UpdateMusicStream(*currentMusicTrackPtr);
 	}
@@ -557,6 +561,10 @@ void updateMusic(){
 			stopMusic();
 		}
 	}
+}
+
+void toggleMusic(){
+	shouldMusicPlay = !shouldMusicPlay;
 }
 
 

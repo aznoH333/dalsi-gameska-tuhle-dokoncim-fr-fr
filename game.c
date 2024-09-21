@@ -74,6 +74,10 @@ int main(void)
         if (IsKeyPressed(KEY_F11)){
             gfullscreen();
         }
+
+        if (IsKeyPressed(KEY_F10)){
+            toggleMusic();
+        }
     }
 
     

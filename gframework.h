@@ -74,6 +74,7 @@ void playSoundVolume(const char* soundName, float value);
 void playMusic(int songId);
 void stopMusic();
 void fadeMusicAway();
+void toggleMusic();
 
 // controll functions
 void fUpdate();

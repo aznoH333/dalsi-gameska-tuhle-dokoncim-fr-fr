@@ -1,4 +1,5 @@
 gamedata/custom/*
 *.out
 .cache
+*.prg
 compile_commands.json
