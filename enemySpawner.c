@@ -26,7 +26,7 @@ void initBasedOnType(EnemySpawner* data, int type){
         
         case SPAWNER_ROBOT_BLUE:
             data->enemyId = ENEMY_ROBOT_BLUE;
-            data->spawnSprite = SPRITE_START_ENTITIES + 8;
+            data->spawnSprite = SPRITE_START_ENTITIES + 6;
             break;
     }
 }

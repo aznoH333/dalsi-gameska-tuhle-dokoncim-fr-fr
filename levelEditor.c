@@ -56,6 +56,8 @@ void loadLevelEditorLevel(LevelEditor* editor, const char* path){
 void unloadLevelEditor(LevelEditor* editor){
     unloadLevel(editor->level);
     editor->level = 0;
+    resetCameraZoom();
+    editor->cameraZoom = 1.0f;
 }
 
 void disposeLevelEditor(LevelEditor* editor){

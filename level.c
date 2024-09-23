@@ -241,6 +241,14 @@ void writeTileData(Level* lvl, char* fileData, int index, unsigned char** tileDa
 }
 
 
+#define ANIMATED_WATERFALL_SPRITE_ID 141
+
+void drawTile(int spriteId, int x, int y, int layer){
+    draw(SPRITE_START_TILES - 1 + spriteId 
+    + ((spriteId == ANIMATED_WATERFALL_SPRITE_ID) * ((getGlobalTimer() / 3) % 3)) // the shities hack you have ever seen
+    , x * 16, y * 16, layer);
+}
+
 // this sucks
 // try to make this simpler
 const Color MARKER_COLOR = {255, 255, 255, 200};
@@ -266,7 +274,7 @@ void drawLevel(Level* lvl, int drawType){
                 if (tile != 0){
                     if (drawForeGround){
                         if (tile != 1 || !highlightBlacks){
-                            draw(SPRITE_START_TILES - 1 + tile, x * 16, y * 16, LAYER_WORLD);
+                            drawTile(tile, x, y, LAYER_WORLD);
                         }else {
                             draw(SPRITE_VIS_TOGGLE, x * 16, y * 16, LAYER_WORLD);
                         }
@@ -282,7 +290,7 @@ void drawLevel(Level* lvl, int drawType){
                 if (tile != 0){
                     if (drawBackGround){
                         if (tile != 1 || !highlightBlacks){
-                            draw(SPRITE_START_TILES - 1 + tile, x * 16, y * 16, LAYER_BACKGROUND);
+                            drawTile(tile, x, y, LAYER_BACKGROUND);
                         }else {
                             draw(SPRITE_VIS_TOGGLE, x * 16, y * 16, LAYER_BACKGROUND);
                         }
