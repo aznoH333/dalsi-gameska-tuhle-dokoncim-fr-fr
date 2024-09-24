@@ -59,6 +59,7 @@ void initLargeFly(Entity* this){
     ExtraLargeFlyData* e = malloc(sizeof(ExtraLargeFlyData));
     e->movementTimer = 0;
     e->attackTimer = 50;
+    e->attackDirection = 0.0f;
     this->updateFunction = &largeFlyUpdate;
     this->extraIndex = allocateExtraEntityData(getEntityManager(), e);
     ((Enemy*)this->data)->animationFrameDuration = 3;
@@ -255,6 +256,11 @@ void enemyTryJump(Entity* this){
     }
 }
 
+void enemyTurnToPlayer(Entity* this){
+    Enemy* data = this->data;
+    data->flipDirection = this->x < getGameplay()->playerX;
+}
+
 const int HURT_TIMER_MAX = 10;
 
 void gunnerUpdate(Entity* this){
@@ -364,8 +370,8 @@ void enemyUpdate(Entity* this){
                 case 4: // jump marker
                     enemyTryJump(this);
                     break;
-                case 5: // split jump marker
-                    enemyTryJump(this); // TODO
+                case 5: // turn to player
+                    enemyTurnToPlayer(this);
                     break;
                 case 6: // decide jump marker
                     if (gameplay->playerY + 8 < this->y){
@@ -416,10 +422,14 @@ void largeFlyUpdate(Entity* this){
 
     // attack
     if (extraData->attackTimer < 15 && extraData->attackTimer % 5 == 0){
+        
+        if (extraData->attackTimer == 10){
+            extraData->attackDirection = dirTowards(playerX, playerY, this->x, this->y);
+        }
+        
         // calc direction
-        float dir = dirTowards(playerX, playerY, this->x, this->y);
         playSoundVolume("enemy_beam.wav", 1.0f);
-        addEntity(getEntityManager(), initBullet(this->x, this->y, sin(dir) * LARGE_FLY_PROJ_SPEED, cos(dir) * LARGE_FLY_PROJ_SPEED, SPRITE_START_EFFECTS + 6 - (extraData->attackTimer == 0), ENTITY_ENEMY_PROJECTILE, 0));
+        addEntity(getEntityManager(), initBullet(this->x, this->y, sin(extraData->attackDirection) * LARGE_FLY_PROJ_SPEED, cos(extraData->attackDirection) * LARGE_FLY_PROJ_SPEED, SPRITE_START_EFFECTS + 6 - (extraData->attackTimer == 0), ENTITY_ENEMY_PROJECTILE, 0));
     }
 
     if (extraData->attackTimer == 0){

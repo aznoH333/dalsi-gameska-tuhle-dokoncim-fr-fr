@@ -17,6 +17,7 @@ typedef struct ExtraFlyData ExtraFlyData;
 struct ExtraLargeFlyData{
     int movementTimer;
     int attackTimer;
+    float attackDirection;
 };
 typedef struct ExtraLargeFlyData ExtraLargeFlyData;
 
