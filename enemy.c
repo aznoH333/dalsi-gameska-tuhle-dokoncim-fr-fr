@@ -132,7 +132,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
         case ENEMY_LIZARD_BLUE:
             initBasicEnemy(enemy);
             enemy->health = 25;
-            enemy->moveSpeed = 0.8f;
+            enemy->moveSpeed = 0.9f;
             enemy->baseSprite = SPRITE_START_ENTITIES + 2;
             break;
 
@@ -147,7 +147,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
         case ENEMY_ROBOT_BLUE:  
             initBasicEnemy(enemy);
             enemy->health = 65;
-            enemy->moveSpeed = 0.8f;
+            enemy->moveSpeed = 0.9f;
             enemy->baseSprite = SPRITE_START_ENTITIES + 6;
             enemy->bodyType = BODY_ROBOT;
             break;  
@@ -165,7 +165,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             initSoldierEnemy(enemy);
             enemy->baseSprite = SPRITE_START_ENTITIES + 25;
             enemy->health = 30;
-            initSoldierData(entity, 60);
+            initSoldierData(entity, 70);
 
             break;
 
