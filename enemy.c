@@ -131,8 +131,8 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
 
         case ENEMY_LIZARD_BLUE:
             initBasicEnemy(enemy);
-            enemy->health = 23;
-            enemy->moveSpeed = 1.0f;
+            enemy->health = 25;
+            enemy->moveSpeed = 0.8f;
             enemy->baseSprite = SPRITE_START_ENTITIES + 2;
             break;
 
@@ -147,7 +147,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
         case ENEMY_ROBOT_BLUE:  
             initBasicEnemy(enemy);
             enemy->health = 65;
-            enemy->moveSpeed = 1.0f;
+            enemy->moveSpeed = 0.8f;
             enemy->baseSprite = SPRITE_START_ENTITIES + 6;
             enemy->bodyType = BODY_ROBOT;
             break;  
@@ -165,7 +165,7 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
             initSoldierEnemy(enemy);
             enemy->baseSprite = SPRITE_START_ENTITIES + 25;
             enemy->health = 30;
-            initSoldierData(entity, 85);
+            initSoldierData(entity, 60);
 
             break;
 
@@ -186,13 +186,13 @@ void initEnemyBasedOnType(Enemy* enemy, Entity* entity, int enemyType){
 
         case ENEMY_LARGE_FLY_RED:
             initLargeFly(entity);
-            enemy->health = 96;
+            enemy->health = 75;
             enemy->baseSprite = SPRITE_START_ENTITIES + 27;
             break;
 
         case ENEMY_LARGE_FLY_BLUE:
             initLargeFly(entity);
-            enemy->health = 124;
+            enemy->health = 85;
             enemy->baseSprite = SPRITE_START_ENTITIES + 30;
             break;
         
@@ -436,7 +436,7 @@ void largeFlyUpdate(Entity* this){
     }
 
     if (extraData->attackTimer == 0){
-        extraData->attackTimer = 200;
+        extraData->attackTimer = 150 + (50 * (data->enemyType == ENEMY_LARGE_FLY_RED)); 
     }
 
 
