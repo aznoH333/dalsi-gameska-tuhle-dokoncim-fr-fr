@@ -257,8 +257,11 @@ void enemyTryJump(Entity* this){
 }
 
 void enemyTurnToPlayer(Entity* this){
-    Enemy* data = this->data;
-    data->flipDirection = this->x < getGameplay()->playerX;
+    Enemy* data = this->data;\
+    float playerX = getGameplay()->playerX;
+    if (data->isTouchingGround && fabs(this->x - playerX) > 16.0f){
+        data->flipDirection = this->x < playerX;
+    }
 }
 
 const int HURT_TIMER_MAX = 10;
