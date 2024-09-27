@@ -23,7 +23,7 @@ void l6s0(){
 // Level 8
 //---------------------------------------------
 void l8s0(){
-	setScrollSpeed(getCameraManager(), 1.8f);
+	setScrollSpeed(getCameraManager(), 1.3f);
 }
 
 

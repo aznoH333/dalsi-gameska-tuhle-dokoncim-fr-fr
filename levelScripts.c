@@ -25,7 +25,12 @@ void l6s0(){
 void l8s0(){
 	setScrollSpeed(getCameraManager(), 1.3f);
 }
-
+//---------------------------------------------
+// Level 10
+//---------------------------------------------
+void l10s0(){
+	spawnBoss(getGameplay());
+}
 
 #define MAX_SCRIPTS_IN_LEVEL 5
 void (*(scriptMap[][MAX_SCRIPTS_IN_LEVEL]))() = {
@@ -36,11 +41,13 @@ void (*(scriptMap[][MAX_SCRIPTS_IN_LEVEL]))() = {
     {l5s0},
     {l6s0},
 	{},
-	{l8s0}
+	{l8s0},
+	{},
+	{l10s0}
 };
 
 
-#define SHITTY_HARDCODED_LEVEL_INDEX 7
+#define SHITTY_HARDCODED_LEVEL_INDEX 9
 
 int currentLevelIndex;
 int currentScriptIndex = 0;

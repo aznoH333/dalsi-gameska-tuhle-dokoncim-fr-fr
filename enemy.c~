@@ -538,8 +538,8 @@ void lizardBossShoot(Entity* this, Enemy* data, ExtraBossData* extraData, bool i
     // shoot
     if (extraData->attackTimer <= 0){
         data->animationFrame = (data->animationFrame + 1) % 2;
-        extraData->attackTimer = 45 + (5 * (data->enemyType == ENEMY_BOSS_RED));
-        float bulletSpeed = boolToSign(data->flipDirection) * (3.2f);
+        extraData->attackTimer = 40 + (10 * (data->enemyType == ENEMY_BOSS_RED));
+        float bulletSpeed = boolToSign(data->flipDirection) * (2.0f + (1.2f * ( data->enemyType == ENEMY_BOSS_RED )));
         playSound("lizard_boss_shoot.wav");
         addEntity(getEntityManager(), initBullet(this->x, this->y - 6, bulletSpeed, 0.0f, SPRITE_START_EFFECTS + 2, ENTITY_ENEMY, BULLET_FLAG_PHASING | BULLET_FLAG_ANIMATED | BULLET_FLAG_SPAWN_DECAL));
     }
