@@ -22,17 +22,17 @@ void l6s0(){
 //---------------------------------------------
 // Level 8
 //---------------------------------------------
-void l8s0(){
+void l9s0(){
 	setScrollSpeed(getCameraManager(), 1.3f);
 }
 //---------------------------------------------
 // Level 10
 //---------------------------------------------
-void l10s0(){
+void l11s0(){
 	spawnBoss(getGameplay());
 }
 
-#define MAX_SCRIPTS_IN_LEVEL 5
+#define MAX_SCRIPTS_IN_LEVEL 1
 void (*(scriptMap[][MAX_SCRIPTS_IN_LEVEL]))() = {
     {},
     {},
@@ -41,9 +41,10 @@ void (*(scriptMap[][MAX_SCRIPTS_IN_LEVEL]))() = {
     {l5s0},
     {l6s0},
 	{},
-	{l8s0},
 	{},
-	{l10s0}
+	{l9s0},
+	{},
+	{l11s0}
 };
 
 
