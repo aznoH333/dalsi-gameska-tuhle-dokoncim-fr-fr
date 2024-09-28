@@ -180,6 +180,22 @@ void disposeGameState(GameState* gamestate){
 
 
 void updateGameState(GameState* gamestate){
+
+    if (IsKeyPressed(KEY_ONE)){
+        changeGameState(gamestate, 0);
+    }
+    if (IsKeyPressed(KEY_TWO)){
+        setNextLevelIndex(gamestate, -1);
+        changeGameState(gamestate, 1);
+    }
+    if (IsKeyPressed(KEY_THREE)){
+        changeGameState(gamestate, 2);
+    }
+
+    if (IsKeyPressed(KEY_FOUR)){
+        changeGameState(gamestate, 5);
+    }
+  
     
     switch (gamestate->currentState) {
         case GAME_STATE_MAIN_MENU:
